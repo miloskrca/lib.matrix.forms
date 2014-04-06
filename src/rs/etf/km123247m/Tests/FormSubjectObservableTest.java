@@ -48,7 +48,7 @@ class ConcreteFormObserver extends FormObserver {
 }
 
 
-public class FormSubjectTest {
+public class FormSubjectObservableTest {
     private Form form;
     private ConcreteFormObserver observer;
     private int id = 123456;
