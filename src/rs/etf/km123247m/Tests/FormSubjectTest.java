@@ -12,7 +12,7 @@ import java.util.Observable;
  * Created by Miloš Krsmanović.
  * 2014
  * <p/>
- * package: rs.etf.km123247m.Observers
+ * package: rs.etf.km123247m.Tests
  */
 
 /**
