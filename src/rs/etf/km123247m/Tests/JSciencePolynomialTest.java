@@ -5,7 +5,6 @@ import org.jscience.mathematics.number.Rational;
 import org.junit.Test;
 
 import org.jscience.mathematics.function.Polynomial;
-import org.jscience.mathematics.number.Rational;
 
 /**
  * Created by Miloš Krsmanović.
@@ -13,7 +12,7 @@ import org.jscience.mathematics.number.Rational;
  * <p/>
  * package: rs.etf.km123247m.Tests
  */
-public class PolynomialTest {
+public class JSciencePolynomialTest {
 
     @Test
     public void createSomePolynomials() {
@@ -38,8 +37,8 @@ public class PolynomialTest {
 
         Variable<Rational> x = new Variable.Local<Rational>("x");
         Variable<Rational> y = new Variable.Local<Rational>("y");
-        Polynomial xpoly = Polynomial.valueOf(Rational.ONE, x);
-        Polynomial ypoly = Polynomial.valueOf(Rational.ONE, y);
+        Polynomial<Rational> xpoly = Polynomial.valueOf(Rational.ONE, x);
+        Polynomial<Rational> ypoly = Polynomial.valueOf(Rational.ONE, y);
         Rational nine = Rational.valueOf("9/1");
         Rational sixty = Rational.valueOf("60/1");
         Rational seven15ths = Rational.valueOf("7/15");
@@ -50,8 +49,7 @@ public class PolynomialTest {
         Polynomial nineXY = (Polynomial)
                 Constant.valueOf(nine).times(xpoly).times(ypoly);
 
-        Polynomial poly = (Polynomial)
-                seven15X5.plus(nineXY).plus(Constant.valueOf(sixty));
+        Polynomial poly = seven15X5.plus(nineXY).plus(Constant.valueOf(sixty));
 
         x.set(Rational.valueOf("5/7"));
         y.set(Rational.ONE);
