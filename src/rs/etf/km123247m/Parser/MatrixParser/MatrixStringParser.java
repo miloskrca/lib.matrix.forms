@@ -1,8 +1,7 @@
-package rs.etf.km123247m.Parser;
+package rs.etf.km123247m.Parser.MatrixParser;
 
 import rs.etf.km123247m.Matrix.Matrix;
-import rs.etf.km123247m.Polinomial.Polynomial;
-import rs.etf.km123247m.Polinomial.Term;
+import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -11,33 +10,36 @@ import java.util.regex.Pattern;
 /**
  * Created by Miloš Krsmanović.
  * May 2014
- *
- * package: rs.etf.km123247m.IParser
+ * <p/>
+ * package: rs.etf.km123247m.Parser
  */
-public class StringParser implements IParser {
+public abstract class MatrixStringParser extends StringParser {
 
-    private String matrixString;
-
-    public String getMatrixString() {
-        return matrixString;
-    }
-
-    public void setMatrixString(String matrixString) {
-        this.matrixString = matrixString;
+    @Override
+    protected void preInputParseChecks(String inputString) throws Exception {
+        if(this.getInputString() == null) {
+            throw new Exception("No matrix string to parse");
+        }
     }
 
     @Override
-    public Matrix parseMatrix() throws Exception {
-        if(this.getMatrixString() == null) {
-            throw new Exception("No matrix string to parse");
-        }
+    protected String parseFromInput(String inputString) {
+        // do nothing
+        return inputString;
+    }
 
+    @Override
+    protected void postInputParseChecks(String parsedInput) throws Exception {
+        // do nothing
+    }
+
+    @Override
+    protected Matrix generateObject(String input) {
         Matrix matrix = null;
-
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
         try {
             Pattern rowPattern = Pattern.compile("(.*?);");
-            Matcher rowMatcher = rowPattern.matcher(this.getMatrixString());
+            Matcher rowMatcher = rowPattern.matcher(this.getInputString());
 
             int i = 0;
             while (rowMatcher.find()) {
@@ -59,21 +61,23 @@ public class StringParser implements IParser {
                 throw new Exception(("Wrong matrix size!") + list.size());
             }
 
-            matrix = new Matrix<Polynomial>(list.size(), list.get(0).size());
+            matrix = new Matrix(list.size(), list.get(0).size());
 
             for (i = 0; i < list.size(); i++) {
                 for (int j = 0; j < list.get(i).size(); j++) {
-                    Polynomial p = new Polynomial();
-                    Term t = new Term(Term.MINUS, 1, "x", 2);
-                    p.addTerm(t);
-                    matrix.set(i, j, p);
+                    Object o = createMatrixElement(list.get(i).get(j));
+                    matrix.set(i, j, o);
                 }
             }
 
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return matrix;
     }
+
+    protected abstract Object createMatrixElement(String s);
+
+    @Override
+    protected abstract void postObjectGenerationChecks(Object o) throws Exception;
 }
