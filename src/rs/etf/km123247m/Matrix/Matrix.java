@@ -37,23 +37,22 @@ public class Matrix {
     }
 
     public void set(int col, int row, Object t) throws Exception {
-        if(col >= columnNumber) {
-            throw new Exception("Column number doesn't exist!");
-        }
-        if(row >= rowNumber) {
-            throw new Exception("Row number doesn't exist!");
-        }
+        checkColumnAndRowValues(col, row);
         // @TODO: fix IndexOutOfBounds exception
         this.getMatrix().get(col).set(row, t);
     }
 
     public Object get(int col, int row) throws Exception {
-        if(col >= columnNumber) {
+        checkColumnAndRowValues(col, row);
+        return this.getMatrix().get(col).get(row);
+    }
+
+    protected void checkColumnAndRowValues(int col, int row) throws Exception {
+        if(col >= columnNumber || col < 0) {
             throw new Exception("Column number doesn't exist!");
         }
-        if(row >= rowNumber) {
+        if(row >= rowNumber || row < 0) {
             throw new Exception("Row number doesn't exist!");
         }
-        return this.getMatrix().get(col).get(row);
     }
 }
