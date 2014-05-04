@@ -57,6 +57,7 @@ public abstract class MatrixStringParser extends StringParser {
                 if (list.size() != list.get(i).size())
                     throw new Exception("Matrix format error! m != n");
             }
+            // @TODO: add 2 and 4 to a config file
             if (2 > list.size() || 4 < list.size()) {
                 throw new Exception(("Wrong matrix size!") + list.size());
             }
