@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Polinomial;
+package rs.etf.km123247m.Polynomial;
 
 /**
  * Created by Miloš Krsmanović.

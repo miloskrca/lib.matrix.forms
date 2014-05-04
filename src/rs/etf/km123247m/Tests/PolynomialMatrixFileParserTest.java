@@ -5,7 +5,7 @@ import org.junit.Test;
 import rs.etf.km123247m.Matrix.Matrix;
 import rs.etf.km123247m.Parser.ParserTypes.FileParser;
 import rs.etf.km123247m.Parser.MatrixParser.PolynomialMatrixParser.PolynomialMatrixFileParser;
-import rs.etf.km123247m.Polinomial.Polynomial;
+import rs.etf.km123247m.Polynomial.Polynomial;
 
 import java.io.File;
 import java.net.URL;
