@@ -1,10 +1,11 @@
 package rs.etf.km123247m.Tests;
-
+/*
 import org.jscience.mathematics.function.*;
 import org.jscience.mathematics.number.Rational;
 import org.junit.Test;
 
 import org.jscience.mathematics.function.Polynomial;
+*/
 
 /**
  * Created by Miloš Krsmanović.
@@ -13,7 +14,7 @@ import org.jscience.mathematics.function.Polynomial;
  * package: rs.etf.km123247m.Tests
  */
 public class JSciencePolynomialTest {
-
+/*
     @Test
     public void createSomePolynomials() {
 
@@ -53,7 +54,8 @@ public class JSciencePolynomialTest {
 
         x.set(Rational.valueOf("5/7"));
         y.set(Rational.ONE);
-        System.out.println(poly);
-        System.out.println(poly.evaluate());
+//        System.out.println(poly);
+//        System.out.println(poly.evaluate());
     }
+    */
 }

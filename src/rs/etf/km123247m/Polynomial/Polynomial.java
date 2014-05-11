@@ -41,7 +41,7 @@ public class Polynomial implements Comparable {
         return terms;
     }
 
-    //@TODO: do a proper compare
+    //TODO: do a proper compare
     @Override
     public int compareTo(Object o) {
         Polynomial p = (Polynomial) o;
@@ -50,5 +50,14 @@ public class Polynomial implements Comparable {
             return oTerms.size() > terms.size() ? -1 : 1;
         }
         return 0;
+    }
+
+    public String toString() {
+        String polynomialString = "";
+        for(Term term : terms) {
+            polynomialString += term.getSignChar() + term.toString();
+        }
+
+        return polynomialString.substring(1);
     }
 }

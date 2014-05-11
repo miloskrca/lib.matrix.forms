@@ -1,6 +1,7 @@
 package rs.etf.km123247m.Parser.MatrixParser;
 
-import rs.etf.km123247m.Matrix.Matrix;
+import rs.etf.km123247m.Matrix.ArrayMatrix;
+import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Properties.PropertyManager;
 
@@ -35,8 +36,8 @@ public abstract class MatrixStringParser extends StringParser {
     }
 
     @Override
-    protected Matrix generateObject(String input) {
-        Matrix matrix = null;
+    protected IMatrix generateObject(String input) {
+        IMatrix matrix = null;
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
         try {
             Pattern rowPattern = Pattern.compile("(.*?);");
@@ -64,7 +65,7 @@ public abstract class MatrixStringParser extends StringParser {
                 throw new Exception(("Wrong matrix size!") + list.size());
             }
 
-            matrix = new Matrix(list.size(), list.get(0).size());
+            matrix = new ArrayMatrix(list.size(), list.get(0).size());
 
             for (i = 0; i < list.size(); i++) {
                 for (int j = 0; j < list.get(i).size(); j++) {
@@ -79,7 +80,7 @@ public abstract class MatrixStringParser extends StringParser {
         return matrix;
     }
 
-    protected abstract Object createMatrixElement(String s);
+    protected abstract Object createMatrixElement(String s) throws Exception;
 
     @Override
     protected abstract void postObjectGenerationChecks(Object o) throws Exception;

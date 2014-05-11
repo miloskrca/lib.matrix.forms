@@ -1,26 +1,24 @@
 package rs.etf.km123247m.Matrix;
 
-import java.util.ArrayList;
-
 /**
  * Created by Miloš Krsmanović.
  * 2014
  *
  * package: rs.etf.km123247m.Matrix
  */
-public class Matrix {
+public class ArrayMatrix implements IMatrix {
     private final int rowNumber;
     private final int columnNumber;
-    private ArrayList<ArrayList<Object>> matrix;
+    private Object[][] matrix;
 
-    public Matrix(int columnNumber, int rowNumber) {
+    public ArrayMatrix(int columnNumber, int rowNumber) {
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
-        this.matrix = new ArrayList<ArrayList<Object>>();
+        this.matrix = new Object[columnNumber][rowNumber];
     }
-    public Matrix(ArrayList<ArrayList<Object>> matrix) {
-        this.columnNumber = matrix.size();
-        this.rowNumber = matrix.size() > 0 ? matrix.get(0).size(): 0;
+    public ArrayMatrix(Object[][] matrix) {
+        this.columnNumber = matrix.length;
+        this.rowNumber = matrix.length > 0 ? matrix[0].length : 0;
         this.matrix = matrix;
     }
 
@@ -32,19 +30,14 @@ public class Matrix {
         return rowNumber;
     }
 
-    public ArrayList<ArrayList<Object>> getMatrix() {
-        return matrix;
-    }
-
     public void set(int col, int row, Object t) throws Exception {
         checkColumnAndRowValues(col, row);
-        // @TODO: fix IndexOutOfBounds exception
-        this.getMatrix().get(col).set(row, t);
+        matrix[col][row] = t;
     }
 
     public Object get(int col, int row) throws Exception {
         checkColumnAndRowValues(col, row);
-        return this.getMatrix().get(col).get(row);
+        return matrix[col][row];
     }
 
     protected void checkColumnAndRowValues(int col, int row) throws Exception {

@@ -10,13 +10,16 @@ public class Term implements Comparable {
 
     public static short MINUS = 0;
     public static short PLUS = 1;
+    public static char MINUS_CHAR = '-';
+    public static char PLUS_CHAR = '+';
+    public static char NULL = '\u0000';
 
     private int power;
     private int coefficient;
-    private String variable;
+    private char variable;
     private short sign;
 
-    public Term(short sign, int coefficient, String variable, int power) throws Exception {
+    public Term(short sign, int coefficient, char variable, int power) throws Exception {
         this.setSign(sign);
         this.setVariable(variable);
         this.setPower(power);
@@ -39,11 +42,11 @@ public class Term implements Comparable {
         this.coefficient = coefficient;
     }
 
-    public String getVariable() {
+    public char getVariable() {
         return variable;
     }
 
-    public void setVariable(String variable) {
+    public void setVariable(char variable) {
         this.variable = variable;
     }
 
@@ -52,7 +55,7 @@ public class Term implements Comparable {
     }
 
     public void setSign(short sign) throws Exception {
-        if (sign == PLUS && sign == MINUS) {
+        if (sign == PLUS || sign == MINUS) {
             this.sign = sign;
         } else {
             throw new Exception("Invalid sign!");
@@ -65,12 +68,32 @@ public class Term implements Comparable {
         if (t.getCoefficient() == coefficient
                 && t.getPower() == power
                 && t.getSign() == sign
-                && t.getVariable().equals(variable)) {
+                && t.getVariable() == variable) {
             return 0;
-        } else if (t.getPower() > power && t.getVariable().equals(variable)) {
+        } else if (t.getPower() > power && t.getVariable() == variable) {
             // maybe do a fine grain compare
             return -1;
         }
         return 1;
+    }
+
+    public String toString() {
+        String signString = sign == MINUS ? "-" : "";
+        String coefficientString = coefficient == 1 ? "" : coefficient + "*";
+        String variableString = power == 0 ? "" : variable == NULL ? "" : String.valueOf(variable);
+        String powerString = power == 1 ? "" : power == 0 ? "" : "^" + power;
+
+        String returnString = signString + coefficientString + variableString + powerString;
+
+        // if the term is only a coefficient the "*" sign is not necessary
+        if(returnString.length() > 1 && returnString.charAt(returnString.length() - 1) == '*') {
+            returnString = returnString.substring(0, returnString.length() - 1);
+        }
+
+        return returnString.length() == 0 ? "1" : returnString;
+    }
+
+    public char getSignChar() {
+        return sign == PLUS ? PLUS_CHAR : MINUS_CHAR;
     }
 }

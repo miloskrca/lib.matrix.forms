@@ -1,5 +1,6 @@
 package rs.etf.km123247m.Tests;
 
+/*
 import edu.jas.kern.ComputerThreads;
 import org.junit.Test;
 
@@ -10,7 +11,7 @@ import org.matheclipse.core.form.output.StringBufferWriter;
 import org.matheclipse.core.interfaces.IExpr;
 
 import static org.matheclipse.core.expression.F.*;
-
+*/
 
 /**
  * Created by Miloš Krsmanović.
@@ -19,7 +20,7 @@ import static org.matheclipse.core.expression.F.*;
  * package: rs.etf.km123247m.Tests
  */
 public class SymJaMatrixTest {
-
+/*
     @Test
     public void createSomeMatrices() {
         // Static initialization of the MathEclipse engine instead of null
@@ -61,4 +62,5 @@ public class SymJaMatrixTest {
             ComputerThreads.terminate();
         }
     }
+    */
 }
