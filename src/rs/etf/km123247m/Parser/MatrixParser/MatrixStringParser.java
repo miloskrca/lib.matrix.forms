@@ -2,6 +2,7 @@ package rs.etf.km123247m.Parser.MatrixParser;
 
 import rs.etf.km123247m.Matrix.Matrix;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
+import rs.etf.km123247m.Properties.PropertyManager;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -57,8 +58,9 @@ public abstract class MatrixStringParser extends StringParser {
                 if (list.size() != list.get(i).size())
                     throw new Exception("Matrix format error! m != n");
             }
-            // @TODO: add 2 and 4 to a config file
-            if (2 > list.size() || 4 < list.size()) {
+            int min = Integer.parseInt(PropertyManager.getProperty("min_degree"));
+            int max = Integer.parseInt(PropertyManager.getProperty("max_degree"));
+            if (min > list.size() || max < list.size()) {
                 throw new Exception(("Wrong matrix size!") + list.size());
             }
 
