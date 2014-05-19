@@ -41,14 +41,51 @@ public class Polynomial implements Comparable {
         return terms;
     }
 
-    //TODO: do a proper compare
     @Override
     public int compareTo(Object o) {
         Polynomial p = (Polynomial) o;
         ArrayList<Term> oTerms = p.getTerms();
-        if(oTerms.size() != terms.size()) {
-            return oTerms.size() > terms.size() ? -1 : 1;
+
+        int highestTermPower = 0;
+        for (Term term : terms) {
+            if(highestTermPower < term.getPower()) {
+                highestTermPower = term.getPower();
+            }
         }
+        int highestOTermPower = 0;
+        for (Term oTerm : oTerms) {
+            if(highestOTermPower < oTerm.getPower()) {
+                highestOTermPower = oTerm.getPower();
+            }
+        }
+
+        if(highestTermPower != highestOTermPower) {
+            return highestTermPower > highestOTermPower ? 1 : -1;
+        }
+
+        if(oTerms.size() != terms.size()) {
+            return terms.size() > oTerms.size() ? 1 : -1;
+        }
+
+        int compareCount = 0;
+        int compareResult;
+        boolean found;
+        for (Term oTerm : oTerms) {
+            found = false;
+            for (Term term : terms) {
+                compareResult = term.compareTo(oTerm);
+                if(compareResult == 0) {
+                    found = true;
+                    break;
+                } else {
+                    compareCount += compareResult;
+                }
+            }
+            if(!found) {
+                return compareCount == 0 ? 1 : (compareCount > 0 ? 1 : -1);
+            }
+        }
+
         return 0;
     }
 
