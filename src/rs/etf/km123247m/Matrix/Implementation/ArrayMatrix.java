@@ -1,4 +1,6 @@
-package rs.etf.km123247m.Matrix;
+package rs.etf.km123247m.Matrix.Implementation;
+
+import rs.etf.km123247m.Matrix.IMatrix;
 
 /**
  * Created by Miloš Krsmanović.
@@ -15,11 +17,6 @@ public class ArrayMatrix implements IMatrix {
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
         this.matrix = new Object[columnNumber][rowNumber];
-    }
-    public ArrayMatrix(Object[][] matrix) {
-        this.columnNumber = matrix.length;
-        this.rowNumber = matrix.length > 0 ? matrix[0].length : 0;
-        this.matrix = matrix;
     }
 
     public int getColumnNumber() {

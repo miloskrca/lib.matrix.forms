@@ -2,7 +2,7 @@ package rs.etf.km123247m.Tests;
 
 import org.junit.Before;
 import org.junit.Test;
-import rs.etf.km123247m.Matrix.ArrayMatrix;
+import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Parser.MatrixParser.PolynomialMatrixParser.PolynomialMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;

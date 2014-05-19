@@ -1,6 +1,6 @@
 package rs.etf.km123247m.Parser.MatrixParser;
 
-import rs.etf.km123247m.Matrix.ArrayMatrix;
+import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Properties.PropertyManager;
