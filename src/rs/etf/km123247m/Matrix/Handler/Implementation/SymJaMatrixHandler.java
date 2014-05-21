@@ -1,6 +1,7 @@
 package rs.etf.km123247m.Matrix.Handler.Implementation;
 
-import rs.etf.km123247m.Matrix.Handler.IMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
+import rs.etf.km123247m.Matrix.IMatrix;
 
 /**
  * Implementation of matrix operations using SymJa library
@@ -11,5 +12,8 @@ import rs.etf.km123247m.Matrix.Handler.IMatrixHandler;
  * package: rs.etf.km123247m.Matrix.Handler.Implementation.SymJa
  */
 // TODO: Implement.
-public class SymJaMatrixHandler implements IMatrixHandler {
+public class SymJaMatrixHandler extends MatrixHandler {
+    public SymJaMatrixHandler(IMatrix matrix) {
+        super(matrix);
+    }
 }

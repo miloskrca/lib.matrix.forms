@@ -7,10 +7,14 @@ import java.util.Observable;
  * Form should extend this class so the GUI can observe the calculations in the form
  */
 public abstract class FormSubject extends Observable {
+
     /**
-     * Set the 'changed' flag in Observable parent
+     * Notifies observers of an update
      */
-    public void setChanged() {
-        super.setChanged();
+    protected void update(Object object) {
+        this.setChanged();
+        synchronized (this) {
+            this.notifyObservers(object);
+        }
     }
 }
