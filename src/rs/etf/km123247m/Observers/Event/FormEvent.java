@@ -11,6 +11,7 @@ public class FormEvent {
     public static final int PROCESSING_START = 1;
     public static final int PROCESSING_STATUS = 2;
     public static final int PROCESSING_END = 3;
+    public static final int PROCESSING_EXCEPTION = 4;
 
     private int type;
 

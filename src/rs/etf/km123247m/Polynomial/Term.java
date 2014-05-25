@@ -19,7 +19,7 @@ public class Term implements Comparable {
     private char variable;
     private short sign;
 
-    public Term(short sign, int coefficient, char variable, int power) throws Exception {
+    public Term(short sign, int coefficient, char variable, int power) {
         this.setSign(sign);
         this.setVariable(variable);
         this.setPower(power);
@@ -54,12 +54,8 @@ public class Term implements Comparable {
         return sign;
     }
 
-    public void setSign(short sign) throws Exception {
-        if (sign == PLUS || sign == MINUS) {
-            this.sign = sign;
-        } else {
-            throw new Exception("Invalid sign!");
-        }
+    public void setSign(short sign) {
+        this.sign = sign;
     }
 
     @Override
@@ -75,6 +71,10 @@ public class Term implements Comparable {
             return -1;
         }
         return 1;
+    }
+
+    public static Term getZeroTerm() {
+        return new Term(PLUS, 0, NULL, 0);
     }
 
     public String toString() {

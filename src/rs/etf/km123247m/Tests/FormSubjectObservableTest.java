@@ -2,23 +2,22 @@ package rs.etf.km123247m.Tests;
 
 import org.junit.Before;
 import org.junit.Test;
-
-import rs.etf.km123247m.Forms.Form;
 import rs.etf.km123247m.Observers.FormObserver;
+import rs.etf.km123247m.Observers.FormSubject;
 
 import java.util.Observable;
 
 /**
  * Created by Miloš Krsmanović.
  * 2014
- * <p/>
+ *
  * package: rs.etf.km123247m.Tests
  */
 
 /**
  * Simple implementation of the Form class
  */
-class ConcreteForm extends Form {
+class ConcreteForm extends FormSubject {
     private int id;
     public ConcreteForm(int id) {
         this.id = id;
@@ -26,15 +25,18 @@ class ConcreteForm extends Form {
     public int getId() {
         return this.id;
     }
+    public void update() {
+        update(null);
+    }
 }
 
 class ConcreteFormObserver extends FormObserver {
     private int value = 0;
-    private Form subject;
+    private FormSubject subject;
 
     @Override
     public void update(Observable o, Object arg) {
-        subject = (Form)o;
+        subject = (FormSubject)o;
         this.value++;
     }
 
@@ -49,7 +51,7 @@ class ConcreteFormObserver extends FormObserver {
 
 
 public class FormSubjectObservableTest {
-    private Form form;
+    private ConcreteForm form;
     private ConcreteFormObserver observer;
     private int id = 123456;
 

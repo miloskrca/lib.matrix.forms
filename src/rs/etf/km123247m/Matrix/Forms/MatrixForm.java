@@ -1,8 +1,10 @@
 package rs.etf.km123247m.Matrix.Forms;
 
+import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Observers.Event.FormEvent;
 import rs.etf.km123247m.Observers.FormSubject;
+import java.util.LinkedList;
 
 /**
  * Created by Miloš Krsmanović.
@@ -10,13 +12,14 @@ import rs.etf.km123247m.Observers.FormSubject;
  *
  * package: rs.etf.km123247m.Matrix.Forms
  */
-// TODO: Implement basic MatrixForm interface (lean on Smiths form implementation).
 public abstract class MatrixForm extends FormSubject {
 
-    protected MatrixHandler handler;
+    private MatrixHandler handler;
+    private LinkedList<ICommand> commands;
 
     public MatrixForm(MatrixHandler handler) {
         this.handler = handler;
+        this.commands = new LinkedList<ICommand>();
     }
 
     public MatrixHandler getHandler() {
@@ -28,15 +31,23 @@ public abstract class MatrixForm extends FormSubject {
     }
 
     public void start() {
-        sendUpdate(FormEvent.PROCESSING_START);
-        process();
-        sendUpdate(FormEvent.PROCESSING_END);
+        try {
+            sendUpdate(FormEvent.PROCESSING_START);
+            process();
+            sendUpdate(FormEvent.PROCESSING_END);
+        } catch (Exception exception) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION);
+        }
     }
 
     protected void sendUpdate(int type) {
         update(new FormEvent(type, handler));
     }
 
-    protected abstract void process();
+    public LinkedList<ICommand> getCommands() {
+        return commands;
+    }
+
+    protected abstract void process() throws Exception;
 
 }

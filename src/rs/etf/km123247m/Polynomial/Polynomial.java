@@ -41,6 +41,12 @@ public class Polynomial implements Comparable {
         return terms;
     }
 
+    public static Polynomial getZeroPolynomial() {
+        return new Polynomial(new Term[] {
+            Term.getZeroTerm()
+        });
+    }
+
     @Override
     public int compareTo(Object o) {
         Polynomial p = (Polynomial) o;
