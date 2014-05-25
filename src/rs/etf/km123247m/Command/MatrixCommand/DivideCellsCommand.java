@@ -9,17 +9,24 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class DivideRowsCommand implements ICommand {
+public class DivideCellsCommand implements ICommand {
     private final MatrixHandler handler;
     private final int row1;
     private final int row2;
-    private final int column;
+    private final int column1;
+    private final int column2;
 
-    public DivideRowsCommand(MatrixHandler handler, int row1, int row2, int column) {
+    public DivideCellsCommand(MatrixHandler handler, int row1, int column1, int row2, int column2) {
         this.handler = handler;
         this.row1 = row1;
         this.row2 = row2;
-        this.column = column;
+        this.column1 = column1;
+        this.column2 = column2;
+    }
+
+    @Override
+    public Object execute() {
+        return null;
     }
 
     public MatrixHandler getHandler() {
@@ -34,12 +41,11 @@ public class DivideRowsCommand implements ICommand {
         return row2;
     }
 
-    public int getColumn() {
-        return column;
+    public int getColumn1() {
+        return column1;
     }
 
-    @Override
-    public Object execute() {
-        return null;
+    public int getColumn2() {
+        return column2;
     }
 }
