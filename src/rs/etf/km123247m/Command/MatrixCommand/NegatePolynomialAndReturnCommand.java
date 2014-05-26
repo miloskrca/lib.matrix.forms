@@ -10,11 +10,11 @@ import rs.etf.km123247m.Polynomial.Polynomial;
  *
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class NegatePolynomialCommand implements ICommand {
+public class NegatePolynomialAndReturnCommand implements ICommand {
     private final Polynomial polynomial;
     private final MatrixHandler handler;
 
-    public NegatePolynomialCommand(MatrixHandler handler, Polynomial polynomial) {
+    public NegatePolynomialAndReturnCommand(MatrixHandler handler, Polynomial polynomial) {
         this.handler = handler;
         this.polynomial = polynomial;
     }

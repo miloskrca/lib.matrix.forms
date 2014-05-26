@@ -1,10 +1,10 @@
 package rs.etf.km123247m.Matrix.Forms.Implementation;
 
 import rs.etf.km123247m.Command.ICommand;
-import rs.etf.km123247m.Command.MatrixCommand.AddToCellAndStore;
-import rs.etf.km123247m.Command.MatrixCommand.DivideCellsCommand;
-import rs.etf.km123247m.Command.MatrixCommand.MultiplyPolynomialAndCellCommand;
-import rs.etf.km123247m.Command.MatrixCommand.NegatePolynomialCommand;
+import rs.etf.km123247m.Command.MatrixCommand.AddPolynomialToCellAndSaveCommand;
+import rs.etf.km123247m.Command.MatrixCommand.DivideCellsAndReturnCommand;
+import rs.etf.km123247m.Command.MatrixCommand.MultiplyPolynomialWithCellAndReturnCommand;
+import rs.etf.km123247m.Command.MatrixCommand.NegatePolynomialAndReturnCommand;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
@@ -93,24 +93,24 @@ public class SmithMatrixForm extends MatrixForm {
     private void DivideCellsInColumn(int row1, int row2, int column, int rng) throws Exception {
         IMatrix matrix = getHandler().getMatrix();
         if(matrix.get(column, row2) != Polynomial.getZeroPolynomial()) {
-            ICommand divideRowsCommand = new DivideCellsCommand(
+            ICommand divideCellsAndReturnCommand = new DivideCellsAndReturnCommand(
                     getHandler(), row2, column, row1, column
             );
-            Polynomial quotient = (Polynomial) divideRowsCommand.execute();
-            getCommands().push(divideRowsCommand);
+            Polynomial quotient = (Polynomial) divideCellsAndReturnCommand.execute();
+            getCommands().push(divideCellsAndReturnCommand);
 
-            ICommand negatePolynomialCommand = new NegatePolynomialCommand(getHandler(), quotient);
-            quotient = (Polynomial) negatePolynomialCommand.execute();
-            getCommands().push(negatePolynomialCommand);
+            ICommand negatePolynomialAndReturnCommand = new NegatePolynomialAndReturnCommand(getHandler(), quotient);
+            quotient = (Polynomial) negatePolynomialAndReturnCommand.execute();
+            getCommands().push(negatePolynomialAndReturnCommand);
 
             for (int i = column; i < rng; i++) {
-                ICommand multiplyPolynomialAndCellCommand = new MultiplyPolynomialAndCellCommand(getHandler(), quotient, row1, i);
-                Polynomial partial = (Polynomial) multiplyPolynomialAndCellCommand.execute();
-                getCommands().push(multiplyPolynomialAndCellCommand);
+                ICommand multiplyPolynomialWithCellAndReturnCommand = new MultiplyPolynomialWithCellAndReturnCommand(getHandler(), quotient, row1, i);
+                Polynomial partial = (Polynomial) multiplyPolynomialWithCellAndReturnCommand.execute();
+                getCommands().push(multiplyPolynomialWithCellAndReturnCommand);
 
-                ICommand addToCellAndStore = new AddToCellAndStore(getHandler(), partial, row2, i);
-                addToCellAndStore.execute();
-                getCommands().push(addToCellAndStore);
+                ICommand addPolynomialToCellAndSaveCommand = new AddPolynomialToCellAndSaveCommand(getHandler(), partial, row2, i);
+                addPolynomialToCellAndSaveCommand.execute();
+                getCommands().push(addPolynomialToCellAndSaveCommand);
             }
         }
     }

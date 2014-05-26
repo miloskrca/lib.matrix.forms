@@ -10,15 +10,15 @@ import rs.etf.km123247m.Polynomial.Polynomial;
  *
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class AddToCellAndStore implements ICommand {
+public class MultiplyPolynomialWithCellAndReturnCommand implements ICommand {
     private final MatrixHandler handler;
-    private final Polynomial partial;
+    private final Polynomial polynomial;
     private final int row;
     private final int column;
 
-    public AddToCellAndStore(MatrixHandler handler, Polynomial partial, int row, int column) {
+    public MultiplyPolynomialWithCellAndReturnCommand(MatrixHandler handler, Polynomial polynomial, int row, int column) {
         this.handler = handler;
-        this.partial = partial;
+        this.polynomial = polynomial;
         this.row = row;
         this.column = column;
     }
@@ -32,15 +32,15 @@ public class AddToCellAndStore implements ICommand {
         return handler;
     }
 
-    public Polynomial getPartial() {
-        return partial;
-    }
-
     public int getRow() {
         return row;
     }
 
     public int getColumn() {
         return column;
+    }
+
+    public Polynomial getPolynomial() {
+        return polynomial;
     }
 }
