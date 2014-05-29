@@ -11,7 +11,7 @@ public interface IMatrix {
     public int getColumnNumber();
     public int getRowNumber();
 
-    public void set(int col, int row, Object t) throws Exception;
-    public Object get(int col, int row) throws Exception;
+    public void set(MatrixCell cell) throws Exception;
+    public MatrixCell get(int col, int row) throws Exception;
 
 }

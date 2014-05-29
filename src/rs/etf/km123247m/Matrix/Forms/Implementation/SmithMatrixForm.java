@@ -1,15 +1,8 @@
 package rs.etf.km123247m.Matrix.Forms.Implementation;
 
-import rs.etf.km123247m.Command.ICommand;
-import rs.etf.km123247m.Command.MatrixCommand.AddPolynomialToCellAndSaveCommand;
-import rs.etf.km123247m.Command.MatrixCommand.DivideCellsAndReturnCommand;
-import rs.etf.km123247m.Command.MatrixCommand.MultiplyPolynomialWithCellAndReturnCommand;
-import rs.etf.km123247m.Command.MatrixCommand.NegatePolynomialAndReturnCommand;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
-import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Observers.Event.FormEvent;
-import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**
  * Created by Miloš Krsmanović.
@@ -91,28 +84,7 @@ public class SmithMatrixForm extends MatrixForm {
      * @param rng rng
      */
     private void DivideCellsInColumn(int row1, int row2, int column, int rng) throws Exception {
-        IMatrix matrix = getHandler().getMatrix();
-        if(matrix.get(column, row2) != Polynomial.getZeroPolynomial()) {
-            ICommand divideCellsAndReturnCommand = new DivideCellsAndReturnCommand(
-                    getHandler(), row2, column, row1, column
-            );
-            Polynomial quotient = (Polynomial) divideCellsAndReturnCommand.execute();
-            getCommands().push(divideCellsAndReturnCommand);
 
-            ICommand negatePolynomialAndReturnCommand = new NegatePolynomialAndReturnCommand(getHandler(), quotient);
-            quotient = (Polynomial) negatePolynomialAndReturnCommand.execute();
-            getCommands().push(negatePolynomialAndReturnCommand);
-
-            for (int i = column; i < rng; i++) {
-                ICommand multiplyPolynomialWithCellAndReturnCommand = new MultiplyPolynomialWithCellAndReturnCommand(getHandler(), quotient, row1, i);
-                Polynomial partial = (Polynomial) multiplyPolynomialWithCellAndReturnCommand.execute();
-                getCommands().push(multiplyPolynomialWithCellAndReturnCommand);
-
-                ICommand addPolynomialToCellAndSaveCommand = new AddPolynomialToCellAndSaveCommand(getHandler(), partial, row2, i);
-                addPolynomialToCellAndSaveCommand.execute();
-                getCommands().push(addPolynomialToCellAndSaveCommand);
-            }
-        }
     }
 
     /**

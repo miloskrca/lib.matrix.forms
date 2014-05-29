@@ -31,10 +31,10 @@ public class PolynomialMatrixFileParserTest {
         matrix = (ArrayMatrix)parser.parseInput();
         assert matrix != null;
 
-        poly00 = ((Polynomial)matrix.get(0, 0));
-        poly01 = ((Polynomial)matrix.get(0, 1));
-        poly10 = ((Polynomial)matrix.get(1, 0));
-        poly11 = ((Polynomial)matrix.get(1, 1));
+        poly00 = ((Polynomial)matrix.get(0, 0).getElement());
+        poly01 = ((Polynomial)matrix.get(0, 1).getElement());
+        poly10 = ((Polynomial)matrix.get(1, 0).getElement());
+        poly11 = ((Polynomial)matrix.get(1, 1).getElement());
     }
 
     @Test

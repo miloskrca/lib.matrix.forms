@@ -2,6 +2,7 @@ package rs.etf.km123247m.Parser.MatrixParser;
 
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Properties.PropertyManager;
 
@@ -70,7 +71,7 @@ public abstract class MatrixStringParser extends StringParser {
             for (i = 0; i < list.size(); i++) {
                 for (int j = 0; j < list.get(i).size(); j++) {
                     Object o = createMatrixElement(list.get(i).get(j));
-                    matrix.set(i, j, o);
+                    matrix.set(new MatrixCell(j, i, o));
                 }
             }
 

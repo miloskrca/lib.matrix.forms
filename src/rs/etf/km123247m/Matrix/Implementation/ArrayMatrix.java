@@ -1,6 +1,7 @@
 package rs.etf.km123247m.Matrix.Implementation;
 
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Matrix.MatrixCell;
 
 /**
  * Created by Miloš Krsmanović.
@@ -27,14 +28,14 @@ public class ArrayMatrix implements IMatrix {
         return rowNumber;
     }
 
-    public void set(int col, int row, Object t) throws Exception {
-        checkColumnAndRowValues(col, row);
-        matrix[col][row] = t;
+    public void set(MatrixCell cell) throws Exception {
+        checkColumnAndRowValues(cell.getColumn(), cell.getRow());
+        matrix[cell.getColumn()][cell.getRow()] = cell.getElement();
     }
 
-    public Object get(int col, int row) throws Exception {
+    public MatrixCell get(int col, int row) throws Exception {
         checkColumnAndRowValues(col, row);
-        return matrix[col][row];
+        return new MatrixCell(row, col, matrix[col][row]);
     }
 
     protected void checkColumnAndRowValues(int col, int row) throws Exception {
