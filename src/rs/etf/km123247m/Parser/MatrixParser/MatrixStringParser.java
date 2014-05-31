@@ -71,7 +71,7 @@ public abstract class MatrixStringParser extends StringParser {
             for (i = 0; i < list.size(); i++) {
                 for (int j = 0; j < list.get(i).size(); j++) {
                     Object o = createMatrixElement(list.get(i).get(j));
-                    matrix.set(new MatrixCell(j, i, o));
+                    matrix.set(new MatrixCell(i, j, o));
                 }
             }
 

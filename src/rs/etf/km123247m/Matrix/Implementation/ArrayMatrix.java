@@ -17,7 +17,7 @@ public class ArrayMatrix implements IMatrix {
     public ArrayMatrix(int columnNumber, int rowNumber) {
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
-        this.matrix = new Object[columnNumber][rowNumber];
+        this.matrix = new Object[rowNumber][columnNumber];
     }
 
     public int getColumnNumber() {
@@ -30,15 +30,15 @@ public class ArrayMatrix implements IMatrix {
 
     public void set(MatrixCell cell) throws Exception {
         checkColumnAndRowValues(cell.getColumn(), cell.getRow());
-        matrix[cell.getColumn()][cell.getRow()] = cell.getElement();
+        matrix[cell.getRow()][cell.getColumn()] = cell.getElement();
     }
 
-    public MatrixCell get(int col, int row) throws Exception {
-        checkColumnAndRowValues(col, row);
-        return new MatrixCell(row, col, matrix[col][row]);
+    public MatrixCell get(int row, int col) throws Exception {
+        checkColumnAndRowValues(row, col);
+        return new MatrixCell(row, col, matrix[row][col]);
     }
 
-    protected void checkColumnAndRowValues(int col, int row) throws Exception {
+    protected void checkColumnAndRowValues(int row, int col) throws Exception {
         if(col >= columnNumber || col < 0) {
             throw new Exception("Column number doesn't exist!");
         }
