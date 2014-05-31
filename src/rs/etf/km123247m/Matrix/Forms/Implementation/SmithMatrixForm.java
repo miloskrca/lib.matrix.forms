@@ -24,18 +24,18 @@ public class SmithMatrixForm extends MatrixForm {
 
     @Override
     public void process() throws Exception {
-        sendUpdate(FormEvent.PROCESSING_STATUS);
+        sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
         MatrixHandler handler = this.getHandler();
         int matrixSize = handler.getMatrix().getRowNumber();
 
-        // make all elements, except for the first one, in the left outmost column equal to 0
         for (int range = 0; range < matrixSize - 1; range++) {
             do {
                 do {
                     // Moving smallest to start...
                     MatrixCell smallestElement = findCellWithSmallestElement(range);
                     moveElementToStartPosition(range, smallestElement);
+                    // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize - 1; nextRow++) {
                         MatrixCell nextElement = handler.getMatrix().get(range, nextRow);
                         Polynomial element = (Polynomial) nextElement.getElement();
@@ -49,7 +49,7 @@ public class SmithMatrixForm extends MatrixForm {
                 } while (!isColumnCleared(range));
 
                 MatrixCell firstElement = handler.getMatrix().get(0, 0);
-                // make all elements, except for the first one, in the top outmost row equal to 0
+                // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize - 1; nextColumn++) {
                     MatrixCell nextElement = handler.getMatrix().get(nextColumn, range);
                     Polynomial element = (Polynomial) nextElement.getElement();
@@ -107,23 +107,25 @@ public class SmithMatrixForm extends MatrixForm {
         return cleared;
     }
 
-    private void multiplyRowWithElementAndAddToRow(int row1, MatrixCell element, int row2) {
+    private void multiplyRowWithElementAndAddToRow(int row1, MatrixCell element, int row2) throws Exception {
         // TODO: keep in mind that basic transformations should be stored as a command
+        throw new Exception("multiplyRowWithElementAndAddToRow is not implemented!");
     }
 
-    private void multiplyColumnWithElementAndAddToColumn(int column1, MatrixCell element, int column2) {
+    private void multiplyColumnWithElementAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
         // TODO: keep in mind that basic transformations should be stored as a command
+        throw new Exception("multiplyColumnWithElementAndAddToColumn is not implemented!");
     }
 
-    private MatrixCell calculateQuotientForElement(MatrixCell dividend, MatrixCell divisor) {
-        return null;
+    private MatrixCell calculateQuotientForElement(MatrixCell dividend, MatrixCell divisor) throws Exception {
+        throw new Exception("calculateQuotientForElement is not implemented!");
     }
 
-    private MatrixCell calculateNegativeElement(MatrixCell quotient) {
-        return null;
+    private MatrixCell calculateNegativeElement(MatrixCell quotient) throws Exception {
+        throw new Exception("calculateNegativeElement is not implemented!");
     }
 
-    private MatrixCell findCellWithSmallestElement(int range) {
-        return null;
+    private MatrixCell findCellWithSmallestElement(int range) throws Exception {
+        throw new Exception("findCellWithSmallestElement is not implemented!");
     }
 }

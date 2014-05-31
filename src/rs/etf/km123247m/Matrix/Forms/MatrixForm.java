@@ -32,16 +32,16 @@ public abstract class MatrixForm extends FormSubject {
 
     public void start() {
         try {
-            sendUpdate(FormEvent.PROCESSING_START);
+            sendUpdate(FormEvent.PROCESSING_START, null);
             process();
-            sendUpdate(FormEvent.PROCESSING_END);
+            sendUpdate(FormEvent.PROCESSING_END, null);
         } catch (Exception exception) {
-            sendUpdate(FormEvent.PROCESSING_EXCEPTION);
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, exception.getMessage());
         }
     }
 
-    protected void sendUpdate(int type) {
-        update(new FormEvent(type, handler));
+    protected void sendUpdate(int type, String message) {
+        update(new FormEvent(type, handler, message));
     }
 
     public LinkedList<ICommand> getCommands() {

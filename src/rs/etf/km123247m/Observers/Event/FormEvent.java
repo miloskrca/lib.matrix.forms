@@ -17,9 +17,12 @@ public class FormEvent {
 
     private Object object;
 
-    public FormEvent(int type, Object object) {
+    private String message;
+
+    public FormEvent(int type, Object object, String message) {
         this.type = type;
         this.object = object;
+        this.message = message;
     }
 
     public int getType() {
@@ -36,5 +39,13 @@ public class FormEvent {
 
     public void setObject(Object object) {
         this.object = object;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 }

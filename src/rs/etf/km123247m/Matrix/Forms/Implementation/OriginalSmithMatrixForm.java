@@ -18,7 +18,7 @@ public class OriginalSmithMatrixForm extends MatrixForm {
 
     @Override
     public void process() throws Exception{
-        sendUpdate(FormEvent.PROCESSING_STATUS);
+        sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
         MatrixHandler handler = this.getHandler();
         int matrixSize = handler.getMatrix().getRowNumber();
