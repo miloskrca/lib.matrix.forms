@@ -2,7 +2,7 @@ package rs.etf.km123247m.Tests.FormTests;
 
 import org.junit.Before;
 import org.junit.Test;
-import rs.etf.km123247m.Matrix.Forms.Implementation.OriginalSmithMatrixForm;
+import rs.etf.km123247m.Matrix.Forms.Implementation.SmithMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
@@ -24,7 +24,7 @@ public class MatrixFormTest {
     public void setUp() throws Exception {
         IMatrix matrix = new ArrayMatrix(1, 1);
         handler = new SymJaMatrixHandler(matrix);
-        form = new OriginalSmithMatrixForm(handler);
+        form = new SmithMatrixForm(handler);
         started = false;
         processed = false;
     }
