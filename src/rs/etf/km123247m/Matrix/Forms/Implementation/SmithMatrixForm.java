@@ -1,8 +1,7 @@
 package rs.etf.km123247m.Matrix.Forms.Implementation;
 
 import rs.etf.km123247m.Command.ICommand;
-import rs.etf.km123247m.Command.MatrixCommand.SwitchColumnsCommand;
-import rs.etf.km123247m.Command.MatrixCommand.SwitchRowsCommand;
+import rs.etf.km123247m.Command.MatrixCommand.*;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
@@ -33,30 +32,30 @@ public class SmithMatrixForm extends MatrixForm {
             do {
                 do {
                     // Moving smallest to start...
-                    MatrixCell smallestElement = findCellWithSmallestElement(range);
-                    moveElementToStartPosition(range, smallestElement);
+                    MatrixCell smallestCell = findCellWithSmallestElement(range);
+                    moveCellToStartPosition(range, smallestCell);
                     // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize - 1; nextRow++) {
-                        MatrixCell nextElement = handler.getMatrix().get(range, nextRow);
-                        Polynomial element = (Polynomial) nextElement.getElement();
-                        if (element.compareTo(Polynomial.getZeroPolynomial()) != 0) {
-                            MatrixCell quotient = calculateQuotientForElement(smallestElement, nextElement);
-                            MatrixCell negativeQuotient = calculateNegativeElement(quotient);
-                            multiplyRowWithElementAndAddToRow(range, negativeQuotient, nextRow);
+                        MatrixCell nextCell = handler.getMatrix().get(range, nextRow);
+                        Object element = nextCell.getElement();
+                        if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+                            MatrixCell quotient = calculateQuotientForCell(smallestCell, nextCell);
+                            MatrixCell negativeQuotient = calculateNegativeCell(quotient);
+                            multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
                         }
                     }
 
                 } while (!isColumnCleared(range));
 
-                MatrixCell firstElement = handler.getMatrix().get(0, 0);
+                MatrixCell firstCell = handler.getMatrix().get(0, 0);
                 // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize - 1; nextColumn++) {
-                    MatrixCell nextElement = handler.getMatrix().get(nextColumn, range);
-                    Polynomial element = (Polynomial) nextElement.getElement();
-                    if (element.compareTo(Polynomial.getZeroPolynomial()) != 0) {
-                        MatrixCell quotient = calculateQuotientForElement(firstElement, nextElement);
-                        MatrixCell negativeQuotient = calculateNegativeElement(quotient);
-                        multiplyColumnWithElementAndAddToColumn(range, negativeQuotient, nextColumn);
+                    MatrixCell nextCell = handler.getMatrix().get(nextColumn, range);
+                    Object element = nextCell.getElement();
+                    if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+                        MatrixCell quotient = calculateQuotientForCell(firstCell, nextCell);
+                        MatrixCell negativeQuotient = calculateNegativeCell(quotient);
+                        multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
                     }
                 }
             } while (!isRowCleared(range));
@@ -67,17 +66,17 @@ public class SmithMatrixForm extends MatrixForm {
 
     }
 
-    private void moveElementToStartPosition(int range, MatrixCell element) throws Exception {
+    private void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
         if(element.getRow() == 0 && element.getColumn() == 0) {
             return;
         }
         if(element.getColumn() != 0) {
-            ICommand command = new SwitchColumnsCommand(getHandler(), 0, element.getColumn());
+            ICommand command = new SwitchColumnsCommand(getHandler(), range, element.getColumn());
             command.execute();
             getCommands().add(command);
         }
         if (element.getRow() != 0) {
-            ICommand command = new SwitchRowsCommand(getHandler(), 0, element.getRow());
+            ICommand command = new SwitchRowsCommand(getHandler(), range, element.getRow());
             command.execute();
             getCommands().add(command);
         }
@@ -107,25 +106,51 @@ public class SmithMatrixForm extends MatrixForm {
         return cleared;
     }
 
-    private void multiplyRowWithElementAndAddToRow(int row1, MatrixCell element, int row2) throws Exception {
-        // TODO: keep in mind that basic transformations should be stored as a command
-        throw new Exception("multiplyRowWithElementAndAddToRow is not implemented!");
+    private void multiplyRowWithCellAndAddToRow(int row1, MatrixCell element, int row2) throws Exception {
+        ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), row1, element.getElement());
+        multiplyRowWithElementCommand.execute();
+        getCommands().add(multiplyRowWithElementCommand);
+
+        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row2, row1);
+        addRowsCommand.execute();
+        getCommands().add(addRowsCommand);
     }
 
-    private void multiplyColumnWithElementAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
-        // TODO: keep in mind that basic transformations should be stored as a command
-        throw new Exception("multiplyColumnWithElementAndAddToColumn is not implemented!");
+    private void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
+        ICommand multiplyColumnWithElementCommand = new MultiplyColumnWithElementCommand(getHandler(), column1, element.getElement());
+        multiplyColumnWithElementCommand.execute();
+        getCommands().add(multiplyColumnWithElementCommand);
+
+        ICommand addColumnsCommand = new AddColumnsCommand(getHandler(), column2, column1);
+        addColumnsCommand.execute();
+        getCommands().add(addColumnsCommand);
     }
 
-    private MatrixCell calculateQuotientForElement(MatrixCell dividend, MatrixCell divisor) throws Exception {
-        throw new Exception("calculateQuotientForElement is not implemented!");
+    private MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
+        Object object = getHandler().divideCellElements(dividend.getElement(), divisor.getElement());
+        return new MatrixCell(dividend.getRow(), dividend.getColumn(), object);
     }
 
-    private MatrixCell calculateNegativeElement(MatrixCell quotient) throws Exception {
-        throw new Exception("calculateNegativeElement is not implemented!");
+    private MatrixCell calculateNegativeCell(MatrixCell cell) throws Exception {
+        Object object = getHandler().calculateNegativeElement(cell.getElement());
+        return new MatrixCell(cell.getRow(), cell.getColumn(), object);
     }
 
     private MatrixCell findCellWithSmallestElement(int range) throws Exception {
-        throw new Exception("findCellWithSmallestElement is not implemented!");
+        Object smallestElement = getHandler().getZeroElement();
+        int foundRow = -1;
+        int foundColumn = -1;
+        IMatrix matrix = getHandler().getMatrix();
+        for (int row = range; row < matrix.getRowNumber(); row++) {
+            for (int column = range; column < matrix.getColumnNumber(); column++) {
+                Object element = matrix.get(row, column).getElement();
+                if(getHandler().compareElements(element, smallestElement) == -1) {
+                    foundRow = row;
+                    foundColumn = column;
+                    smallestElement = element;
+                }
+            }
+        }
+        return new MatrixCell(foundRow, foundColumn, smallestElement);
     }
 }

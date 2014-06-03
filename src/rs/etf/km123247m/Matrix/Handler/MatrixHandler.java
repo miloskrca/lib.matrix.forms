@@ -48,4 +48,56 @@ public abstract class MatrixHandler {
             matrix.set(new MatrixCell(row, column2, temp));
         }
     }
+
+    public void multipleRowWithObject(int row, Object object) throws Exception {
+        int numOfColumns = matrix.getColumnNumber();
+        for (int column = 0; column < numOfColumns; column++) {
+            Object result = multiplyElements(matrix.get(row, column).getElement(), object);
+            MatrixCell resultCell = new MatrixCell(row, column, result);
+            matrix.set(resultCell);
+        }
+    }
+
+    public void multipleColumnWithObject(int column, Object object) throws Exception {
+        int numOfRows = matrix.getRowNumber();
+        for (int row = 0; row < numOfRows; row++) {
+            Object result = multiplyElements(matrix.get(row, column).getElement(), object);
+            MatrixCell resultCell = new MatrixCell(row, column, result);
+            matrix.set(resultCell);
+        }
+    }
+
+    public void addRows(int row1, int row2) throws Exception {
+        int numOfColumns = matrix.getColumnNumber();
+        for (int column = 0; column < numOfColumns; column++) {
+            Object result = addElements(matrix.get(row1, column).getElement(), matrix.get(row2, column).getElement());
+            MatrixCell resultCell = new MatrixCell(row1, column, result);
+            matrix.set(resultCell);
+        }
+    }
+
+    public void addColumns(int column1, int column2) throws Exception {
+        int numOfRows = matrix.getRowNumber();
+        for (int row = 0; row < numOfRows; row++) {
+            Object result = addElements(matrix.get(row, column1).getElement(), matrix.get(row, column2).getElement());
+            MatrixCell resultCell = new MatrixCell(row, column1, result);
+            matrix.set(resultCell);
+        }
+    }
+
+    public Object divideCellElements(Object object1, Object object2) {
+        return divideElements(object1, object2);
+    }
+
+    protected abstract Object addElements(Object element1, Object element2);
+
+    protected abstract Object multiplyElements(Object element1, Object element2);
+
+    protected abstract Object divideElements(Object element1, Object element2);
+
+    public abstract Object calculateNegativeElement(Object element);
+
+    public abstract Object getZeroElement();
+
+    public abstract int compareElements(Object element1, Object element2);
 }
