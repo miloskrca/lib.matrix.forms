@@ -1,7 +1,13 @@
 package rs.etf.km123247m.Matrix.Handler.Implementation;
 
+import org.matheclipse.core.eval.EvalUtilities;
+import org.matheclipse.core.expression.F;
+import org.matheclipse.core.form.output.OutputFormFactory;
+import org.matheclipse.core.form.output.StringBufferWriter;
+import org.matheclipse.core.interfaces.IExpr;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Parser.PolynomialParser.PolynomialStringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**
@@ -13,28 +19,39 @@ import rs.etf.km123247m.Polynomial.Polynomial;
  * package: rs.etf.km123247m.Matrix.Handler.Implementation.SymJa
  */
 public class SymJaMatrixHandler extends MatrixHandler {
+
+    private PolynomialStringParser polynomialStringParser = new PolynomialStringParser();
+    private EvalUtilities util = new EvalUtilities();
+    private StringBufferWriter buf = new StringBufferWriter();
+
+
     public SymJaMatrixHandler(IMatrix matrix) {
         super(matrix);
+        F.initSymbols(null);
     }
 
     @Override
-    protected Object addElements(Object element1, Object element2) {
-        return null;
+    protected Object addElements(Object element1, Object element2) throws Exception {
+        String input = element1.toString() + " + " + element2.toString();
+        return generateObjectFromString(input);
     }
 
     @Override
-    protected Object multiplyElements(Object element1, Object element2) {
-        return null;
+    protected Object multiplyElements(Object element1, Object element2) throws Exception {
+        String input = element1.toString() + " * " + element2.toString();
+        return generateObjectFromString(input);
     }
 
     @Override
-    protected Object divideElements(Object element1, Object element2) {
-        return null;
+    protected Object divideElements(Object element1, Object element2) throws Exception {
+        String input = element1.toString() + " / " + element2.toString();
+        return generateObjectFromString(input);
     }
 
     @Override
-    public Object calculateNegativeElement(Object element) {
-        return null;
+    public Object calculateNegativeElement(Object element) throws Exception {
+        String input = "-1 * " + element.toString();
+        return generateObjectFromString(input);
     }
 
     @Override
@@ -44,6 +61,18 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     @Override
     public int compareElements(Object element1, Object element2) {
-        return 0;
+        return ((Polynomial)element1).compareTo(element2);
     }
+
+    protected Object generateObjectFromString(String input) throws Exception {
+        IExpr result = util.evaluate(input);
+        buf.flush();
+        OutputFormFactory.get().convert(buf, result);
+        String output = buf.toString();
+
+        // TODO: We got something like this output = "4*x+3-4*x+34*x*3--+15*x+3" fix it.
+        polynomialStringParser.setInputString(output);
+        return polynomialStringParser.parseInput();
+    }
+
 }

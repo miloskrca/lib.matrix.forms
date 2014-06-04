@@ -23,7 +23,7 @@ public class MultiplyColumnWithElementCommand implements ICommand {
 
     @Override
     public Object execute() throws Exception {
-        handler.multipleColumnWithObject(column, element);
+        handler.multipleColumnWithElement(column, element);
         return null;
     }
 

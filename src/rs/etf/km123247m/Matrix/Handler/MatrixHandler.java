@@ -48,19 +48,19 @@ public abstract class MatrixHandler {
         }
     }
 
-    public void multipleRowWithObject(int row, Object object) throws Exception {
+    public void multipleRowWithElement(int row, Object element) throws Exception {
         int numOfColumns = matrix.getColumnNumber();
         for (int column = 0; column < numOfColumns; column++) {
-            Object result = multiplyElements(matrix.get(row, column).getElement(), object);
+            Object result = multiplyElements(matrix.get(row, column).getElement(), element);
             MatrixCell resultCell = new MatrixCell(row, column, result);
             matrix.set(resultCell);
         }
     }
 
-    public void multipleColumnWithObject(int column, Object object) throws Exception {
+    public void multipleColumnWithElement(int column, Object element) throws Exception {
         int numOfRows = matrix.getRowNumber();
         for (int row = 0; row < numOfRows; row++) {
-            Object result = multiplyElements(matrix.get(row, column).getElement(), object);
+            Object result = multiplyElements(matrix.get(row, column).getElement(), element);
             MatrixCell resultCell = new MatrixCell(row, column, result);
             matrix.set(resultCell);
         }
@@ -84,17 +84,17 @@ public abstract class MatrixHandler {
         }
     }
 
-    public Object divideCellElements(Object object1, Object object2) {
+    public Object divideCellElements(Object object1, Object object2) throws Exception {
         return divideElements(object1, object2);
     }
 
-    protected abstract Object addElements(Object element1, Object element2);
+    protected abstract Object addElements(Object element1, Object element2) throws Exception;
 
-    protected abstract Object multiplyElements(Object element1, Object element2);
+    protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;
 
-    protected abstract Object divideElements(Object element1, Object element2);
+    protected abstract Object divideElements(Object element1, Object element2) throws Exception;
 
-    public abstract Object calculateNegativeElement(Object element);
+    public abstract Object calculateNegativeElement(Object element) throws Exception;
 
     public abstract Object getZeroElement();
 

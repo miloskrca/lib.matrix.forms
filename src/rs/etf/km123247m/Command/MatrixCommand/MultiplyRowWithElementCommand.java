@@ -23,7 +23,7 @@ public class MultiplyRowWithElementCommand implements ICommand {
 
     @Override
     public Object execute() throws Exception {
-        handler.multipleRowWithObject(row, element);
+        handler.multipleRowWithElement(row, element);
         return null;
     }
 

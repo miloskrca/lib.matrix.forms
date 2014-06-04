@@ -20,7 +20,7 @@ public abstract class MatrixStringParser extends StringParser {
 
     @Override
     protected void preInputParseChecks(String inputString) throws Exception {
-        if(this.getInputString() == null) {
+        if(inputString == null) {
             throw new Exception("No matrix string to parse");
         }
     }

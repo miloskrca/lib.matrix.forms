@@ -31,7 +31,7 @@ public abstract class StringParser implements IParser {
     protected abstract void preInputParseChecks(String inputString) throws Exception;
     protected abstract String parseFromInput(String inputString);
     protected abstract void postInputParseChecks(String parsedInput) throws Exception;
-    protected abstract Object generateObject(String input);
+    protected abstract Object generateObject(String input) throws Exception;
     protected abstract void postObjectGenerationChecks(Object o) throws Exception;
 
 }
