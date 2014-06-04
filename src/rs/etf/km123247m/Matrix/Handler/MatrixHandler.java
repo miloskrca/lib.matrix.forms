@@ -9,7 +9,6 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  *
  * package: rs.etf.km123247m.Math.Matrix
  */
-// TODO: Implement signatures for all necessary matrix operations.
 public abstract class MatrixHandler {
     private IMatrix matrix;
 
