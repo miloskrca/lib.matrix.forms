@@ -22,7 +22,6 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     private PolynomialStringParser polynomialStringParser = new PolynomialStringParser();
     private EvalUtilities util = new EvalUtilities();
-    private StringBufferWriter buf = new StringBufferWriter();
 
 
     public SymJaMatrixHandler(IMatrix matrix) {
@@ -38,19 +37,19 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     @Override
     protected Object multiplyElements(Object element1, Object element2) throws Exception {
-        String input = element1.toString() + " * " + element2.toString();
+        String input = "(" + element1.toString() + ") * (" + element2.toString() + ")";
         return generateObjectFromString(input);
     }
 
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
-        String input = element1.toString() + " / " + element2.toString();
+        String input = "PolynomialQuotient[" + element1.toString() + "," + element2.toString() + "]";
         return generateObjectFromString(input);
     }
 
     @Override
     public Object calculateNegativeElement(Object element) throws Exception {
-        String input = "-1 * " + element.toString();
+        String input = "-1 * (" + element.toString() + ")";
         return generateObjectFromString(input);
     }
 
@@ -66,11 +65,10 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     protected Object generateObjectFromString(String input) throws Exception {
         IExpr result = util.evaluate(input);
-        buf.flush();
+        StringBufferWriter buf = new StringBufferWriter();
         OutputFormFactory.get().convert(buf, result);
         String output = buf.toString();
 
-        // TODO: We got something like this output = "4*x+3-4*x+34*x*3--+15*x+3" fix it.
         polynomialStringParser.setInputString(output);
         return polynomialStringParser.parseInput();
     }

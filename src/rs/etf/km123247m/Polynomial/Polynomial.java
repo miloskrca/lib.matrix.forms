@@ -49,8 +49,7 @@ public class Polynomial implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        Polynomial p = (Polynomial) o;
-        ArrayList<Term> oTerms = p.getTerms();
+        ArrayList<Term> oTerms = ((Polynomial)o).getTerms();
 
         int highestTermPower = 0;
         for (Term term : terms) {
@@ -96,11 +95,15 @@ public class Polynomial implements Comparable {
     }
 
     public String toString() {
-        String polynomialString = "";
+        StringBuilder sb = new StringBuilder();
         for(Term term : terms) {
-            polynomialString += term.getSignChar() + term.toString();
+            String termString = term.toString();
+            sb.append((termString.charAt(0) == Term.MINUS_CHAR) ? termString : term.getSignChar() + termString);
+        }
+        if(sb.charAt(0) == Term.PLUS_CHAR) {
+            sb.deleteCharAt(0);
         }
 
-        return polynomialString.substring(1);
+        return sb.toString();
     }
 }

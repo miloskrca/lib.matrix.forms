@@ -40,6 +40,11 @@ public class PolynomialStringParser extends StringParser {
     protected Object generateObject(String input) throws Exception {
         Polynomial poly = new Polynomial();
         input = input.replace("-", "+-");
+        if(input.charAt(0) == Term.PLUS_CHAR) {
+            // if the input starts with a "+" sign, remove it, so the split()
+            // doesn't return an empty first element
+            input = input.substring(1);
+        }
         String[] terms = input.split("\\+");
 
         // parse string
@@ -102,7 +107,6 @@ public class PolynomialStringParser extends StringParser {
                         throw new Exception("qurac6");
                     }
                 } else {
-                    // TODO: We are getting this parts = "34*x*3" and cannot parse it, fix it.
                     throw new Exception("qurac5");
                 }
             } else if(isNumeric(parts)) {
@@ -115,7 +119,7 @@ public class PolynomialStringParser extends StringParser {
 
 
     private boolean isNumeric(String s) {
-        return s.matches("[-+]?\\d*\\.?\\d+");
+        return /*s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || */s.matches("[-+]?\\d*\\.?\\d+");
     }
 
     @Override

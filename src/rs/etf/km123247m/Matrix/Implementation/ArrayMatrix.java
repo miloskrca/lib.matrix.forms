@@ -46,4 +46,18 @@ public class ArrayMatrix implements IMatrix {
             throw new Exception("Row number doesn't exist!");
         }
     }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int row = 0; row < rowNumber; row++) {
+            sb.append("|");
+            for (int col = 0; col < columnNumber; col++) {
+                sb.append(" ");
+                sb.append(matrix[row][col].toString());
+                sb.append(" ");
+            }
+            sb.append("|\n");
+        }
+        return sb.toString();
+    }
 }

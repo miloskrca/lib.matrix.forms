@@ -15,6 +15,7 @@ public class Term implements Comparable {
     public static char NULL = '\u0000';
 
     private int power;
+    // TODO: coefficient should be able to be a rational number
     private int coefficient;
     private char variable;
     private short sign;
@@ -74,13 +75,18 @@ public class Term implements Comparable {
     }
 
     public static Term getZeroTerm() {
-        return new Term(PLUS, 0, NULL, 0);
+        return new Term(PLUS, 0, NULL, 1);
     }
 
     public String toString() {
         String signString = sign == MINUS ? "-" : "";
-        String coefficientString = coefficient == 1 ? "" : coefficient + "*";
         String variableString = power == 0 ? "" : variable == NULL ? "" : String.valueOf(variable);
+        String coefficientString;
+        if(variable == NULL) {
+            coefficientString = String.valueOf(coefficient);
+        } else {
+            coefficientString = coefficient == 1 ? "" : coefficient + "*";
+        }
         String powerString = power == 1 ? "" : power == 0 ? "" : "^" + power;
 
         String returnString = signString + coefficientString + variableString + powerString;

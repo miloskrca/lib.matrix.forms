@@ -2,6 +2,7 @@ package rs.etf.km123247m.Command.MatrixCommand;
 
 import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
+import rs.etf.km123247m.Matrix.MatrixCell;
 
 /**
  * Created by Miloš Krsmanović.
@@ -22,9 +23,8 @@ public class MultiplyRowWithElementCommand implements ICommand {
     }
 
     @Override
-    public Object execute() throws Exception {
-        handler.multipleRowWithElement(row, element);
-        return null;
+    public MatrixCell[] execute() throws Exception {
+        return handler.multipleRowWithElement(row, element);
     }
 
     public MatrixHandler getHandler() {

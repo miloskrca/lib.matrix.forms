@@ -23,8 +23,6 @@ public class SmithMatrixForm extends MatrixForm {
 
     @Override
     public void process() throws Exception {
-        sendUpdate(FormEvent.PROCESSING_STATUS, null);
-
         MatrixHandler handler = this.getHandler();
         int matrixSize = handler.getMatrix().getRowNumber();
 
@@ -34,28 +32,31 @@ public class SmithMatrixForm extends MatrixForm {
                     // Moving smallest to start...
                     MatrixCell smallestCell = findCellWithSmallestElement(range);
                     moveCellToStartPosition(range, smallestCell);
+                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize; nextRow++) {
-                        MatrixCell nextCell = handler.getMatrix().get(range, nextRow);
+                        MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
                         Object element = nextCell.getElement();
                         if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
-                            MatrixCell quotient = calculateQuotientForCell(smallestCell, nextCell);
+                            MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                             MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
+                            sendUpdate(FormEvent.PROCESSING_STATUS, null);
                         }
                     }
 
                 } while (!isColumnCleared(range));
 
-                MatrixCell firstCell = handler.getMatrix().get(0, 0);
+                MatrixCell firstCell = handler.getMatrix().get(range, range);
                 // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize; nextColumn++) {
-                    MatrixCell nextCell = handler.getMatrix().get(nextColumn, range);
+                    MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                     Object element = nextCell.getElement();
                     if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
-                        MatrixCell quotient = calculateQuotientForCell(firstCell, nextCell);
+                        MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
                         MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                         multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
+                        sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     }
                 }
             } while (!isRowCleared(range));
@@ -85,8 +86,8 @@ public class SmithMatrixForm extends MatrixForm {
     private boolean isColumnCleared(int range) throws Exception {
         boolean cleared = true;
         IMatrix matrix = getHandler().getMatrix();
-        for (int row = range; row < matrix.getRowNumber(); row++) {
-            Object element = matrix.get(range, row).getElement();
+        for (int row = range + 1; row < matrix.getRowNumber(); row++) {
+            Object element = matrix.get(row, range).getElement();
             if(getHandler().compareElements(element, Polynomial.getZeroPolynomial()) != 0) {
                 cleared = false;
             }
@@ -97,8 +98,8 @@ public class SmithMatrixForm extends MatrixForm {
     private boolean isRowCleared(int range) throws Exception {
         boolean cleared = true;
         IMatrix matrix = getHandler().getMatrix();
-        for (int column = range; column < matrix.getRowNumber(); column++) {
-            Object element = matrix.get(column, range).getElement();
+        for (int column = range + 1; column < matrix.getRowNumber(); column++) {
+            Object element = matrix.get(range, column).getElement();
             if(getHandler().compareElements(element, Polynomial.getZeroPolynomial()) != 0) {
                 cleared = false;
             }
@@ -108,10 +109,10 @@ public class SmithMatrixForm extends MatrixForm {
 
     private void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
         ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), row1, cell.getElement());
-        multiplyRowWithElementCommand.execute();
+        MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
         getCommands().add(multiplyRowWithElementCommand);
 
-        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row2, row1);
+        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row2, resultRow);
         addRowsCommand.execute();
         getCommands().add(addRowsCommand);
     }
