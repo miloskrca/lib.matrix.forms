@@ -37,7 +37,7 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     @Override
     protected Object multiplyElements(Object element1, Object element2) throws Exception {
-        String input = "(" + element1.toString() + ") * (" + element2.toString() + ")";
+        String input = "Expand[(" + element1.toString() + ") * (" + element2.toString() + ")]";
         return generateObjectFromString(input);
     }
 

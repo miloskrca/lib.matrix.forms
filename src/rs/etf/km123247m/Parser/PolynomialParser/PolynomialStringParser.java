@@ -16,7 +16,7 @@ public class PolynomialStringParser extends StringParser {
     short sign;
     int pow;
     char var;
-    int coefficient;
+    String coefficient;
 
     @Override
     protected void preInputParseChecks(String inputString) throws Exception {
@@ -80,7 +80,7 @@ public class PolynomialStringParser extends StringParser {
         sign = Term.PLUS;
         pow = 1;
         var = Term.NULL;
-        coefficient = 1;
+        coefficient = "1";
     }
 
     private void handleCoefficientAndVar(String parts) throws Exception {
@@ -88,7 +88,7 @@ public class PolynomialStringParser extends StringParser {
             if(Character.isLetter(parts.charAt(0))) {
                 var = parts.charAt(0);
             } else if(Character.isDigit(parts.charAt(0))) {
-                coefficient = Integer.parseInt(String.valueOf(parts.charAt(0)));
+                coefficient = String.valueOf(parts.charAt(0));
             } else {
                 throw new Exception("qurac3");
             }
@@ -97,7 +97,7 @@ public class PolynomialStringParser extends StringParser {
                 String[] subParts = parts.split("\\*");
                 if(subParts.length == 2) {
                     if(isNumeric(subParts[0])) {
-                        coefficient = Integer.parseInt(subParts[0]);
+                        coefficient = subParts[0];
                     } else {
                         throw new Exception("qurac7");
                     }
@@ -110,7 +110,7 @@ public class PolynomialStringParser extends StringParser {
                     throw new Exception("qurac5");
                 }
             } else if(isNumeric(parts)) {
-                coefficient = Integer.parseInt(parts);
+                coefficient = parts;
             } else {
                 throw new Exception("qurac4");
             }
@@ -119,7 +119,7 @@ public class PolynomialStringParser extends StringParser {
 
 
     private boolean isNumeric(String s) {
-        return /*s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || */s.matches("[-+]?\\d*\\.?\\d+");
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
     }
 
     @Override

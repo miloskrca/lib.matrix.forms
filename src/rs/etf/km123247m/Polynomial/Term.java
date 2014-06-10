@@ -15,12 +15,11 @@ public class Term implements Comparable {
     public static char NULL = '\u0000';
 
     private int power;
-    // TODO: coefficient should be able to be a rational number
-    private int coefficient;
+    private String coefficient;
     private char variable;
     private short sign;
 
-    public Term(short sign, int coefficient, char variable, int power) {
+    public Term(short sign, String coefficient, char variable, int power) {
         this.setSign(sign);
         this.setVariable(variable);
         this.setPower(power);
@@ -35,11 +34,11 @@ public class Term implements Comparable {
         this.power = power;
     }
 
-    public int getCoefficient() {
+    public String getCoefficient() {
         return coefficient;
     }
 
-    public void setCoefficient(int coefficient) {
+    public void setCoefficient(String coefficient) {
         this.coefficient = coefficient;
     }
 
@@ -62,7 +61,7 @@ public class Term implements Comparable {
     @Override
     public int compareTo(Object o) {
         Term t = (Term) o;
-        if (t.getCoefficient() == coefficient
+        if (t.getCoefficient().equals(coefficient)
                 && t.getPower() == power
                 && t.getSign() == sign
                 && t.getVariable() == variable) {
@@ -75,7 +74,7 @@ public class Term implements Comparable {
     }
 
     public static Term getZeroTerm() {
-        return new Term(PLUS, 0, NULL, 1);
+        return new Term(PLUS, "0", NULL, 1);
     }
 
     public String toString() {
@@ -83,9 +82,9 @@ public class Term implements Comparable {
         String variableString = power == 0 ? "" : variable == NULL ? "" : String.valueOf(variable);
         String coefficientString;
         if(variable == NULL) {
-            coefficientString = String.valueOf(coefficient);
+            coefficientString = coefficient;
         } else {
-            coefficientString = coefficient == 1 ? "" : coefficient + "*";
+            coefficientString = coefficient.equals("1") ? "" : coefficient + "*";
         }
         String powerString = power == 1 ? "" : power == 0 ? "" : "^" + power;
 

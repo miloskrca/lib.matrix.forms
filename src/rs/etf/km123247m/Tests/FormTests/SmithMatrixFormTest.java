@@ -9,8 +9,6 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observers.Event.FormEvent;
-import rs.etf.km123247m.Observers.FormObserver;
-import rs.etf.km123247m.Observers.FormSubject;
 import rs.etf.km123247m.Parser.MatrixParser.PolynomialMatrixParser.PolynomialMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
@@ -21,6 +19,7 @@ import java.util.Observer;
 public class SmithMatrixFormTest {
 
     private MatrixForm form;
+    private String lastOutput = "";
 
     @Before
     public void setUp() throws Exception {
@@ -54,7 +53,10 @@ public class SmithMatrixFormTest {
                         System.out.println("Exception: " + event.getMessage());
                         break;
                 }
-                System.out.println(((MatrixHandler)event.getObject()).getMatrix());
+                // TODO: Fix SmithMatrixFormTestMatrix.txt not passing this assertion
+                assert !lastOutput.equals(((MatrixHandler)event.getObject()).getMatrix().toString());
+                lastOutput = ((MatrixHandler)event.getObject()).getMatrix().toString();
+                System.out.println(lastOutput);
             }
         };
         form.addObserver(observer);
