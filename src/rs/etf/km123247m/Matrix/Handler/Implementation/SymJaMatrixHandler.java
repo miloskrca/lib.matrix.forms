@@ -7,7 +7,7 @@ import org.matheclipse.core.form.output.StringBufferWriter;
 import org.matheclipse.core.interfaces.IExpr;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Parser.PolynomialParser.PolynomialStringParser;
+import rs.etf.km123247m.Parser.ObjectParser.PolynomialStringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**
@@ -20,9 +20,7 @@ import rs.etf.km123247m.Polynomial.Polynomial;
  */
 public class SymJaMatrixHandler extends MatrixHandler {
 
-    private PolynomialStringParser polynomialStringParser = new PolynomialStringParser();
     private EvalUtilities util = new EvalUtilities();
-
 
     public SymJaMatrixHandler(IMatrix matrix) {
         super(matrix);
@@ -31,46 +29,37 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     @Override
     protected Object addElements(Object element1, Object element2) throws Exception {
-        String input = element1.toString() + " + " + element2.toString();
-        return generateObjectFromString(input);
+        IExpr result = ((IExpr)element1).and((IExpr) element2);
+        return result;
     }
 
     @Override
     protected Object multiplyElements(Object element1, Object element2) throws Exception {
-        String input = "Expand[(" + element1.toString() + ") * (" + element2.toString() + ")]";
-        return generateObjectFromString(input);
+        IExpr result = ((IExpr)element1).multiply((IExpr)element2);
+        return result;
     }
 
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
-        String input = "PolynomialQuotient[" + element1.toString() + "," + element2.toString() + "]";
-        return generateObjectFromString(input);
+        IExpr result = ((IExpr)element1).divide((IExpr) element2);
+        return result;
     }
 
     @Override
     public Object calculateNegativeElement(Object element) throws Exception {
-        String input = "-1 * (" + element.toString() + ")";
-        return generateObjectFromString(input);
+        IExpr result = ((IExpr)element).negate();
+        return result;
     }
 
     @Override
-    public Object getZeroElement() {
-        return Polynomial.getZeroPolynomial();
+    public Object getZeroElement() throws Exception {
+        IExpr result = util.evaluate(Polynomial.getZeroPolynomial().toString());
+        return result;
     }
 
     @Override
     public int compareElements(Object element1, Object element2) {
-        return ((Polynomial)element1).compareTo(element2);
+        int result = ((IExpr)element1).compareTo((IExpr) element2);
+        return result;
     }
-
-    protected Object generateObjectFromString(String input) throws Exception {
-        IExpr result = util.evaluate(input);
-        StringBufferWriter buf = new StringBufferWriter();
-        OutputFormFactory.get().convert(buf, result);
-        String output = buf.toString();
-
-        polynomialStringParser.setInputString(output);
-        return polynomialStringParser.parseInput();
-    }
-
 }

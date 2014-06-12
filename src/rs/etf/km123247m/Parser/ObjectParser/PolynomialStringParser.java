@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Parser.PolynomialParser;
+package rs.etf.km123247m.Parser.ObjectParser;
 
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;

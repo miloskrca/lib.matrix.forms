@@ -1,7 +1,7 @@
-package rs.etf.km123247m.Parser.MatrixParser.PolynomialMatrixParser;
+package rs.etf.km123247m.Parser.MatrixParser.Polynomial;
 
 import rs.etf.km123247m.Parser.MatrixParser.MatrixStringParser;
-import rs.etf.km123247m.Parser.PolynomialParser.PolynomialStringParser;
+import rs.etf.km123247m.Parser.ObjectParser.PolynomialStringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**

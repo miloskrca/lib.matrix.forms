@@ -98,7 +98,7 @@ public abstract class MatrixHandler {
 
     public abstract Object calculateNegativeElement(Object element) throws Exception;
 
-    public abstract Object getZeroElement();
+    public abstract Object getZeroElement() throws Exception;
 
     public abstract int compareElements(Object element1, Object element2);
 }

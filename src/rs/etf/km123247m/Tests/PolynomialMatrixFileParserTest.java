@@ -4,7 +4,7 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Parser.MatrixParser.PolynomialMatrixParser.PolynomialMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.Polynomial.PolynomialMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
 import rs.etf.km123247m.Polynomial.Term;

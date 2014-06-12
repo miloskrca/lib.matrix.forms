@@ -7,7 +7,6 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Observers.Event.FormEvent;
-import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**
  * Created by Miloš Krsmanović.
@@ -88,7 +87,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int row = range + 1; row < matrix.getRowNumber(); row++) {
             Object element = matrix.get(row, range).getElement();
-            if(getHandler().compareElements(element, Polynomial.getZeroPolynomial()) != 0) {
+            if(getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
                 cleared = false;
             }
         }
@@ -100,7 +99,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int column = range + 1; column < matrix.getRowNumber(); column++) {
             Object element = matrix.get(range, column).getElement();
-            if(getHandler().compareElements(element, Polynomial.getZeroPolynomial()) != 0) {
+            if(getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
                 cleared = false;
             }
         }
