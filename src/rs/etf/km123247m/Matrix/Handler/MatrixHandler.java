@@ -59,13 +59,15 @@ public abstract class MatrixHandler {
         return resultRow;
     }
 
-    public void multipleColumnWithElement(int column, Object element) throws Exception {
+    public MatrixCell[] multipleColumnWithElement(int column, Object element) throws Exception {
         int numOfRows = matrix.getRowNumber();
+        MatrixCell[] resultColumn = new MatrixCell[numOfRows];
         for (int row = 0; row < numOfRows; row++) {
             Object result = multiplyElements(matrix.get(row, column).getElement(), element);
             MatrixCell resultCell = new MatrixCell(row, column, result);
-            matrix.set(resultCell);
+            resultColumn[row] = resultCell;
         }
+        return resultColumn;
     }
 
     public void addRows(int row1, MatrixCell[] objectRow) throws Exception {
@@ -77,10 +79,10 @@ public abstract class MatrixHandler {
         }
     }
 
-    public void addColumns(int column1, int column2) throws Exception {
+    public void addColumns(int column1, MatrixCell[] objectColumn) throws Exception {
         int numOfRows = matrix.getRowNumber();
         for (int row = 0; row < numOfRows; row++) {
-            Object result = addElements(matrix.get(row, column1).getElement(), matrix.get(row, column2).getElement());
+            Object result = addElements(matrix.get(row, column1).getElement(), objectColumn[row].getElement());
             MatrixCell resultCell = new MatrixCell(row, column1, result);
             matrix.set(resultCell);
         }

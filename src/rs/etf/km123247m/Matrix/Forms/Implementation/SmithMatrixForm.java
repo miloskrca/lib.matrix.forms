@@ -67,15 +67,15 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     private void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
-        if(element.getRow() == 0 && element.getColumn() == 0) {
+        if(element.getRow() == range && element.getColumn() == range) {
             return;
         }
-        if(element.getColumn() != 0) {
+        if(element.getColumn() != range) {
             ICommand command = new SwitchColumnsCommand(getHandler(), range, element.getColumn());
             command.execute();
             getCommands().add(command);
         }
-        if (element.getRow() != 0) {
+        if (element.getRow() != range) {
             ICommand command = new SwitchRowsCommand(getHandler(), range, element.getRow());
             command.execute();
             getCommands().add(command);
@@ -118,10 +118,10 @@ public class SmithMatrixForm extends MatrixForm {
 
     private void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
         ICommand multiplyColumnWithElementCommand = new MultiplyColumnWithElementCommand(getHandler(), column1, element.getElement());
-        multiplyColumnWithElementCommand.execute();
+        MatrixCell[] resultColumn = (MatrixCell[]) multiplyColumnWithElementCommand.execute();
         getCommands().add(multiplyColumnWithElementCommand);
 
-        ICommand addColumnsCommand = new AddColumnsCommand(getHandler(), column2, column1);
+        ICommand addColumnsCommand = new AddColumnsCommand(getHandler(), column2, resultColumn);
         addColumnsCommand.execute();
         getCommands().add(addColumnsCommand);
     }
@@ -137,20 +137,20 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     private MatrixCell findCellWithSmallestElement(int range) throws Exception {
-        Object smallestElement = getHandler().getMatrix().get(range, range).getElement();
-        int foundRow = range;
-        int foundColumn = range;
+        MatrixCell smallestCell = getHandler().getMatrix().get(range, range);
         IMatrix matrix = getHandler().getMatrix();
-        for (int row = range; row < matrix.getRowNumber(); row++) {
+        int rowNumber = matrix.getRowNumber();
+        for (int row = range; row < rowNumber; row++) {
             for (int column = range; column < matrix.getColumnNumber(); column++) {
-                Object element = matrix.get(row, column).getElement();
-                if(getHandler().compareElements(element, smallestElement) == -1) {
-                    foundRow = row;
-                    foundColumn = column;
-                    smallestElement = element;
+                if(row == range && column == range) {
+                    continue;
+                }
+                MatrixCell cell = matrix.get(row, column);
+                if(getHandler().compareElements(cell.getElement(), smallestCell.getElement()) == -1) {
+                    smallestCell = cell;
                 }
             }
         }
-        return new MatrixCell(foundRow, foundColumn, smallestElement);
+        return smallestCell;
     }
 }

@@ -35,27 +35,23 @@ public class SymJaLibraryTest {
         F.initSymbols(null);
 
         try {
-            String input = "Expand[(3*x+3)*(-1/3*x+1/3)]";
-            StringBufferWriter buf = new StringBufferWriter();
-            EvalUtilities util = new EvalUtilities();
-            IExpr result = util.evaluate(input);
-            OutputFormFactory.get().convert(buf, result);
-            String output = buf.toString();
-            assert output.equals("-x^2+1");
-
-            input = "Expand[(-4)*x]";//"Expand[(-1)*(4*x)]";
-            buf = new StringBufferWriter();
-            result = util.evaluate(input);
-            OutputFormFactory.get().convert(buf, result);
-            output = buf.toString();
-//            assert output.equals("-4*x");
-
+            assertValue("Plus[Power[x, 2], Times[x, Times[-1, x]]]", "0");
+            assertValue("Plus[Power[x, 3], Times[-1, x, Plus[x, Power[x, 2]]]]", "-x^2");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    protected void assertValue(String input, String expectedOutput) throws Exception {
+        StringBufferWriter buf = new StringBufferWriter();
+        EvalUtilities util = new EvalUtilities();
+        IExpr result = util.evaluate("Expand[" + input + "]");
+        OutputFormFactory.get().convert(buf, result);
+        String output = buf.toString();
+        assert output.equals(expectedOutput);
     }
 
 }

@@ -4,6 +4,8 @@ import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Observers.Event.FormEvent;
 import rs.etf.km123247m.Observers.FormSubject;
+
+import java.util.Arrays;
 import java.util.LinkedList;
 
 /**
@@ -36,7 +38,7 @@ public abstract class MatrixForm extends FormSubject {
             process();
             sendUpdate(FormEvent.PROCESSING_END, null);
         } catch (Exception exception) {
-            sendUpdate(FormEvent.PROCESSING_EXCEPTION, exception.getMessage());
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, exception.getMessage() + Arrays.toString(exception.getStackTrace()));
         }
     }
 
