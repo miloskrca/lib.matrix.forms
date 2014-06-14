@@ -59,12 +59,13 @@ public class SmithMatrixForm extends MatrixForm {
             } while (!isRowCleared(range));
         }
 
-
-        // TODO: finish the second part of the algorithm
+        if(!allElementsOnDiagonalAreDividingTheNextElement()) {
+            // TODO: finish the second part of the algorithm
+        }
 
     }
 
-    private void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
+    protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
         if(element.getRow() == range && element.getColumn() == range) {
             return;
         }
@@ -80,7 +81,7 @@ public class SmithMatrixForm extends MatrixForm {
         }
     }
 
-    private boolean isColumnCleared(int range) throws Exception {
+    protected boolean isColumnCleared(int range) throws Exception {
         boolean cleared = true;
         IMatrix matrix = getHandler().getMatrix();
         for (int row = range + 1; row < matrix.getRowNumber(); row++) {
@@ -92,7 +93,7 @@ public class SmithMatrixForm extends MatrixForm {
         return cleared;
     }
 
-    private boolean isRowCleared(int range) throws Exception {
+    protected boolean isRowCleared(int range) throws Exception {
         boolean cleared = true;
         IMatrix matrix = getHandler().getMatrix();
         for (int column = range + 1; column < matrix.getRowNumber(); column++) {
@@ -104,7 +105,7 @@ public class SmithMatrixForm extends MatrixForm {
         return cleared;
     }
 
-    private void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
+    protected void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
         ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), row1, cell.getElement());
         MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
         getCommands().add(multiplyRowWithElementCommand);
@@ -114,7 +115,7 @@ public class SmithMatrixForm extends MatrixForm {
         getCommands().add(addRowsCommand);
     }
 
-    private void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
+    protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
         ICommand multiplyColumnWithElementCommand = new MultiplyColumnWithElementCommand(getHandler(), column1, element.getElement());
         MatrixCell[] resultColumn = (MatrixCell[]) multiplyColumnWithElementCommand.execute();
         getCommands().add(multiplyColumnWithElementCommand);
@@ -124,22 +125,23 @@ public class SmithMatrixForm extends MatrixForm {
         getCommands().add(addColumnsCommand);
     }
 
-    private MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
+    protected MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
         Object object = getHandler().divideCellElements(dividend.getElement(), divisor.getElement());
         return new MatrixCell(dividend.getRow(), dividend.getColumn(), object);
     }
 
-    private MatrixCell calculateNegativeCell(MatrixCell cell) throws Exception {
+    protected MatrixCell calculateNegativeCell(MatrixCell cell) throws Exception {
         Object object = getHandler().calculateNegativeElement(cell.getElement());
         return new MatrixCell(cell.getRow(), cell.getColumn(), object);
     }
 
-    private MatrixCell findCellWithElementWithSmallestPower(int range) throws Exception {
-        MatrixCell smallestCell = getHandler().getMatrix().get(range, range);
+    protected MatrixCell findCellWithElementWithSmallestPower(int range) throws Exception {
         IMatrix matrix = getHandler().getMatrix();
+        MatrixCell smallestCell = matrix.get(range, range);
         int rowNumber = matrix.getRowNumber();
+        int columnNumber = matrix.getColumnNumber();
         for (int row = range; row < rowNumber; row++) {
-            for (int column = range; column < matrix.getColumnNumber(); column++) {
+            for (int column = range; column < columnNumber; column++) {
                 if(row == range && column == range) {
                     continue;
                 }
@@ -151,4 +153,31 @@ public class SmithMatrixForm extends MatrixForm {
         }
         return smallestCell;
     }
+
+    protected boolean allElementsOnDiagonalAreDividingTheNextElement() throws Exception {
+        boolean allClear = true;
+        IMatrix matrix = getHandler().getMatrix();
+        MatrixCell lastCell = matrix.get(0, 0);
+        int rowNumber = matrix.getRowNumber();
+        int columnNumber = matrix.getColumnNumber();
+        for (int row = 1; row < rowNumber; row++) {
+            if(!allClear) {
+                break;
+            }
+            for (int column = 1; column < columnNumber; column++) {
+                if(row != column) {
+                    continue;
+                }
+                MatrixCell cell = matrix.get(row, column);
+                Object remainder = getHandler().divideCellElementsAndReturnRemainder(cell.getElement(), lastCell.getElement());
+                if(!getHandler().isZeroElement(remainder)) {
+                    allClear = false;
+                    break;
+                }
+                lastCell = cell;
+            }
+        }
+        return allClear;
+    }
+
 }

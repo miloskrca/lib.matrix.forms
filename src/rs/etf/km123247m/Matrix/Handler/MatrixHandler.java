@@ -92,6 +92,8 @@ public abstract class MatrixHandler {
         return divideElements(object1, object2);
     }
 
+    public abstract Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception;
+
     protected abstract Object addElements(Object element1, Object element2) throws Exception;
 
     protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;

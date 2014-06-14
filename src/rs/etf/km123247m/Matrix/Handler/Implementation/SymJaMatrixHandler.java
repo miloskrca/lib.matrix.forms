@@ -46,6 +46,12 @@ public class SymJaMatrixHandler extends MatrixHandler {
     }
 
     @Override
+    public Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception {
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + "]");
+        return results.getAt(2);
+    }
+
+    @Override
     public Object calculateNegativeElement(Object element) throws Exception {
         IExpr result = evaluate(((IExpr) element).negate());
         return result;
