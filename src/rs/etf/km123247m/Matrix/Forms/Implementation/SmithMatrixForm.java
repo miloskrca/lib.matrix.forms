@@ -29,14 +29,13 @@ public class SmithMatrixForm extends MatrixForm {
             do {
                 do {
                     // Moving smallest to start...
-                    MatrixCell smallestCell = findCellWithSmallestElement(range);
+                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range);
                     moveCellToStartPosition(range, smallestCell);
                     sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize; nextRow++) {
                         MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
-                        Object element = nextCell.getElement();
-                        if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+                        if (!getHandler().isZeroElement(nextCell.getElement())) {
                             MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                             MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
@@ -50,8 +49,7 @@ public class SmithMatrixForm extends MatrixForm {
                 // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize; nextColumn++) {
                     MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
-                    Object element = nextCell.getElement();
-                    if (getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+                    if (!getHandler().isZeroElement(nextCell.getElement())) {
                         MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
                         MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                         multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
@@ -87,7 +85,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int row = range + 1; row < matrix.getRowNumber(); row++) {
             Object element = matrix.get(row, range).getElement();
-            if(getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+            if(!getHandler().isZeroElement(element)) {
                 cleared = false;
             }
         }
@@ -99,7 +97,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int column = range + 1; column < matrix.getRowNumber(); column++) {
             Object element = matrix.get(range, column).getElement();
-            if(getHandler().compareElements(element, getHandler().getZeroElement()) != 0) {
+            if(!getHandler().isZeroElement(element)) {
                 cleared = false;
             }
         }
@@ -136,7 +134,7 @@ public class SmithMatrixForm extends MatrixForm {
         return new MatrixCell(cell.getRow(), cell.getColumn(), object);
     }
 
-    private MatrixCell findCellWithSmallestElement(int range) throws Exception {
+    private MatrixCell findCellWithElementWithSmallestPower(int range) throws Exception {
         MatrixCell smallestCell = getHandler().getMatrix().get(range, range);
         IMatrix matrix = getHandler().getMatrix();
         int rowNumber = matrix.getRowNumber();
@@ -146,7 +144,7 @@ public class SmithMatrixForm extends MatrixForm {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
-                if(getHandler().compareElements(cell.getElement(), smallestCell.getElement()) == -1) {
+                if(getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1) {
                     smallestCell = cell;
                 }
             }

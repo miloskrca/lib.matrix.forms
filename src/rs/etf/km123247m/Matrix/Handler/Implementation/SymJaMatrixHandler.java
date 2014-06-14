@@ -41,8 +41,8 @@ public class SymJaMatrixHandler extends MatrixHandler {
 
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
-        IExpr result = evaluate(((IExpr) element1).divide((IExpr) element2));
-        return result;
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + "]");
+        return results.getAt(1);
     }
 
     @Override
@@ -52,16 +52,16 @@ public class SymJaMatrixHandler extends MatrixHandler {
     }
 
     @Override
-    public Object getZeroElement() throws Exception {
-        IExpr result = evaluate(Polynomial.getZeroPolynomial());
+    public int comparePowersOfElements(Object element1, Object element2) {
+        int power1 = getHighestPower(element1);
+        int power2 = getHighestPower(element2);
+        int result = power1 > power2 ? 1 : (power1 < power2 ? -1 : 0);
         return result;
     }
 
     @Override
-    public int compareElements(Object element1, Object element2) {
-        int power1 = getHighestPower(element1);
-        int power2 = getHighestPower(element2);
-        int result = power1 > power2 ? 1 : (power1 < power2 ? -1 : 0);
+    public boolean isZeroElement(Object element) {
+        boolean result = Polynomial.getZeroPolynomial().toString().equals(element.toString());
         return result;
     }
 
@@ -73,16 +73,24 @@ public class SymJaMatrixHandler extends MatrixHandler {
         int power = 1;
         String exprString = expr.toString().replace(" ", "");
 
-        Pattern p = Pattern.compile("Power\\[(.),(\\d+)\\]");
-        Matcher m = p.matcher(exprString);
+        if(isNumeric(exprString)) {
+            power = 0;
+        } else {
+            Pattern p = Pattern.compile("Power\\[(.),(\\d+)\\]");
+            Matcher m = p.matcher(exprString);
 
-        while(m.find()) {
-            int groupPower = Integer.parseInt(m.group(2));
-            if(groupPower > power) {
-                power = groupPower;
+            while(m.find()) {
+                int groupPower = Integer.parseInt(m.group(2));
+                if(groupPower > power) {
+                    power = groupPower;
+                }
             }
         }
 
         return power;
+    }
+
+    protected boolean isNumeric(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
     }
 }

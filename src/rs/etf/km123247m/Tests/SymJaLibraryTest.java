@@ -37,6 +37,7 @@ public class SymJaLibraryTest {
         try {
             assertValue("Plus[Power[x, 2], Times[x, Times[-1, x]]]", "0");
             assertValue("Plus[Power[x, 3], Times[-1, x, Plus[x, Power[x, 2]]]]", "-x^2");
+            assertValue("PolynomialQuotientRemainder[Plus[1, x], x]", "{1,1}");
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {

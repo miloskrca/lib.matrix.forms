@@ -100,7 +100,7 @@ public abstract class MatrixHandler {
 
     public abstract Object calculateNegativeElement(Object element) throws Exception;
 
-    public abstract Object getZeroElement() throws Exception;
+    public abstract int comparePowersOfElements(Object element1, Object element2);
 
-    public abstract int compareElements(Object element1, Object element2);
+    public abstract boolean isZeroElement(Object element);
 }

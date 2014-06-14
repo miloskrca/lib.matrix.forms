@@ -117,7 +117,6 @@ public class PolynomialStringParser extends StringParser {
         }
     }
 
-
     private boolean isNumeric(String s) {
         return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
     }
