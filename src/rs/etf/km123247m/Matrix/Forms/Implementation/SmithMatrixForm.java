@@ -3,6 +3,7 @@ package rs.etf.km123247m.Matrix.Forms.Implementation;
 import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Command.MatrixCommand.*;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
+import rs.etf.km123247m.Matrix.Handler.Implementation.PolynomialMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
@@ -29,7 +30,7 @@ public class SmithMatrixForm extends MatrixForm {
             do {
                 do {
                     // Moving smallest to start...
-                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range);
+                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
                     moveCellToStartPosition(range, smallestCell);
                     sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     // make all elements, except for the first one, in the left outmost column equal to 0
@@ -60,7 +61,13 @@ public class SmithMatrixForm extends MatrixForm {
         }
 
         if(!allElementsOnDiagonalAreDividingTheNextElement()) {
-            // TODO: finish the second part of the algorithm
+            for (int range = 0; range < matrixSize - 1; range++) {
+                if(isPowerGreaterThenPowerOnNextElement(range)) {
+                    addTwoRows(range, range + 1);
+                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
+                    // TODO: finish the second part of the algorithm
+                }
+            }
         }
 
     }
@@ -110,9 +117,9 @@ public class SmithMatrixForm extends MatrixForm {
         MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
         getCommands().add(multiplyRowWithElementCommand);
 
-        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row2, resultRow);
-        addRowsCommand.execute();
-        getCommands().add(addRowsCommand);
+        ICommand addRowOfObjectsToRowCommand = new AddRowOfObjectsToRowCommand(getHandler(), row2, resultRow);
+        addRowOfObjectsToRowCommand.execute();
+        getCommands().add(addRowOfObjectsToRowCommand);
     }
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
@@ -135,14 +142,12 @@ public class SmithMatrixForm extends MatrixForm {
         return new MatrixCell(cell.getRow(), cell.getColumn(), object);
     }
 
-    protected MatrixCell findCellWithElementWithSmallestPower(int range) throws Exception {
+    protected MatrixCell findCellWithElementWithSmallestPower(int rangeFrom, int rangeTo) throws Exception {
         IMatrix matrix = getHandler().getMatrix();
-        MatrixCell smallestCell = matrix.get(range, range);
-        int rowNumber = matrix.getRowNumber();
-        int columnNumber = matrix.getColumnNumber();
-        for (int row = range; row < rowNumber; row++) {
-            for (int column = range; column < columnNumber; column++) {
-                if(row == range && column == range) {
+        MatrixCell smallestCell = matrix.get(rangeFrom, rangeFrom);
+        for (int row = rangeFrom; row < rangeTo; row++) {
+            for (int column = rangeFrom; column < rangeTo; column++) {
+                if(row == rangeFrom && column == rangeFrom) {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
@@ -178,6 +183,19 @@ public class SmithMatrixForm extends MatrixForm {
             }
         }
         return allClear;
+    }
+
+    protected boolean isPowerGreaterThenPowerOnNextElement(int range) throws Exception {
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        MatrixCell cell1 = handler.getMatrix().get(range, range);
+        MatrixCell cell2 = handler.getMatrix().get(range + 1, range + 1);
+        return handler.getPower(cell1) > handler.getPower(cell2);
+    }
+
+    protected void addTwoRows(int row1, int row2) throws Exception {
+        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row1, row2);
+        addRowsCommand.execute();
+        getCommands().add(addRowsCommand);
     }
 
 }

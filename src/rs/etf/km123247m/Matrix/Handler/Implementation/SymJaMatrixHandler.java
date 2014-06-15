@@ -3,7 +3,6 @@ package rs.etf.km123247m.Matrix.Handler.Implementation;
 import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.expression.F;
 import org.matheclipse.core.interfaces.IExpr;
-import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Polynomial.Polynomial;
 
@@ -18,7 +17,7 @@ import java.util.regex.Pattern;
  *
  * package: rs.etf.km123247m.Matrix.Handler.Implementation.SymJa
  */
-public class SymJaMatrixHandler extends MatrixHandler {
+public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     private EvalUtilities util = new EvalUtilities();
 
@@ -75,6 +74,7 @@ public class SymJaMatrixHandler extends MatrixHandler {
         return util.evaluate("Expand[" + expr.toString() + "]");
     }
 
+    @Override
     protected int getHighestPower(Object expr) {
         int power = 1;
         String exprString = expr.toString().replace(" ", "");
