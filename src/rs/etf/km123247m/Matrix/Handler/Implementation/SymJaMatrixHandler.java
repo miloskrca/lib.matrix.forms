@@ -41,7 +41,14 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
         IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + "]");
-        return results.getAt(1);
+        // If the method is successful it will return [List, quotient, remainder],
+        // if not it will return [PolynomialQuotientRemainder, element1, element2]
+        if(results.getAt(0).toString().equals("List")) {
+            results = results.getAt(1);
+        } else {
+            results = evaluate(element1.toString() + " / " + element2.toString());
+        }
+        return results;
     }
 
     @Override
@@ -68,6 +75,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public boolean isZeroElement(Object element) {
         boolean result = Polynomial.getZeroPolynomial().toString().equals(element.toString());
         return result;
+    }
+
+    @Override
+    protected void reduceLeadingCoefficientOfElementToOne(Object element) {
+        //TODO: reduceLeadingCoefficientOfElementToOne
     }
 
     protected IExpr evaluate(Object expr) throws Exception {

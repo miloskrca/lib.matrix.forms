@@ -60,23 +60,60 @@ public class SmithMatrixForm extends MatrixForm {
             } while (!isRowCleared(range));
         }
 
-        if(!allElementsOnDiagonalAreDividingTheNextElement()) {
+        if (!allElementsOnDiagonalAreDividingTheNextElement()) {
             for (int range = 0; range < matrixSize - 1; range++) {
-                if(isPowerGreaterThenPowerOnNextElement(range)) {
+                if (isPowerGreaterThenPowerOnNextElement(range)) {
                     addTwoRows(range, range + 1);
                     sendUpdate(FormEvent.PROCESSING_STATUS, null);
-                    // TODO: finish the second part of the algorithm
+
+                    int tempMatrixSize = range + 2;
+                    do {
+                        do {
+                            // Moving smallest to start...
+                            MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                            moveCellToStartPosition(range, smallestCell);
+                            sendUpdate(FormEvent.PROCESSING_STATUS, null);
+
+                            // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
+                            for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
+                                MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
+                                if (!getHandler().isZeroElement(nextCell.getElement())) {
+                                    MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
+                                    MatrixCell negativeQuotient = calculateNegativeCell(quotient);
+                                    multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
+                                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
+                                }
+                            }
+                        } while (!isRowCleared(range));
+
+                        MatrixCell firstCell = handler.getMatrix().get(range, range);
+                        for (int nextRow = range + 1; nextRow < tempMatrixSize; nextRow++) {
+                            MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
+                            if (!getHandler().isZeroElement(nextCell.getElement())) {
+                                MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
+                                MatrixCell negativeQuotient = calculateNegativeCell(quotient);
+                                multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
+                                sendUpdate(FormEvent.PROCESSING_STATUS, null);
+                            }
+                        }
+                    } while (!isColumnCleared(range));
                 }
             }
         }
+        fixLeadingCoefficientOfFirstElement();
+    }
 
+    private void fixLeadingCoefficientOfFirstElement() throws Exception {
+        ICommand reduceLeadingCoefficientToOne = new ReduceLeadingCoefficientToOne(getHandler());
+        reduceLeadingCoefficientToOne.execute();
+        getCommands().add(reduceLeadingCoefficientToOne);
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
-        if(element.getRow() == range && element.getColumn() == range) {
+        if (element.getRow() == range && element.getColumn() == range) {
             return;
         }
-        if(element.getColumn() != range) {
+        if (element.getColumn() != range) {
             ICommand command = new SwitchColumnsCommand(getHandler(), range, element.getColumn());
             command.execute();
             getCommands().add(command);
@@ -93,7 +130,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int row = range + 1; row < matrix.getRowNumber(); row++) {
             Object element = matrix.get(row, range).getElement();
-            if(!getHandler().isZeroElement(element)) {
+            if (!getHandler().isZeroElement(element)) {
                 cleared = false;
             }
         }
@@ -105,7 +142,7 @@ public class SmithMatrixForm extends MatrixForm {
         IMatrix matrix = getHandler().getMatrix();
         for (int column = range + 1; column < matrix.getRowNumber(); column++) {
             Object element = matrix.get(range, column).getElement();
-            if(!getHandler().isZeroElement(element)) {
+            if (!getHandler().isZeroElement(element)) {
                 cleared = false;
             }
         }
@@ -147,11 +184,11 @@ public class SmithMatrixForm extends MatrixForm {
         MatrixCell smallestCell = matrix.get(rangeFrom, rangeFrom);
         for (int row = rangeFrom; row < rangeTo; row++) {
             for (int column = rangeFrom; column < rangeTo; column++) {
-                if(row == rangeFrom && column == rangeFrom) {
+                if (row == rangeFrom && column == rangeFrom) {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
-                if(getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1) {
+                if (getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1) {
                     smallestCell = cell;
                 }
             }
@@ -166,16 +203,16 @@ public class SmithMatrixForm extends MatrixForm {
         int rowNumber = matrix.getRowNumber();
         int columnNumber = matrix.getColumnNumber();
         for (int row = 1; row < rowNumber; row++) {
-            if(!allClear) {
+            if (!allClear) {
                 break;
             }
             for (int column = 1; column < columnNumber; column++) {
-                if(row != column) {
+                if (row != column) {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
                 Object remainder = getHandler().divideCellElementsAndReturnRemainder(cell.getElement(), lastCell.getElement());
-                if(!getHandler().isZeroElement(remainder)) {
+                if (!getHandler().isZeroElement(remainder)) {
                     allClear = false;
                     break;
                 }

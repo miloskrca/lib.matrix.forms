@@ -22,5 +22,11 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
         return getHighestPower(cell.getElement());
     }
 
-    protected abstract int getHighestPower(Object expr);
+    public void reduceLeadingCoefficientToOne() throws Exception {
+        reduceLeadingCoefficientOfElementToOne(getMatrix().get(0, 0).getElement());
+    }
+
+    protected abstract void reduceLeadingCoefficientOfElementToOne(Object element);
+
+    protected abstract int getHighestPower(Object element);
 }
