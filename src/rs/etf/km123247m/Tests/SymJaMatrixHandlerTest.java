@@ -55,6 +55,6 @@ public class SymJaMatrixHandlerTest {
 
         coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 1)).toString();
         assert "1".equals(coefficient);
-
+       //TODO: Do even better testing with more complicated test cases
     }
 }

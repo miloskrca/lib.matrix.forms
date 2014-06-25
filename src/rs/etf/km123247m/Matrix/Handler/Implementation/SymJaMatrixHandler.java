@@ -75,14 +75,13 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected Object getLeadingCoefficientOfElement(Object element) throws Exception {
-        return getLeadingCoefficientOfElementRecursive((IExpr) element)[0];
+        return getLeadingCoefficientOfElementRecursive((IExpr) element).getCoefficient();
     }
 
-    protected Object[] getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
-        //TODO: make this function prettier
+    protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
         IExpr lowestCoefficient = util.evaluate("1");
         int lowestPower = 9999;
-        ArrayList<Object[]> pairs = new ArrayList<Object[]>();
+        ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
         if(element.isNumber()) {
             lowestCoefficient = element;
             lowestPower = 1;
@@ -93,31 +92,33 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                     pairs.add(getLeadingCoefficientOfElementRecursive(leaf));
                 }
             } else if(method.equals("Times")) {
-                Object[] tempArray = new Object[2];
-                if(element.getAt(2).leaves() != null) {
-                    String method2 = element.getAt(2).getAt(0).toString();
+                if(element.leaves().size() > 2) {
+                    throw new Exception("Fix this!");
+                }
+                CoefficientPowerPair tempCoefficientPowerPair = new CoefficientPowerPair();
+                IExpr firstLeaf = element.getAt(1);
+                IExpr secondLeaf = element.getAt(2);
+                if(secondLeaf.leaves() != null) {
+                    String method2 = secondLeaf.getAt(0).toString();
                     if(method2.equals("Power")) {
-                        tempArray[1] = element.getAt(2).getAt(2);
+                        tempCoefficientPowerPair.setPower(Integer.parseInt(secondLeaf.getAt(2).toString()));
                     }
-                } else if (element.getAt(2).isSymbol()) {
-                    tempArray[1] = lowestCoefficient;
+                } else if (secondLeaf.isSymbol()) {
+                    tempCoefficientPowerPair.setPower(1);
                 }
-                if(element.getAt(1).isNumber()) {
-                    tempArray[0] = element.getAt(1);
+                if(firstLeaf.isNumber()) {
+                    tempCoefficientPowerPair.setCoefficient(firstLeaf);
                 }
-                pairs.add(tempArray);
+                pairs.add(tempCoefficientPowerPair);
             }
         }
-        for(Object[] pair: pairs) {
-           if(lowestPower > Integer.parseInt(pair[1].toString())) {
-               lowestPower = Integer.parseInt(pair[1].toString());
-               lowestCoefficient = (IExpr) pair[0];
+        for(CoefficientPowerPair pair: pairs) {
+           if(lowestPower > pair.getPower()) {
+               lowestPower = pair.getPower();
+               lowestCoefficient = pair.getCoefficient();
            }
         }
-        return new Object[] {
-            lowestCoefficient,
-            lowestPower
-        };
+        return new CoefficientPowerPair(lowestCoefficient, lowestPower);
     }
 
     protected IExpr evaluate(Object expr) throws Exception {
@@ -148,5 +149,36 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     protected boolean isNumeric(String s) {
         return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
+    }
+
+    private class CoefficientPowerPair {
+        private int power;
+        private IExpr coefficient;
+
+        private CoefficientPowerPair() {
+            this.power = -1;
+            this.coefficient = null;
+        }
+
+        private CoefficientPowerPair(IExpr coefficient, int power) {
+            this.power = power;
+            this.coefficient = coefficient;
+        }
+
+        public int getPower() {
+            return power;
+        }
+
+        public void setPower(int power) {
+            this.power = power;
+        }
+
+        public IExpr getCoefficient() {
+            return coefficient;
+        }
+
+        public void setCoefficient(IExpr coefficient) {
+            this.coefficient = coefficient;
+        }
     }
 }

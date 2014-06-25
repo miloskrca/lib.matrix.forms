@@ -104,11 +104,11 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     private void fixLeadingCoefficientOfFirstElement() throws Exception {
-        //TODO: create divideRowWithElementCommand
-//        Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-//        ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), 0, leadingCoefficient);
-//        MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
-//        getCommands().add(multiplyRowWithElementCommand);
+        //TODO: create divideRowWithElementCommand, a find a proper way to do this step
+        Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
+        ICommand divideRowWithElementCommand = new DivideRowWithElementCommand(getHandler(), 0, leadingCoefficient);
+        /*MatrixCell[] resultRow = (MatrixCell[]) */divideRowWithElementCommand.execute();
+        getCommands().add(divideRowWithElementCommand);
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
