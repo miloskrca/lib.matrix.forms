@@ -108,6 +108,13 @@ public abstract class MatrixHandler {
         }
     }
 
+    public void storeRow(int row, MatrixCell[] rowCells) throws Exception {
+        int numOfColumns = matrix.getColumnNumber();
+        for (int column = 0; column < numOfColumns; column++) {
+            matrix.set(new MatrixCell(row, column, rowCells[column].getElement()));
+        }
+    }
+
     public Object divideCellElements(Object object1, Object object2) throws Exception {
         return divideElements(object1, object2);
     }

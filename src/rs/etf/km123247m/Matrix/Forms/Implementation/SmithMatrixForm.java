@@ -7,7 +7,7 @@ import rs.etf.km123247m.Matrix.Handler.Implementation.PolynomialMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
-import rs.etf.km123247m.Observers.Event.FormEvent;
+import rs.etf.km123247m.Observer.Event.FormEvent;
 
 /**
  * Created by Miloš Krsmanović.
@@ -47,7 +47,7 @@ public class SmithMatrixForm extends MatrixForm {
                 } while (!isColumnCleared(range));
 
                 MatrixCell firstCell = handler.getMatrix().get(range, range);
-                // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
+                // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize; nextColumn++) {
                     MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                     if (!getHandler().isZeroElement(nextCell.getElement())) {
@@ -60,7 +60,7 @@ public class SmithMatrixForm extends MatrixForm {
             } while (!isRowCleared(range));
         }
 
-        if (!allElementsOnDiagonalAreDividingTheNextElement()) {
+        if (!allElementsOnTheDiagonalAreDividingTheNextElement()) {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (isPowerGreaterThenPowerOnNextElement(range)) {
                     addTwoRows(range, range + 1);
@@ -74,7 +74,7 @@ public class SmithMatrixForm extends MatrixForm {
                             moveCellToStartPosition(range, smallestCell);
                             sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
-                            // make all elements, except for the first one, in the top outmost row equal to 0 or smaller degree that first element
+                            // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
                             for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
                                 MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                                 if (!getHandler().isZeroElement(nextCell.getElement())) {
@@ -104,11 +104,10 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     private void fixLeadingCoefficientOfFirstElement() throws Exception {
-        //TODO: create divideRowWithElementCommand, a find a proper way to do this step
         Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-        ICommand divideRowWithElementCommand = new DivideRowWithElementCommand(getHandler(), 0, leadingCoefficient);
-        /*MatrixCell[] resultRow = (MatrixCell[]) */divideRowWithElementCommand.execute();
-        getCommands().add(divideRowWithElementCommand);
+        ICommand divideRowWithElementAndStoreCommand = new DivideRowWithElementAndStoreCommand(getHandler(), 0, leadingCoefficient);
+        /*MatrixCell[] resultRow = (MatrixCell[]) */divideRowWithElementAndStoreCommand.execute();
+        getCommands().add(divideRowWithElementAndStoreCommand);
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
@@ -152,21 +151,23 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     protected void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
+        // TODO: This all should be a single command so it can be used with single matrix
         ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), row1, cell.getElement());
         MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
         getCommands().add(multiplyRowWithElementCommand);
 
-        ICommand addRowOfObjectsToRowCommand = new AddRowOfObjectsToRowCommand(getHandler(), row2, resultRow);
+        ICommand addRowOfObjectsToRowCommand = new AddRowOfCellsToRowCommand(getHandler(), row2, resultRow);
         addRowOfObjectsToRowCommand.execute();
         getCommands().add(addRowOfObjectsToRowCommand);
     }
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
+        // TODO: This all should be a single command so it can be used with single matrix
         ICommand multiplyColumnWithElementCommand = new MultiplyColumnWithElementCommand(getHandler(), column1, element.getElement());
         MatrixCell[] resultColumn = (MatrixCell[]) multiplyColumnWithElementCommand.execute();
         getCommands().add(multiplyColumnWithElementCommand);
 
-        ICommand addColumnsCommand = new AddColumnsCommand(getHandler(), column2, resultColumn);
+        ICommand addColumnsCommand = new AddColumnOfCellsToColumnCommand(getHandler(), column2, resultColumn);
         addColumnsCommand.execute();
         getCommands().add(addColumnsCommand);
     }
@@ -198,7 +199,7 @@ public class SmithMatrixForm extends MatrixForm {
         return smallestCell;
     }
 
-    protected boolean allElementsOnDiagonalAreDividingTheNextElement() throws Exception {
+    protected boolean allElementsOnTheDiagonalAreDividingTheNextElement() throws Exception {
         boolean allClear = true;
         IMatrix matrix = getHandler().getMatrix();
         MatrixCell lastCell = matrix.get(0, 0);

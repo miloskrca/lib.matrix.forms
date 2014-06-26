@@ -2,8 +2,8 @@ package rs.etf.km123247m.Matrix.Forms;
 
 import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
-import rs.etf.km123247m.Observers.Event.FormEvent;
-import rs.etf.km123247m.Observers.FormSubject;
+import rs.etf.km123247m.Observer.Event.FormEvent;
+import rs.etf.km123247m.Observer.FormSubject;
 
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -43,7 +43,7 @@ public abstract class MatrixForm extends FormSubject {
     }
 
     protected void sendUpdate(int type, String message) {
-        update(new FormEvent(type, handler, message));
+        update(new FormEvent(type, this, message));
     }
 
     public LinkedList<ICommand> getCommands() {

@@ -10,21 +10,22 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class AddRowOfObjectsToRowCommand implements ICommand {
+public class AddColumnOfCellsToColumnCommand implements ICommand {
 
     private MatrixHandler handler;
-    private int row1;
-    private MatrixCell[] objectRow;
+    private int column1;
+    private MatrixCell[] objectColumn;
 
-    public AddRowOfObjectsToRowCommand(MatrixHandler handler, int row1, MatrixCell[] objectRow) {
+    // TODO: This command shouldn't exist
+    public AddColumnOfCellsToColumnCommand(MatrixHandler handler, int column1, MatrixCell[] objectColumn) {
         this.handler = handler;
-        this.row1 = row1;
-        this.objectRow = objectRow;
+        this.column1 = column1;
+        this.objectColumn = objectColumn;
     }
 
     @Override
     public Object execute() throws Exception {
-        handler.addRows(row1, objectRow);
+        handler.addColumns(column1, objectColumn);
         return null;
     }
 
@@ -32,11 +33,11 @@ public class AddRowOfObjectsToRowCommand implements ICommand {
         return handler;
     }
 
-    public int getRow1() {
-        return row1;
+    public int getColumn1() {
+        return column1;
     }
 
-    public MatrixCell[] getObjectRow() {
-        return objectRow;
+    public MatrixCell[] getObjectColumn() {
+        return objectColumn;
     }
 }

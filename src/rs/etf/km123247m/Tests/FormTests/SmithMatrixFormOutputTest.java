@@ -8,7 +8,7 @@ import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
-import rs.etf.km123247m.Observers.Event.FormEvent;
+import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
@@ -16,7 +16,7 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class SmithMatrixFormTest {
+public class SmithMatrixFormOutputTest {
 
     private String[] paths;
     private String lastOutput = "";
@@ -28,7 +28,8 @@ public class SmithMatrixFormTest {
             "./TestData/FormTests/SmithMatrixFormTestMatrix1.txt",
             "./TestData/FormTests/SmithMatrixFormTestMatrix2.txt",
             "./TestData/FormTests/SmithMatrixFormTestMatrix3.txt",
-            "./TestData/FormTests/SmithMatrixFormTestMatrix4.txt"
+            "./TestData/FormTests/SmithMatrixFormTestMatrix4.txt",
+            "./TestData/FormTests/SmithMatrixFormTestMatrix5.txt"
         };
     }
 
@@ -41,24 +42,26 @@ public class SmithMatrixFormTest {
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
             MatrixHandler handler = new SymJaMatrixHandler(matrix);
-            MatrixForm form = new SmithMatrixForm(handler);
+            MatrixForm matrixForm = new SmithMatrixForm(handler);
 
             Observer observer = new Observer() {
                 @Override
                 public void update(Observable o, Object arg) {
                     FormEvent event = (FormEvent)arg;
+                    MatrixForm form = (MatrixForm) event.getObject();
                     switch (event.getType()) {
                         case FormEvent.PROCESSING_START:
-                            System.out.println("Start");
-                            output = "PROCESSING_START";
+                            output = "PROCESSING_START\n";
+                            output += form.getHandler().getMatrix().toString();
                             break;
                         case FormEvent.PROCESSING_STATUS:
-                            System.out.println("Status");
-                            output = ((MatrixHandler)event.getObject()).getMatrix().toString();
+                            output = "PROCESSING_STATUS\n";
+                            output += form.getHandler().getMatrix().toString();
                             break;
                         case FormEvent.PROCESSING_END:
-                            System.out.println("End");
-                            output = "PROCESSING_END";
+                            output = "PROCESSING_END\n";
+                            output += form.getHandler().getMatrix().toString();
+                            output += "PROCESSING_END\n";
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
                             System.out.println("Exception: " + event.getMessage());
@@ -70,8 +73,8 @@ public class SmithMatrixFormTest {
                     System.out.println(output);
                 }
             };
-            form.addObserver(observer);
-            form.start();
+            matrixForm.addObserver(observer);
+            matrixForm.start();
         }
     }
 }

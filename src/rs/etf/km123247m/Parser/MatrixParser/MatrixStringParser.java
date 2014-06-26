@@ -4,7 +4,7 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
-import rs.etf.km123247m.Properties.PropertyManager;
+import rs.etf.km123247m.PropertyManager.PropertyManager;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -60,8 +60,8 @@ public abstract class MatrixStringParser extends StringParser {
                 if (list.size() != list.get(i).size())
                     throw new Exception("Matrix format error! m != n");
             }
-            int min = Integer.parseInt(PropertyManager.getProperty("min_degree"));
-            int max = Integer.parseInt(PropertyManager.getProperty("max_degree"));
+            int min = Integer.parseInt(PropertyManager.getProperty("min_power"));
+            int max = Integer.parseInt(PropertyManager.getProperty("max_power"));
             if (min > list.size() || max < list.size()) {
                 throw new Exception(("Wrong matrix size!") + list.size());
             }
@@ -84,5 +84,5 @@ public abstract class MatrixStringParser extends StringParser {
     protected abstract Object createMatrixElement(String s) throws Exception;
 
     @Override
-    protected abstract void postObjectGenerationChecks(Object o) throws Exception;
+    protected abstract Object postObjectGeneration(Object o) throws Exception;
 }

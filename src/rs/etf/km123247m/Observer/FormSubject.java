@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Observers;
+package rs.etf.km123247m.Observer;
 
 import java.util.Observable;
 

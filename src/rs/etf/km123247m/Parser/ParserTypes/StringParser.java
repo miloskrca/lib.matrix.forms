@@ -24,7 +24,7 @@ public abstract class StringParser implements IParser {
         String parsedInput = parseFromInput(getInputString());
         postInputParseChecks(parsedInput);
         Object o = generateObject(parsedInput);
-        postObjectGenerationChecks(o);
+        o = postObjectGeneration(o);
         return o;
     }
 
@@ -32,6 +32,6 @@ public abstract class StringParser implements IParser {
     protected abstract String parseFromInput(String inputString);
     protected abstract void postInputParseChecks(String parsedInput) throws Exception;
     protected abstract Object generateObject(String input) throws Exception;
-    protected abstract void postObjectGenerationChecks(Object o) throws Exception;
+    protected abstract Object postObjectGeneration(Object o) throws Exception;
 
 }

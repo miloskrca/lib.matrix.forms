@@ -2,7 +2,6 @@ package rs.etf.km123247m.Parser.MatrixParser.SymJa;
 
 import org.matheclipse.core.interfaces.IExpr;
 import rs.etf.km123247m.Parser.MatrixParser.MatrixStringParser;
-import rs.etf.km123247m.Parser.ObjectParser.IExprStringParser;
 
 /**
  * Created by Miloš Krsmanović.
@@ -12,7 +11,12 @@ import rs.etf.km123247m.Parser.ObjectParser.IExprStringParser;
  */
 public class IExprMatrixStringParser extends MatrixStringParser {
 
-    private IExprStringParser iExprStringParser = new IExprStringParser();
+    private IExprStringParser iExprStringParser;
+
+    public IExprMatrixStringParser(boolean nativeInput) {
+        super();
+        iExprStringParser = new IExprStringParser(nativeInput);
+    }
 
     @Override
     protected IExpr createMatrixElement(String s) throws Exception {
@@ -21,7 +25,8 @@ public class IExprMatrixStringParser extends MatrixStringParser {
     }
 
     @Override
-    protected void postObjectGenerationChecks(Object o) throws Exception {
+    protected Object postObjectGeneration(Object o) throws Exception {
         // do nothing
+        return o;
     }
 }

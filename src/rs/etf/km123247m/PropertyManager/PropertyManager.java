@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Properties;
+package rs.etf.km123247m.PropertyManager;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -10,7 +10,7 @@ import java.util.Properties;
  * Created by Miloš Krsmanović.
  * May 2014
  * <p/>
- * package: rs.etf.km123247m.Properties
+ * package: rs.etf.km123247m.PropertyManager
  */
 public abstract class PropertyManager {
 

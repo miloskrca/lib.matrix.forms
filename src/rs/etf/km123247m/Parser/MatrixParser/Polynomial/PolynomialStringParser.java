@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Parser.ObjectParser;
+package rs.etf.km123247m.Parser.MatrixParser.Polynomial;
 
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
@@ -122,7 +122,7 @@ public class PolynomialStringParser extends StringParser {
     }
 
     @Override
-    protected void postObjectGenerationChecks(Object o) throws Exception {
-        // do nothing
+    protected Object postObjectGeneration(Object o) throws Exception {
+        return o;
     }
 }

@@ -1,7 +1,6 @@
 package rs.etf.km123247m.Parser.MatrixParser.Polynomial;
 
 import rs.etf.km123247m.Parser.MatrixParser.MatrixStringParser;
-import rs.etf.km123247m.Parser.ObjectParser.PolynomialStringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
 
 /**
@@ -21,7 +20,8 @@ public class PolynomialMatrixStringParser extends MatrixStringParser {
     }
 
     @Override
-    protected void postObjectGenerationChecks(Object o) throws Exception {
+    protected Object postObjectGeneration(Object o) throws Exception {
         // do nothing
+        return o;
     }
 }

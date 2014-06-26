@@ -7,23 +7,23 @@ import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
-import rs.etf.km123247m.Observers.Event.FormEvent;
-import rs.etf.km123247m.Observers.FormObserver;
+import rs.etf.km123247m.Observer.Event.FormEvent;
+import rs.etf.km123247m.Observer.FormObserver;
 
 import java.util.Observable;
 
-class TestMatrixForm extends MatrixForm {
-    public TestMatrixForm(MatrixHandler handler) {
-        super(handler);
-    }
-
-    @Override
-    protected void process() throws Exception {
-        sendUpdate(FormEvent.PROCESSING_STATUS, null);
-    }
-}
-
 public class MatrixFormTest {
+
+    private class TestMatrixForm extends MatrixForm {
+        public TestMatrixForm(MatrixHandler handler) {
+            super(handler);
+        }
+
+        @Override
+        protected void process() throws Exception {
+            sendUpdate(FormEvent.PROCESSING_STATUS, null);
+        }
+    }
 
     private MatrixForm form;
     private MatrixHandler handler;

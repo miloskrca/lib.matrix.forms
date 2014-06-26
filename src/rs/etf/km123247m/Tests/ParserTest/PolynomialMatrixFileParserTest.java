@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Tests;
+package rs.etf.km123247m.Tests.ParserTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +25,7 @@ public class PolynomialMatrixFileParserTest {
     public void setUp() throws Exception {
 
         matrix = null;
-        String path = "./TestData/PolynomialMatrixFileParserTestMatrix.txt";
+        String path = "./TestData/ParserTest/PolynomialMatrixFileParserTestMatrix.txt";
         File file = new File(path);
         parser = new PolynomialMatrixFileParser(file);
         matrix = (ArrayMatrix)parser.parseInput();

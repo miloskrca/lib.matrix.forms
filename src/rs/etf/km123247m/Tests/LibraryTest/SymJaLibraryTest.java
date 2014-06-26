@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Tests;
+package rs.etf.km123247m.Tests.LibraryTest;
 
 /*
 import edu.jas.kern.ComputerThreads;

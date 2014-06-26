@@ -1,10 +1,10 @@
-package rs.etf.km123247m.Observers.Event;
+package rs.etf.km123247m.Observer.Event;
 
 /**
  * Created by Miloš Krsmanović.
  * May 2014
  *
- * package: rs.etf.km123247m.Observers
+ * package: rs.etf.km123247m.Observer
  */
 public class FormEvent {
 

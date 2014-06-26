@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Tests;
+package rs.etf.km123247m.Tests.HandlerTest;
 
 import org.junit.Before;
 import org.junit.Test;
