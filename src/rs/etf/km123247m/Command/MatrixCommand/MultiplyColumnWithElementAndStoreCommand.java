@@ -10,29 +10,31 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class MultiplyRowWithElementCommand implements ICommand {
+public class MultiplyColumnWithElementAndStoreCommand implements ICommand {
 
     private MatrixHandler handler;
-    private int row;
+    private int column;
     private Object element;
 
-    public MultiplyRowWithElementCommand(MatrixHandler handler, int row, Object element) {
+    public MultiplyColumnWithElementAndStoreCommand(MatrixHandler handler, int column, Object element) {
         this.handler = handler;
-        this.row = row;
+        this.column = column;
         this.element = element;
     }
 
     @Override
-    public MatrixCell[] execute() throws Exception {
-        return handler.multipleRowWithElement(row, element);
+    public Object execute() throws Exception {
+        MatrixCell[] columnCells = handler.multipleColumnWithElement(column, element);
+        handler.storeColumn(column, columnCells);
+        return columnCells;
     }
 
     public MatrixHandler getHandler() {
         return handler;
     }
 
-    public int getRow() {
-        return row;
+    public int getColumn() {
+        return column;
     }
 
     public Object getElement() {

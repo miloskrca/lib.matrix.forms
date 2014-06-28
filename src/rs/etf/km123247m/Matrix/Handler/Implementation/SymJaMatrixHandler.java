@@ -28,6 +28,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    protected Object getElementEquivalentToOne() throws Exception {
+        return util.evaluate("1");
+    }
+
+    @Override
     protected Object addElements(Object element1, Object element2) throws Exception {
         return evaluate(((IExpr) element1).plus((IExpr) element2));
     }
@@ -80,7 +85,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
         IExpr zero = util.evaluate("0");
-        IExpr one = util.evaluate("1");
+        IExpr one = (IExpr) getElementEquivalentToOne();
         IExpr lowestPower = util.evaluate("9999");
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
         if(element.isNumber()) {

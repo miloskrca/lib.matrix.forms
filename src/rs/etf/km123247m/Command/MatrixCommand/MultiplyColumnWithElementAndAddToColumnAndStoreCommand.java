@@ -10,34 +10,40 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class AddColumnOfCellsToColumnCommand implements ICommand {
+public class MultiplyColumnWithElementAndAddToColumnAndStoreCommand implements ICommand {
 
     private MatrixHandler handler;
     private int column1;
-    private MatrixCell[] objectColumn;
+    private int column2;
+    private Object element;
 
-    // TODO: This command shouldn't exist
-    public AddColumnOfCellsToColumnCommand(MatrixHandler handler, int column1, MatrixCell[] objectColumn) {
+    public MultiplyColumnWithElementAndAddToColumnAndStoreCommand(MatrixHandler handler, int column1, int column2, Object element) {
         this.handler = handler;
         this.column1 = column1;
-        this.objectColumn = objectColumn;
+        this.column2 = column2;
+        this.element = element;
     }
 
     @Override
     public Object execute() throws Exception {
-        handler.addColumns(column1, objectColumn);
-        return null;
+        MatrixCell[] columnCells = handler.multipleColumnWithElement(column1, element);
+        handler.addColumns(column2, columnCells);
+        return columnCells;
     }
 
     public MatrixHandler getHandler() {
         return handler;
     }
 
+    public int getColumn2() {
+        return column2;
+    }
+
     public int getColumn1() {
         return column1;
     }
 
-    public MatrixCell[] getObjectColumn() {
-        return objectColumn;
+    public Object getElement() {
+        return element;
     }
 }

@@ -63,7 +63,7 @@ public class SmithMatrixForm extends MatrixForm {
         if (!allElementsOnTheDiagonalAreDividingTheNextElement()) {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (isPowerGreaterThenPowerOnNextElement(range)) {
-                    addTwoRows(range, range + 1);
+                    addTwoRows(range + 1, range); //stores in second
                     sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
                     int tempMatrixSize = range + 2;
@@ -101,13 +101,6 @@ public class SmithMatrixForm extends MatrixForm {
             }
         }
         fixLeadingCoefficientOfFirstElement();
-    }
-
-    private void fixLeadingCoefficientOfFirstElement() throws Exception {
-        Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-        ICommand divideRowWithElementAndStoreCommand = new DivideRowWithElementAndStoreCommand(getHandler(), 0, leadingCoefficient);
-        /*MatrixCell[] resultRow = (MatrixCell[]) */divideRowWithElementAndStoreCommand.execute();
-        getCommands().add(divideRowWithElementAndStoreCommand);
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
@@ -151,25 +144,19 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     protected void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
-        // TODO: This all should be a single command so it can be used with single matrix
-        ICommand multiplyRowWithElementCommand = new MultiplyRowWithElementCommand(getHandler(), row1, cell.getElement());
-        MatrixCell[] resultRow = (MatrixCell[]) multiplyRowWithElementCommand.execute();
-        getCommands().add(multiplyRowWithElementCommand);
-
-        ICommand addRowOfObjectsToRowCommand = new AddRowOfCellsToRowCommand(getHandler(), row2, resultRow);
-        addRowOfObjectsToRowCommand.execute();
-        getCommands().add(addRowOfObjectsToRowCommand);
+        ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
+            getHandler(), row1, row2, cell.getElement()
+        );
+        command.execute();
+        getCommands().add(command);
     }
 
-    protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell element, int column2) throws Exception {
-        // TODO: This all should be a single command so it can be used with single matrix
-        ICommand multiplyColumnWithElementCommand = new MultiplyColumnWithElementCommand(getHandler(), column1, element.getElement());
-        MatrixCell[] resultColumn = (MatrixCell[]) multiplyColumnWithElementCommand.execute();
-        getCommands().add(multiplyColumnWithElementCommand);
-
-        ICommand addColumnsCommand = new AddColumnOfCellsToColumnCommand(getHandler(), column2, resultColumn);
-        addColumnsCommand.execute();
-        getCommands().add(addColumnsCommand);
+    protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell cell, int column2) throws Exception {
+        ICommand command = new MultiplyColumnWithElementAndAddToColumnAndStoreCommand(
+            getHandler(), column1, column2, cell.getElement()
+        );
+        command.execute();
+        getCommands().add(command);
     }
 
     protected MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
@@ -233,9 +220,19 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     protected void addTwoRows(int row1, int row2) throws Exception {
-        ICommand addRowsCommand = new AddRowsCommand(getHandler(), row1, row2);
-        addRowsCommand.execute();
-        getCommands().add(addRowsCommand);
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
+                getHandler(), row1, row2, handler.getOne()
+        );
+        command.execute();
+        getCommands().add(command);
+    }
+
+    private void fixLeadingCoefficientOfFirstElement() throws Exception {
+        Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
+        ICommand command = new DivideRowWithElementAndStoreCommand(getHandler(), 0, leadingCoefficient);
+        command.execute();
+        getCommands().add(command);
     }
 
 }

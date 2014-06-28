@@ -1,0 +1,28 @@
+PROCESSING_START
+| x  Plus[1, Power[x, 2]] |
+| Plus[1, x]  Power[x, 2] |
+
+PROCESSING_STATUS
+| x  Plus[1, Power[x, 2]] |
+| Plus[1, x]  Power[x, 2] |
+
+PROCESSING_STATUS
+| x  Plus[1, Power[x, 2]] |
+| 1  -1 |
+
+PROCESSING_STATUS
+| 1  -1 |
+| x  Plus[1, Power[x, 2]] |
+
+PROCESSING_STATUS
+| 1  -1 |
+| 0  Plus[1, x, Power[x, 2]] |
+
+PROCESSING_STATUS
+| 1  0 |
+| 0  Plus[1, x, Power[x, 2]] |
+
+PROCESSING_END
+| 1  0 |
+| 0  Plus[1, x, Power[x, 2]] |
+PROCESSING_END

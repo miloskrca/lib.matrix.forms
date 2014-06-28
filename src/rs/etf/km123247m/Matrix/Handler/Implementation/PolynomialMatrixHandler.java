@@ -14,8 +14,13 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * package: rs.etf.km123247m.Matrix.Handler.Implementation
  */
 public abstract class PolynomialMatrixHandler extends MatrixHandler {
+
     protected PolynomialMatrixHandler(IMatrix matrix) {
         super(matrix);
+    }
+
+    public Object getOne() throws Exception {
+        return getElementEquivalentToOne();
     }
 
     public int getPower(MatrixCell cell) {
@@ -25,6 +30,8 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     public Object getLeadingCoefficient(MatrixCell cell) throws Exception {
         return getLeadingCoefficientOfElement(cell.getElement());
     }
+
+    protected abstract Object getElementEquivalentToOne() throws Exception;
 
     protected abstract int getHighestPower(Object element);
 

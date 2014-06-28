@@ -90,15 +90,6 @@ public abstract class MatrixHandler {
         }
     }
 
-    public void addRows(int row1, int row2) throws Exception {
-        int numOfColumns = matrix.getColumnNumber();
-        for (int column = 0; column < numOfColumns; column++) {
-            Object result = addElements(matrix.get(row1, column).getElement(), matrix.get(row2, column).getElement());
-            MatrixCell resultCell = new MatrixCell(row1, column, result);
-            matrix.set(resultCell);
-        }
-    }
-
     public void addColumns(int column1, MatrixCell[] objectColumn) throws Exception {
         int numOfRows = matrix.getRowNumber();
         for (int row = 0; row < numOfRows; row++) {
@@ -112,6 +103,13 @@ public abstract class MatrixHandler {
         int numOfColumns = matrix.getColumnNumber();
         for (int column = 0; column < numOfColumns; column++) {
             matrix.set(new MatrixCell(row, column, rowCells[column].getElement()));
+        }
+    }
+
+    public void storeColumn(int column, MatrixCell[] columnCells) throws Exception {
+        int numOfRows = matrix.getRowNumber();
+        for (int row = 0; column < numOfRows; column++) {
+            matrix.set(new MatrixCell(row, column, columnCells[row].getElement()));
         }
     }
 

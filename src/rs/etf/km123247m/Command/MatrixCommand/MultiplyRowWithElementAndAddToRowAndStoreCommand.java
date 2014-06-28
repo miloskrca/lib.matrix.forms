@@ -2,6 +2,7 @@ package rs.etf.km123247m.Command.MatrixCommand;
 
 import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
+import rs.etf.km123247m.Matrix.MatrixCell;
 
 /**
  * Created by Miloš Krsmanović.
@@ -9,22 +10,25 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class AddRowsCommand implements ICommand {
+public class MultiplyRowWithElementAndAddToRowAndStoreCommand implements ICommand {
 
     private MatrixHandler handler;
     private int row1;
     private int row2;
+    private Object element;
 
-    public AddRowsCommand(MatrixHandler handler, int row1, int row2) {
+    public MultiplyRowWithElementAndAddToRowAndStoreCommand(MatrixHandler handler, int row1, int row2, Object element) {
         this.handler = handler;
         this.row1 = row1;
         this.row2 = row2;
+        this.element = element;
     }
 
     @Override
-    public Object execute() throws Exception {
-        handler.addRows(row1, row2);
-        return null;
+    public MatrixCell[] execute() throws Exception {
+        MatrixCell[] rowCells = handler.multipleRowWithElement(row1, element);
+        handler.addRows(row2, rowCells);
+        return rowCells;
     }
 
     public MatrixHandler getHandler() {
@@ -34,8 +38,11 @@ public class AddRowsCommand implements ICommand {
     public int getRow1() {
         return row1;
     }
-
     public int getRow2() {
         return row2;
+    }
+
+    public Object getElement() {
+        return element;
     }
 }
