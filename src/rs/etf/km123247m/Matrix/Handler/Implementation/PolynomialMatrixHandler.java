@@ -31,6 +31,10 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
         return getLeadingCoefficientOfElement(cell.getElement());
     }
 
+    public Object getInverse(Object element) throws Exception {
+        return divideElements(getElementEquivalentToOne(), element);
+    }
+
     protected abstract Object getElementEquivalentToOne() throws Exception;
 
     protected abstract int getHighestPower(Object element);

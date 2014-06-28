@@ -108,13 +108,13 @@ public class SmithMatrixForm extends MatrixForm {
             return;
         }
         if (element.getColumn() != range) {
-            ICommand command = new SwitchColumnsCommand(getHandler(), range, element.getColumn());
-            command.execute();
+            ICommand command = new SwitchColumnsCommand(range, element.getColumn());
+            command.execute(getHandler());
             getCommands().add(command);
         }
         if (element.getRow() != range) {
-            ICommand command = new SwitchRowsCommand(getHandler(), range, element.getRow());
-            command.execute();
+            ICommand command = new SwitchRowsCommand(range, element.getRow());
+            command.execute(getHandler());
             getCommands().add(command);
         }
     }
@@ -145,17 +145,17 @@ public class SmithMatrixForm extends MatrixForm {
 
     protected void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
         ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
-            getHandler(), row1, row2, cell.getElement()
+            row1, row2, cell.getElement()
         );
-        command.execute();
+        command.execute(getHandler());
         getCommands().add(command);
     }
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell cell, int column2) throws Exception {
         ICommand command = new MultiplyColumnWithElementAndAddToColumnAndStoreCommand(
-            getHandler(), column1, column2, cell.getElement()
+            column1, column2, cell.getElement()
         );
-        command.execute();
+        command.execute(getHandler());
         getCommands().add(command);
     }
 
@@ -222,16 +222,18 @@ public class SmithMatrixForm extends MatrixForm {
     protected void addTwoRows(int row1, int row2) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
         ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
-                getHandler(), row1, row2, handler.getOne()
+            row1, row2, handler.getOne()
         );
-        command.execute();
+        command.execute(getHandler());
         getCommands().add(command);
     }
 
     private void fixLeadingCoefficientOfFirstElement() throws Exception {
-        Object leadingCoefficient = ((PolynomialMatrixHandler)getHandler()).getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-        ICommand command = new DivideRowWithElementAndStoreCommand(getHandler(), 0, leadingCoefficient);
-        command.execute();
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
+        // divide row with element with its leading coefficient
+        ICommand command = new MultiplyRowWithElementAndStoreCommand(0, handler.getInverse(leadingCoefficient));
+        command.execute(getHandler());
         getCommands().add(command);
     }
 

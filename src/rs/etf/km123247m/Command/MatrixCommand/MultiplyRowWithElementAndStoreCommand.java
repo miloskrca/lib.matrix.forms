@@ -12,25 +12,19 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  */
 public class MultiplyRowWithElementAndStoreCommand implements ICommand {
 
-    private MatrixHandler handler;
     private int row;
     private Object element;
 
-    public MultiplyRowWithElementAndStoreCommand(MatrixHandler handler, int row, Object element) {
-        this.handler = handler;
+    public MultiplyRowWithElementAndStoreCommand(int row, Object element) {
         this.row = row;
         this.element = element;
     }
 
     @Override
-    public MatrixCell[] execute() throws Exception {
+    public MatrixCell[] execute(MatrixHandler handler) throws Exception {
         MatrixCell[] rowCells = handler.multipleRowWithElement(row, element);
         handler.storeRow(row, rowCells);
         return rowCells;
-    }
-
-    public MatrixHandler getHandler() {
-        return handler;
     }
 
     public int getRow() {

@@ -11,24 +11,18 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  */
 public class SwitchRowsCommand implements ICommand {
 
-    private MatrixHandler handler;
     private int row1;
     private int row2;
 
-    public SwitchRowsCommand(MatrixHandler handler, int row1, int row2) {
-        this.handler = handler;
+    public SwitchRowsCommand(int row1, int row2) {
         this.row1 = row1;
         this.row2 = row2;
     }
 
     @Override
-    public Object execute() throws Exception {
+    public Object execute(MatrixHandler handler) throws Exception {
         handler.switchRows(row1, row2);
         return null;
-    }
-
-    public MatrixHandler getHandler() {
-        return handler;
     }
 
     public int getRow1() {
