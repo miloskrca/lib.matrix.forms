@@ -4,7 +4,6 @@ import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.expression.F;
 import org.matheclipse.core.interfaces.IExpr;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Polynomial.Polynomial;
 
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -30,6 +29,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     @Override
     protected Object getElementEquivalentToOne() throws Exception {
         return util.evaluate("1");
+    }
+
+    @Override
+    protected Object getElementEquivalentToZero() throws Exception {
+        return util.evaluate("0");
     }
 
     @Override
@@ -74,8 +78,13 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
-    public boolean isZeroElement(Object element) {
-        return Polynomial.getZeroPolynomial().toString().equals(element.toString());
+    public boolean isZeroElement(Object element) throws Exception {
+        return getElementEquivalentToZero().toString().equals(element.toString());
+    }
+
+    @Override
+    public int compare(Object element1, Object element2) {
+        return ((IExpr)element1).compareTo((IExpr)element2);
     }
 
     @Override
@@ -84,7 +93,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
-        IExpr zero = util.evaluate("0");
+        IExpr zero = (IExpr) getElementEquivalentToZero();
         IExpr one = (IExpr) getElementEquivalentToOne();
         IExpr lowestPower = util.evaluate("9999");
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();

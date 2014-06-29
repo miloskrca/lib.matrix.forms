@@ -14,7 +14,7 @@ public class ArrayMatrix implements IMatrix {
     private final int columnNumber;
     private Object[][] matrix;
 
-    public ArrayMatrix(int columnNumber, int rowNumber) {
+    public ArrayMatrix(int rowNumber, int columnNumber) {
         this.columnNumber = columnNumber;
         this.rowNumber = rowNumber;
         this.matrix = new Object[rowNumber][columnNumber];

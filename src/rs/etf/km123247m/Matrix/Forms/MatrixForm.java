@@ -43,7 +43,7 @@ public abstract class MatrixForm extends FormSubject {
     }
 
     protected void sendUpdate(int type, String message) {
-        update(new FormEvent(type, this, message));
+        update(new FormEvent(type, message));
     }
 
     public LinkedList<ICommand> getCommands() {

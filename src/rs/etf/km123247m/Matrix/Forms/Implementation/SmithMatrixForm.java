@@ -32,7 +32,6 @@ public class SmithMatrixForm extends MatrixForm {
                     // Moving smallest to start...
                     MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
                     moveCellToStartPosition(range, smallestCell);
-                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize; nextRow++) {
                         MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
@@ -40,7 +39,6 @@ public class SmithMatrixForm extends MatrixForm {
                             MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                             MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
-                            sendUpdate(FormEvent.PROCESSING_STATUS, null);
                         }
                     }
 
@@ -54,7 +52,6 @@ public class SmithMatrixForm extends MatrixForm {
                         MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
                         MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                         multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
-                        sendUpdate(FormEvent.PROCESSING_STATUS, null);
                     }
                 }
             } while (!isRowCleared(range));
@@ -64,7 +61,6 @@ public class SmithMatrixForm extends MatrixForm {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (isPowerGreaterThenPowerOnNextElement(range)) {
                     addTwoRows(range + 1, range); //stores in second
-                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
                     int tempMatrixSize = range + 2;
                     do {
@@ -72,7 +68,6 @@ public class SmithMatrixForm extends MatrixForm {
                             // Moving smallest to start...
                             MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
                             moveCellToStartPosition(range, smallestCell);
-                            sendUpdate(FormEvent.PROCESSING_STATUS, null);
 
                             // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
                             for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
@@ -81,7 +76,6 @@ public class SmithMatrixForm extends MatrixForm {
                                     MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                                     MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                                     multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
-                                    sendUpdate(FormEvent.PROCESSING_STATUS, null);
                                 }
                             }
                         } while (!isRowCleared(range));
@@ -93,14 +87,15 @@ public class SmithMatrixForm extends MatrixForm {
                                 MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
                                 MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                                 multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
-                                sendUpdate(FormEvent.PROCESSING_STATUS, null);
                             }
                         }
                     } while (!isColumnCleared(range));
                 }
             }
         }
-        fixLeadingCoefficientOfFirstElement();
+        if(!isFirstElementLeadingCoefficientEqualToOne()) {
+            fixLeadingCoefficientOfFirstElement();
+        }
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
@@ -111,11 +106,13 @@ public class SmithMatrixForm extends MatrixForm {
             ICommand command = new SwitchColumnsCommand(range, element.getColumn());
             command.execute(getHandler());
             getCommands().add(command);
+            sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
         }
         if (element.getRow() != range) {
             ICommand command = new SwitchRowsCommand(range, element.getRow());
             command.execute(getHandler());
             getCommands().add(command);
+            sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
         }
     }
 
@@ -149,6 +146,7 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
+        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
     }
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell cell, int column2) throws Exception {
@@ -157,6 +155,7 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
+        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
     }
 
     protected MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
@@ -226,6 +225,13 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
+        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+    }
+
+    private boolean isFirstElementLeadingCoefficientEqualToOne() throws Exception {
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
+        return handler.compare(leadingCoefficient, handler.getOne()) == 0;
     }
 
     private void fixLeadingCoefficientOfFirstElement() throws Exception {
@@ -235,6 +241,7 @@ public class SmithMatrixForm extends MatrixForm {
         ICommand command = new MultiplyRowWithElementAndStoreCommand(0, handler.getInverse(leadingCoefficient));
         command.execute(getHandler());
         getCommands().add(command);
+        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
     }
 
 }

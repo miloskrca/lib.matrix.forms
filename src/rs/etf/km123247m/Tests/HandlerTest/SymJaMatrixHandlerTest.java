@@ -10,6 +10,9 @@ import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
 
+/**
+ * TODO: Add test cases for most of the methods
+ */
 public class SymJaMatrixHandlerTest {
 
     private SymJaMatrixHandler handler;

@@ -70,17 +70,6 @@ public abstract class MatrixHandler {
         return resultColumn;
     }
 
-    public MatrixCell[] divideRowWithElement(int row, Object element) throws Exception {
-        int numOfColumns = matrix.getColumnNumber();
-        MatrixCell[] resultRow = new MatrixCell[numOfColumns];
-        for (int column = 0; column < numOfColumns; column++) {
-            Object result = divideElements(matrix.get(row, column).getElement(), element);
-            MatrixCell resultCell = new MatrixCell(row, column, result);
-            resultRow[column] = resultCell;
-        }
-        return resultRow;
-    }
-
     public void addRows(int row1, MatrixCell[] objectRow) throws Exception {
         int numOfColumns = matrix.getColumnNumber();
         for (int column = 0; column < numOfColumns; column++) {
@@ -129,5 +118,7 @@ public abstract class MatrixHandler {
 
     public abstract int comparePowersOfElements(Object element1, Object element2);
 
-    public abstract boolean isZeroElement(Object element);
+    public abstract boolean isZeroElement(Object element) throws Exception;
+
+    public abstract int compare(Object element1, Object element2);
 }

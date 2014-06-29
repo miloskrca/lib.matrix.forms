@@ -27,6 +27,21 @@ public class MultiplyColumnWithElementAndStoreCommand implements ICommand {
         return columnCells;
     }
 
+    @Override
+    public String getDescription() {
+        return this.getClass().getSimpleName() + " " + column + " " + element.toString();
+    }
+
+    @Override
+    public boolean affectsRows() {
+        return false;
+    }
+
+    @Override
+    public boolean affectsColumns() {
+        return true;
+    }
+
     public int getColumn() {
         return column;
     }

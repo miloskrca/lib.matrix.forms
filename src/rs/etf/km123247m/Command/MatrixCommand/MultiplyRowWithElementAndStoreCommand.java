@@ -27,6 +27,21 @@ public class MultiplyRowWithElementAndStoreCommand implements ICommand {
         return rowCells;
     }
 
+    @Override
+    public String getDescription() {
+        return this.getClass().getSimpleName() + " " + row + " " + element.toString();
+    }
+
+    @Override
+    public boolean affectsRows() {
+        return true;
+    }
+
+    @Override
+    public boolean affectsColumns() {
+        return false;
+    }
+
     public int getRow() {
         return row;
     }

@@ -25,6 +25,21 @@ public class SwitchColumnsCommand implements ICommand {
         return null;
     }
 
+    @Override
+    public String getDescription() {
+        return this.getClass().getSimpleName() + " " + column1 + " " + column2;
+    }
+
+    @Override
+    public boolean affectsRows() {
+        return false;
+    }
+
+    @Override
+    public boolean affectsColumns() {
+        return true;
+    }
+
     public int getColumn1() {
         return column1;
     }

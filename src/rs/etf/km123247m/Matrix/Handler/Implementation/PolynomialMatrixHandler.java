@@ -22,6 +22,9 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     public Object getOne() throws Exception {
         return getElementEquivalentToOne();
     }
+    public Object getZero() throws Exception {
+        return getElementEquivalentToZero();
+    }
 
     public int getPower(MatrixCell cell) {
         return getHighestPower(cell.getElement());
@@ -36,8 +39,7 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     }
 
     protected abstract Object getElementEquivalentToOne() throws Exception;
-
+    protected abstract Object getElementEquivalentToZero() throws Exception;
     protected abstract int getHighestPower(Object element);
-
     protected abstract Object getLeadingCoefficientOfElement(Object element) throws Exception;
 }

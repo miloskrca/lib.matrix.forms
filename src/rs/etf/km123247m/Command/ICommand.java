@@ -10,4 +10,8 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  */
 public interface ICommand {
     public abstract Object execute(MatrixHandler handler) throws Exception;
+
+    public String getDescription();
+    public boolean affectsRows();
+    public boolean affectsColumns();
 }

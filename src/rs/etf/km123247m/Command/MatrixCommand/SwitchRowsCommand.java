@@ -25,6 +25,21 @@ public class SwitchRowsCommand implements ICommand {
         return null;
     }
 
+    @Override
+    public String getDescription() {
+        return this.getClass().getSimpleName() + " " + row1 + " " + row2;
+    }
+
+    @Override
+    public boolean affectsRows() {
+        return true;
+    }
+
+    @Override
+    public boolean affectsColumns() {
+        return false;
+    }
+
     public int getRow1() {
         return row1;
     }

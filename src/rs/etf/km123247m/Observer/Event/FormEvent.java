@@ -15,13 +15,10 @@ public class FormEvent {
 
     private int type;
 
-    private Object object;
-
     private String message;
 
-    public FormEvent(int type, Object object, String message) {
+    public FormEvent(int type, String message) {
         this.type = type;
-        this.object = object;
         this.message = message;
     }
 
@@ -31,14 +28,6 @@ public class FormEvent {
 
     public void setType(int type) {
         this.type = type;
-    }
-
-    public Object getObject() {
-        return object;
-    }
-
-    public void setObject(Object object) {
-        this.object = object;
     }
 
     public String getMessage() {

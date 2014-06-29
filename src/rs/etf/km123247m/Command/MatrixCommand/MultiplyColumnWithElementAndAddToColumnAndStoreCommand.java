@@ -29,6 +29,21 @@ public class MultiplyColumnWithElementAndAddToColumnAndStoreCommand implements I
         return columnCells;
     }
 
+    @Override
+    public String getDescription() {
+        return this.getClass().getSimpleName() + " " + column1 + " " + column2 + " " + element.toString();
+    }
+
+    @Override
+    public boolean affectsRows() {
+        return false;
+    }
+
+    @Override
+    public boolean affectsColumns() {
+        return true;
+    }
+
     public int getColumn2() {
         return column2;
     }

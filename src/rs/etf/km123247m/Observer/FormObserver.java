@@ -5,6 +5,6 @@ import java.util.Observer;
 /**
  * Form Observer
  */
-public abstract class FormObserver implements Observer {
+public interface FormObserver extends Observer {
 
 }

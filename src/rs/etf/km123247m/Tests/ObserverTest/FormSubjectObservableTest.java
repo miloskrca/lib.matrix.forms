@@ -32,7 +32,7 @@ public class FormSubjectObservableTest {
         }
     }
 
-    private class ConcreteFormObserver extends FormObserver {
+    private class ConcreteFormObserver implements FormObserver {
         private int value = 0;
         private FormSubject subject;
 
