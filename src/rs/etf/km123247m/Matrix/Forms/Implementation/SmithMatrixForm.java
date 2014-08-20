@@ -41,7 +41,6 @@ public class SmithMatrixForm extends MatrixForm {
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
                         }
                     }
-
                 } while (!isColumnCleared(range));
 
                 MatrixCell firstCell = handler.getMatrix().get(range, range);

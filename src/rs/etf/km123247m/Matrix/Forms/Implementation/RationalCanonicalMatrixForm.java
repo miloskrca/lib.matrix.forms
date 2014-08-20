@@ -85,11 +85,11 @@ public class RationalCanonicalMatrixForm extends MatrixForm implements FormObser
             ICommand lastCommand = smithMatrixForm.getCommands().getLast();
             try {
                 if (lastCommand.affectsColumns()) {
-                    getHandler().setMatrix(p);
+                    getHandler().setMatrix(getP());
                     lastCommand.execute(getHandler());
                 }
                 if (lastCommand.affectsRows()) {
-                    getHandler().setMatrix(q);
+                    getHandler().setMatrix(getQ());
                     lastCommand.execute(getHandler());
                 }
             } catch (Exception e) {
