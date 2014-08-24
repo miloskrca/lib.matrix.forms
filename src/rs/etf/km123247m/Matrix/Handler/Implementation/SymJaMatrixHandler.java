@@ -92,10 +92,9 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return getLeadingCoefficientOfElementRecursive((IExpr) element).getCoefficient();
     }
 
-    protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
+    protected ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(IExpr element) throws Exception {
         IExpr zero = (IExpr) getElementEquivalentToZero();
         IExpr one = (IExpr) getElementEquivalentToOne();
-        IExpr lowestPower = util.evaluate("9999");
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
         if(element.isNumber()) {
             pairs.add(new CoefficientPowerPair(
@@ -142,16 +141,23 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         } else if (element.isSymbol()) {
             pairs.add(new CoefficientPowerPair(one, one));
         }
+
+        return pairs;
+    }
+
+    protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
+        ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
         IExpr coefficient = null;
+        IExpr highestPower = util.evaluate("-1");
         for(CoefficientPowerPair pair: pairs) {
-           if(lowestPower.compareTo(pair.getPower()) == 1) {
-               lowestPower = pair.getPower();
+           if(highestPower.compareTo(pair.getPower()) == -1) {
+               highestPower = pair.getPower();
                coefficient = pair.getCoefficient();
            } else if(coefficient == null) {
                coefficient = pair.getCoefficient();
            }
         }
-        return new CoefficientPowerPair(coefficient, lowestPower);
+        return new CoefficientPowerPair(coefficient, highestPower);
     }
 
     protected IExpr evaluate(Object expr) throws Exception {

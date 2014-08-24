@@ -27,8 +27,8 @@ public class SmithMatrixForm extends MatrixForm {
         int matrixSize = handler.getMatrix().getRowNumber();
 
         for (int range = 0; range < matrixSize - 1; range++) {
-            do {
-                do {
+            while (!isRowCleared(range) || !isColumnCleared(range)) { // do {
+                while (!isColumnCleared(range)) { // do {
                     // Moving smallest to start...
                     MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
                     moveCellToStartPosition(range, smallestCell);
@@ -41,7 +41,7 @@ public class SmithMatrixForm extends MatrixForm {
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
                         }
                     }
-                } while (!isColumnCleared(range));
+                } // } while (!isColumnCleared(range));
 
                 MatrixCell firstCell = handler.getMatrix().get(range, range);
                 // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
@@ -53,48 +53,45 @@ public class SmithMatrixForm extends MatrixForm {
                         multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
                     }
                 }
-            } while (!isRowCleared(range));
+            } // } while (!isRowCleared(range));
         }
 
-        if (!allElementsOnTheDiagonalAreDividingTheNextElement()) {
-            for (int range = 0; range < matrixSize - 1; range++) {
-                if (isPowerGreaterThenPowerOnNextElement(range)) {
-                    addTwoRows(range + 1, range); //stores in second
+        for (int range = 0; range < matrixSize - 1; range++) {
+            if (!isTheNextElementDividedByThisElement(range)) {
+                addTwoRows(range + 1, range); //stores in second
 
-                    int tempMatrixSize = range + 2;
-                    do {
-                        do {
-                            // Moving smallest to start...
-                            MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
-                            moveCellToStartPosition(range, smallestCell);
+                int tempMatrixSize = range + 2;
+                while (!isColumnCleared(range) || !isRowCleared(range)) { // do {
+                    while (!isRowCleared(range)) { // do {
+                        // Moving smallest to start...
+                        MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                        moveCellToStartPosition(range, smallestCell);
 
-                            // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
-                            for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
-                                MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
-                                if (!getHandler().isZeroElement(nextCell.getElement())) {
-                                    MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
-                                    MatrixCell negativeQuotient = calculateNegativeCell(quotient);
-                                    multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
-                                }
-                            }
-                        } while (!isRowCleared(range));
-
-                        MatrixCell firstCell = handler.getMatrix().get(range, range);
-                        for (int nextRow = range + 1; nextRow < tempMatrixSize; nextRow++) {
-                            MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
+                        // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
+                        for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
+                            MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                             if (!getHandler().isZeroElement(nextCell.getElement())) {
-                                MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
+                                MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                                 MatrixCell negativeQuotient = calculateNegativeCell(quotient);
-                                multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
+                                multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
                             }
                         }
-                    } while (!isColumnCleared(range));
-                }
+                    } // while (!isRowCleared(range));
+
+                    MatrixCell firstCell = handler.getMatrix().get(range, range);
+                    for (int nextRow = range + 1; nextRow < tempMatrixSize; nextRow++) {
+                        MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
+                        if (!getHandler().isZeroElement(nextCell.getElement())) {
+                            MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
+                            MatrixCell negativeQuotient = calculateNegativeCell(quotient);
+                            multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
+                        }
+                    }
+                }//  while (!isColumnCleared(range));
             }
         }
-        if(!isFirstElementLeadingCoefficientEqualToOne()) {
-            fixLeadingCoefficientOfFirstElement();
-        }
+
+        fixLeadingCoefficients();
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
@@ -176,7 +173,8 @@ public class SmithMatrixForm extends MatrixForm {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
-                if (getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1) {
+                if (getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1
+                        && !getHandler().isZeroElement(cell.getElement())) {
                     smallestCell = cell;
                 }
             }
@@ -184,37 +182,12 @@ public class SmithMatrixForm extends MatrixForm {
         return smallestCell;
     }
 
-    protected boolean allElementsOnTheDiagonalAreDividingTheNextElement() throws Exception {
-        boolean allClear = true;
-        IMatrix matrix = getHandler().getMatrix();
-        MatrixCell lastCell = matrix.get(0, 0);
-        int rowNumber = matrix.getRowNumber();
-        int columnNumber = matrix.getColumnNumber();
-        for (int row = 1; row < rowNumber; row++) {
-            if (!allClear) {
-                break;
-            }
-            for (int column = 1; column < columnNumber; column++) {
-                if (row != column) {
-                    continue;
-                }
-                MatrixCell cell = matrix.get(row, column);
-                Object remainder = getHandler().divideCellElementsAndReturnRemainder(cell.getElement(), lastCell.getElement());
-                if (!getHandler().isZeroElement(remainder)) {
-                    allClear = false;
-                    break;
-                }
-                lastCell = cell;
-            }
-        }
-        return allClear;
-    }
-
-    protected boolean isPowerGreaterThenPowerOnNextElement(int range) throws Exception {
+    private boolean isTheNextElementDividedByThisElement(int range) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
         MatrixCell cell1 = handler.getMatrix().get(range, range);
         MatrixCell cell2 = handler.getMatrix().get(range + 1, range + 1);
-        return handler.getPower(cell1) > handler.getPower(cell2);
+        Object remainder = handler.divideCellElementsAndReturnRemainder(cell2.getElement(), cell1.getElement());
+        return handler.isZeroElement(remainder);
     }
 
     protected void addTwoRows(int row1, int row2) throws Exception {
@@ -227,20 +200,20 @@ public class SmithMatrixForm extends MatrixForm {
         sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
     }
 
-    private boolean isFirstElementLeadingCoefficientEqualToOne() throws Exception {
+    private void fixLeadingCoefficients() throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
-        Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-        return handler.compare(leadingCoefficient, handler.getOne()) == 0;
-    }
 
-    private void fixLeadingCoefficientOfFirstElement() throws Exception {
-        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
-        Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(0, 0));
-        // divide row with element with its leading coefficient
-        ICommand command = new MultiplyRowWithElementAndStoreCommand(0, handler.getInverse(leadingCoefficient));
-        command.execute(getHandler());
-        getCommands().add(command);
-        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+        int rowNumber = handler.getMatrix().getRowNumber();
+        for (int row = 0; row < rowNumber; row++) {
+            Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(row, row));
+            if (handler.compare(leadingCoefficient, handler.getOne()) != 0) {
+                // divide row with element with its leading coefficient
+                ICommand command = new MultiplyRowWithElementAndStoreCommand(row, handler.getInverse(leadingCoefficient));
+                command.execute(getHandler());
+                getCommands().add(command);
+                sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+            }
+        }
     }
 
 }
