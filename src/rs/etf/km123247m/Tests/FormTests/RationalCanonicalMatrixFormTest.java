@@ -2,6 +2,7 @@ package rs.etf.km123247m.Tests.FormTests;
 
 import org.junit.Before;
 import org.junit.Test;
+import rs.etf.km123247m.Matrix.Forms.Implementation.PolynomialRationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.Implementation.RationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
@@ -26,8 +27,8 @@ public class RationalCanonicalMatrixFormTest {
     public void setUp() throws Exception {
         paths = new String[] {
             "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt"
+//            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
+//            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt"
         };
     }
 
@@ -40,7 +41,7 @@ public class RationalCanonicalMatrixFormTest {
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
             MatrixHandler handler = new SymJaMatrixHandler(matrix);
-            MatrixForm matrixForm = new RationalCanonicalMatrixForm(handler);
+            MatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
             Observer observer = new Observer() {
                 @Override
@@ -50,21 +51,15 @@ public class RationalCanonicalMatrixFormTest {
                     switch (event.getType()) {
                         case FormEvent.PROCESSING_START:
                             output = "PROCESSING_START\n";
-                            output += form.getSmithMatrix().toString() + "\n";
-                            output += form.getP().toString() + "\n";
-                            output += form.getQ().toString();
+                            output += form.getTransitionalMatrix().toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_STATUS:
                             output = "PROCESSING_STATUS " + event.getMessage() + "\n";
-                            output += form.getSmithMatrix().toString() + "\n";
-                            output += form.getP().toString() + "\n";
-                            output += form.getQ().toString();
+                            output += form.getTransitionalMatrix().toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_END:
                             output = "PROCESSING_END\n";
-                            output += form.getSmithMatrix().toString() + "\n";
-                            output += form.getP().toString() + "\n";
-                            output += form.getQ().toString();
+                            output += form.getTransitionalMatrix().toString() + "\n";
                             output += "PROCESSING_END\n";
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:

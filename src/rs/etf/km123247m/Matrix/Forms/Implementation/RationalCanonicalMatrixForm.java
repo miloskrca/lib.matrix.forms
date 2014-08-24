@@ -30,12 +30,8 @@ import java.util.Observable;
  * <p/>
  * package: rs.etf.km123247m.Matrix.Forms.Implementation
  */
-public class RationalCanonicalMatrixForm extends MatrixForm implements FormObserver {
+public abstract class RationalCanonicalMatrixForm extends MatrixForm implements FormObserver {
 
-    /**
-     * Matrix transformed to Smith matrix form
-     */
-    private IMatrix smithMatrix;
     /**
      * Matrix located left from smith form matrix.
      * Affected by operations on columns.
@@ -47,11 +43,31 @@ public class RationalCanonicalMatrixForm extends MatrixForm implements FormObser
      */
     private IMatrix q;
 
+    /**
+     * Utility matrix. x*I - A. Transformed to Smith normal form.
+     * I - Diagonal matrix with all elements equal to 1
+     * x - x symbol
+     * A - smithMatrix
+     */
+    private IMatrix xIminusA;
+
+    /**
+     * Matrix transformed to Rational-Canonical form.
+     */
+    private IMatrix startMatrix;
+
+    /**
+     * Final result of the transformation.
+     */
+    private IMatrix finalMatrix;
+
     public RationalCanonicalMatrixForm(MatrixHandler handler) throws Exception {
         super(handler);
-        smithMatrix = handler.getMatrix();
-        int rowNumber = smithMatrix.getRowNumber();
-        int columnNumber = smithMatrix.getColumnNumber();
+        startMatrix = handler.getMatrix();
+        int rowNumber = startMatrix.getRowNumber();
+        int columnNumber = startMatrix.getColumnNumber();
+        finalMatrix = new ArrayMatrix(rowNumber, columnNumber);
+        xIminusA = new ArrayMatrix(rowNumber, columnNumber);
         p = new ArrayMatrix(rowNumber, columnNumber);
         q = new ArrayMatrix(rowNumber, columnNumber);
         Object zero = ((PolynomialMatrixHandler) handler).getZero();
@@ -59,14 +75,18 @@ public class RationalCanonicalMatrixForm extends MatrixForm implements FormObser
         for (int row = 0; row < rowNumber; row++) {
             for (int column = 0; column < columnNumber; column++) {
                 if (row == column) {
+                    xIminusA.set(new MatrixCell(row, column, getHandler().getSymbol('x')));
                     p.set(new MatrixCell(row, column, one));
                     q.set(new MatrixCell(row, column, one));
                 } else {
+                    xIminusA.set(new MatrixCell(row, column, zero));
                     p.set(new MatrixCell(row, column, zero));
                     q.set(new MatrixCell(row, column, zero));
                 }
             }
         }
+        handler.setMatrix(xIminusA);
+        handler.minus(startMatrix);
     }
 
     @Override
@@ -96,15 +116,25 @@ public class RationalCanonicalMatrixForm extends MatrixForm implements FormObser
                 sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage());
             } finally {
                 // return original matrix to handler
-                getHandler().setMatrix(smithMatrix);
+                getHandler().setMatrix(xIminusA);
                 // pass the event
                 sendUpdate(event.getType(), event.getMessage());
             }
         } else if (event.getType() == FormEvent.PROCESSING_EXCEPTION) {
             // pass the event
             sendUpdate(event.getType(), event.getMessage());
+        } else if (event.getType() == FormEvent.PROCESSING_END) {
+            // Smith transformation ended
+            // don't pass the event
+            try {
+                generateMatrixInRationalCanonicalForm();
+            } catch (Exception e) {
+                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage());
+            }
         }
     }
+
+    protected abstract void generateMatrixInRationalCanonicalForm() throws Exception;
 
     /**
      * Matrix located left.
@@ -125,11 +155,29 @@ public class RationalCanonicalMatrixForm extends MatrixForm implements FormObser
     }
 
     /**
-     * Smith matrix.
+     * Matrix transformed(ing) to rational-canonical form.
      *
      * @return IMatrix
      */
-    public IMatrix getSmithMatrix() {
-        return smithMatrix;
+    public IMatrix getTransitionalMatrix() {
+        return xIminusA;
+    }
+
+    /**
+     * Matrix to be transformed to rational-canonical form.
+     *
+     * @return IMatrix
+     */
+    public IMatrix getStartMatrix() {
+        return startMatrix;
+    }
+
+    /**
+     * Final transformed matrix.
+     *
+     * @return IMatrix
+     */
+    public IMatrix getFinalMatrix() {
+        return finalMatrix;
     }
 }

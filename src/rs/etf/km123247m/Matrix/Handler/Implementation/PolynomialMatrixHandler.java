@@ -1,8 +1,11 @@
 package rs.etf.km123247m.Matrix.Handler.Implementation;
 
+import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
+
+import java.util.ArrayList;
 
 /**
  * Created by Miloš Krsmanović.
@@ -37,6 +40,8 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     public Object getInverse(Object element) throws Exception {
         return divideElements(getElementEquivalentToOne(), element);
     }
+
+    public abstract ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(Object element) throws Exception;
 
     protected abstract Object getElementEquivalentToOne() throws Exception;
     protected abstract Object getElementEquivalentToZero() throws Exception;

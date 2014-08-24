@@ -3,6 +3,7 @@ package rs.etf.km123247m.Matrix.Handler.Implementation;
 import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.expression.F;
 import org.matheclipse.core.interfaces.IExpr;
+import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
 
 import java.util.ArrayList;
@@ -88,11 +89,17 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    public Object getSymbol(char symbol) throws Exception {
+        return util.evaluate(String.valueOf(symbol));
+    }
+
+    @Override
     protected Object getLeadingCoefficientOfElement(Object element) throws Exception {
         return getLeadingCoefficientOfElementRecursive((IExpr) element).getCoefficient();
     }
 
-    protected ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(IExpr element) throws Exception {
+    public ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(Object elementObject) throws Exception {
+        IExpr element = (IExpr) elementObject;
         IExpr zero = (IExpr) getElementEquivalentToZero();
         IExpr one = (IExpr) getElementEquivalentToOne();
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
@@ -190,34 +197,4 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
     }
 
-    private class CoefficientPowerPair {
-        private IExpr power;
-        private IExpr coefficient;
-
-        private CoefficientPowerPair() {
-            this.power = null;
-            this.coefficient = null;
-        }
-
-        private CoefficientPowerPair(IExpr coefficient, IExpr power) {
-            this.power = power;
-            this.coefficient = coefficient;
-        }
-
-        public IExpr getPower() {
-            return power;
-        }
-
-        public void setPower(IExpr power) {
-            this.power = power;
-        }
-
-        public IExpr getCoefficient() {
-            return coefficient;
-        }
-
-        public void setCoefficient(IExpr coefficient) {
-            this.coefficient = coefficient;
-        }
-    }
 }

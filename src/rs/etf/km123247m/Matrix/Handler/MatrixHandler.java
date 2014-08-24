@@ -102,6 +102,24 @@ public abstract class MatrixHandler {
         }
     }
 
+    public void minus(IMatrix subtractedMatrix) throws Exception {
+        int rowNumber = matrix.getRowNumber();
+        int columnNumber = matrix.getColumnNumber();
+        for (int row = 0; row < rowNumber; row++) {
+            for (int column = 0; column < columnNumber; column++) {
+                Object element = subtractElements(
+                    matrix.get(row, column).getElement(),
+                    subtractedMatrix.get(row, column).getElement()
+                );
+                matrix.set(new MatrixCell(row, column, element));
+            }
+        }
+    }
+
+    public Object subtractElements(Object element1, Object element2) throws Exception {
+        return addElements(element1, calculateNegativeElement(element2));
+    }
+
     public Object divideCellElements(Object object1, Object object2) throws Exception {
         return divideElements(object1, object2);
     }
@@ -121,4 +139,7 @@ public abstract class MatrixHandler {
     public abstract boolean isZeroElement(Object element) throws Exception;
 
     public abstract int compare(Object element1, Object element2);
+
+    public abstract Object getSymbol(char symbol) throws Exception;
+
 }
