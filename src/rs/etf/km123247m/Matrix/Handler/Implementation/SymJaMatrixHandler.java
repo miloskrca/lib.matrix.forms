@@ -89,8 +89,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
-    public Object getSymbol(char symbol) throws Exception {
-        return util.evaluate(String.valueOf(symbol));
+    public Object getObjectFromString(String string) throws Exception {
+        return util.evaluate(String.valueOf(string));
     }
 
     @Override

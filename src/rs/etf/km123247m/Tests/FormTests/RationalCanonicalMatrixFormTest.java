@@ -27,8 +27,8 @@ public class RationalCanonicalMatrixFormTest {
     public void setUp() throws Exception {
         paths = new String[] {
             "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-//            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-//            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt"
+            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix2.txt",
+            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt"
         };
     }
 
@@ -51,6 +51,7 @@ public class RationalCanonicalMatrixFormTest {
                     switch (event.getType()) {
                         case FormEvent.PROCESSING_START:
                             output = "PROCESSING_START\n";
+                            output += form.getStartMatrix().toString() + "\n";
                             output += form.getTransitionalMatrix().toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_STATUS:
@@ -59,7 +60,7 @@ public class RationalCanonicalMatrixFormTest {
                             break;
                         case FormEvent.PROCESSING_END:
                             output = "PROCESSING_END\n";
-                            output += form.getTransitionalMatrix().toString() + "\n";
+                            output += form.getFinalMatrix().toString() + "\n";
                             output += "PROCESSING_END\n";
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
@@ -69,7 +70,7 @@ public class RationalCanonicalMatrixFormTest {
                     }
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-//                    System.out.println(output);
+                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);

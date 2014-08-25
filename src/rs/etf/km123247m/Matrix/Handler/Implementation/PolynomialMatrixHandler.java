@@ -46,5 +46,6 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     protected abstract Object getElementEquivalentToOne() throws Exception;
     protected abstract Object getElementEquivalentToZero() throws Exception;
     protected abstract int getHighestPower(Object element);
+
     protected abstract Object getLeadingCoefficientOfElement(Object element) throws Exception;
 }

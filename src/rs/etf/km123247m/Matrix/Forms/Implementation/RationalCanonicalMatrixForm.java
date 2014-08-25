@@ -75,7 +75,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
         for (int row = 0; row < rowNumber; row++) {
             for (int column = 0; column < columnNumber; column++) {
                 if (row == column) {
-                    xIminusA.set(new MatrixCell(row, column, getHandler().getSymbol('x')));
+                    xIminusA.set(new MatrixCell(row, column, getHandler().getObjectFromString("x")));
                     p.set(new MatrixCell(row, column, one));
                     q.set(new MatrixCell(row, column, one));
                 } else {
@@ -83,6 +83,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     p.set(new MatrixCell(row, column, zero));
                     q.set(new MatrixCell(row, column, zero));
                 }
+                finalMatrix.set(new MatrixCell(row, column, zero));
             }
         }
         handler.setMatrix(xIminusA);

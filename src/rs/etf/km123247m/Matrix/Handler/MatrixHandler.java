@@ -140,6 +140,5 @@ public abstract class MatrixHandler {
 
     public abstract int compare(Object element1, Object element2);
 
-    public abstract Object getSymbol(char symbol) throws Exception;
-
+    public abstract Object getObjectFromString(String string) throws Exception;
 }
