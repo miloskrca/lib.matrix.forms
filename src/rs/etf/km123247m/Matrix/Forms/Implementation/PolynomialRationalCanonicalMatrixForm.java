@@ -53,19 +53,19 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
 
     protected void setBlock(int startRow, int size, ArrayList<CoefficientPowerPair> blockPairs) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
-        IMatrix matrix = handler.getMatrix();
         if(size > 1) {
             for(int row = startRow + 1; row < startRow + size; row++) {
                 Object one = handler.getOne();
                 getFinalMatrix().set(new MatrixCell(row, row - 1, one));
             }
         }
+        int power = 0;
         for(int row = startRow; row < startRow + size; row++) {
-            Object element = getCoefficientForElementWithPower(blockPairs, row);
+            Object element = getCoefficientForElementWithPower(blockPairs, power++);
             if(!handler.isZeroElement(element)) {
                 element = handler.calculateNegativeElement(element);
             }
-            getFinalMatrix().set(new MatrixCell(row, matrix.getRowNumber() - 1, element));
+            getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, element));
         }
     }
 

@@ -28,7 +28,8 @@ public class RationalCanonicalMatrixFormTest {
         paths = new String[] {
             "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
             "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix2.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt"
+            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt",
+            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix4.txt"
         };
     }
 
@@ -60,6 +61,7 @@ public class RationalCanonicalMatrixFormTest {
                             break;
                         case FormEvent.PROCESSING_END:
                             output = "PROCESSING_END\n";
+                            output += form.getTransitionalMatrix().toString() + "\n";
                             output += form.getFinalMatrix().toString() + "\n";
                             output += "PROCESSING_END\n";
                             break;
@@ -70,7 +72,7 @@ public class RationalCanonicalMatrixFormTest {
                     }
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-                    System.out.println(output);
+//                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);
