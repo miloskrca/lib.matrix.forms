@@ -95,9 +95,16 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected Object getLeadingCoefficientOfElement(Object element) throws Exception {
-        return getLeadingCoefficientOfElementRecursive((IExpr) element).getCoefficient();
+        return getLeadingCoefficientAndPowerOfElementRecursive((IExpr) element).getCoefficient();
     }
 
+    /**
+     * Creates a list of Coefficient-Power pairs for the given polynomial.
+     *
+     * @param elementObject Given polynomial
+     * @return Returns a list of Coefficient-Power pairs.
+     * @throws Exception
+     */
     public ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(Object elementObject) throws Exception {
         IExpr element = (IExpr) elementObject;
         IExpr zero = (IExpr) getElementEquivalentToZero();
@@ -112,7 +119,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             String method = element.getAt(0).toString();
             if(method.equals("Plus")) {
                 for(IExpr leaf: element.leaves()) {
-                    pairs.add(getLeadingCoefficientOfElementRecursive(leaf));
+                    pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                 }
             } else if(method.equals("Times")) {
                 if(element.leaves().size() > 2) {
@@ -152,7 +159,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return pairs;
     }
 
-    protected CoefficientPowerPair getLeadingCoefficientOfElementRecursive(IExpr element) throws Exception {
+    protected CoefficientPowerPair getLeadingCoefficientAndPowerOfElementRecursive(IExpr element) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
         IExpr coefficient = null;
         IExpr highestPower = util.evaluate("-1");

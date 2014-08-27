@@ -22,6 +22,12 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         super(handler);
     }
 
+    /**
+     * Generates a matrix in rational canonical form based on matrix xIminusA
+     * that was previously transformed to Smith form.
+     *
+     * @throws Exception
+     */
     @Override
     protected void generateMatrixInRationalCanonicalForm() throws Exception {
         // xIminusA is now in Smith normal form
@@ -51,9 +57,20 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
 
     }
 
+    /**
+     * Generates and adds a block to final matrix.
+     *
+     * @param startRow Row the block starts from.
+     * @param size Size of the block.
+     * @param blockPairs Coefficient-Power pars gotten from
+     *                   corresponding polynomial from which the block is generated.
+     * @throws Exception
+     */
     protected void setBlock(int startRow, int size, ArrayList<CoefficientPowerPair> blockPairs) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
         if(size > 1) {
+            // add ones in diagonal below the main diagonal
+            // but only inside the current block
             for(int row = startRow + 1; row < startRow + size; row++) {
                 Object one = handler.getOne();
                 getFinalMatrix().set(new MatrixCell(row, row - 1, one));
@@ -61,14 +78,23 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         }
         int power = 0;
         for(int row = startRow; row < startRow + size; row++) {
-            Object element = getCoefficientForElementWithPower(blockPairs, power++);
-            if(!handler.isZeroElement(element)) {
-                element = handler.calculateNegativeElement(element);
+            // (negative) coefficient to be added to block
+            Object coefficient = getCoefficientForElementWithPower(blockPairs, power++);
+            if(!handler.isZeroElement(coefficient)) {
+                coefficient = handler.calculateNegativeElement(coefficient);
             }
-            getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, element));
+            getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, coefficient));
         }
     }
 
+    /**
+     * Returns coefficient of the element with requested power.
+     *
+     * @param pairs Coefficient-Power pairs which will be iterated.
+     * @param power Power of the element from which the coefficient is requested.
+     * @return Returns coefficient of the element with requested power.
+     * @throws Exception
+     */
     protected Object getCoefficientForElementWithPower(ArrayList<CoefficientPowerPair> pairs, int power) throws Exception {
         Iterator<CoefficientPowerPair> iterator = pairs.iterator();
         Object coefficient = null;
@@ -78,6 +104,8 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
                 coefficient = pair.getCoefficient();
             }
         }
+        // if the requested element is not located in the pars array
+        // then it means that the coefficient is equal to 0
         if(coefficient == null) {
             coefficient = getHandler().getObjectFromString("0");
         }
@@ -85,6 +113,13 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         return coefficient;
     }
 
+    /**
+     * Returns the highest power from the supplied Coefficient-Power pairs.
+     *
+     * @param pairs Coefficient-Power pairs to be iterated.
+     * @return Returns the highest power from the supplied Coefficient-Power pairs.
+     * @throws Exception
+     */
     protected int getHighestPower(ArrayList<CoefficientPowerPair> pairs) throws Exception {
         Iterator<CoefficientPowerPair> iterator = pairs.iterator();
         int power = 0;

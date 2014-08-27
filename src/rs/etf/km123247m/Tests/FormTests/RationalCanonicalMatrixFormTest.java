@@ -4,7 +4,6 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.PolynomialRationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.Implementation.RationalCanonicalMatrixForm;
-import rs.etf.km123247m.Matrix.Forms.MatrixForm;
 import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
@@ -36,18 +35,20 @@ public class RationalCanonicalMatrixFormTest {
     @Test
     public void testProcess() throws Exception {
 
-        for (String path : paths) {
+        for (int i = 0; i < paths.length; i++) {
+            final String path = paths[i];
             File file = new File(path);
             IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
             MatrixHandler handler = new SymJaMatrixHandler(matrix);
-            MatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
+            final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
+            final int finalI = i;
             Observer observer = new Observer() {
                 @Override
                 public void update(Observable o, Object arg) {
-                    FormEvent event = (FormEvent)arg;
+                    FormEvent event = (FormEvent) arg;
                     RationalCanonicalMatrixForm form = (RationalCanonicalMatrixForm) o;
                     switch (event.getType()) {
                         case FormEvent.PROCESSING_START:
@@ -64,12 +65,18 @@ public class RationalCanonicalMatrixFormTest {
                             output += form.getTransitionalMatrix().toString() + "\n";
                             output += form.getFinalMatrix().toString() + "\n";
                             output += "PROCESSING_END\n";
+                            try {
+                                assertAllOK(matrixForm, finalI);
+                            } catch (Exception e) {
+                                System.out.println("Exception: " + e.getMessage());
+                            }
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
                             System.out.println("Exception: " + event.getMessage());
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
+                    // assert no endless loop
                     assert !lastOutput.equals(output);
                     lastOutput = output;
 //                    System.out.println(output);
@@ -77,6 +84,63 @@ public class RationalCanonicalMatrixFormTest {
             };
             matrixForm.addObserver(observer);
             matrixForm.start();
+        }
+    }
+
+    protected void assertAllOK(PolynomialRationalCanonicalMatrixForm matrixForm, int path) throws Exception {
+        IMatrix matrix = matrixForm.getFinalMatrix();
+        MatrixHandler handler = matrixForm.getHandler();
+        switch (path) {
+            case 0: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
+//                | 1  0 |
+//                | 0  Plus[-2, Times[-5, x], Power[x, 2]] |
+                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("2")) == 0;
+                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("5")) == 0;
+                break;
+            case 1: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix2.txt",
+//                | 1  0  0 |
+//                | 0  1  0 |
+//                | 0  0  Plus[Times[10, x], Times[-11, Power[x, 2]], Power[x, 3]] |
+                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("-10")) == 0;
+                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("11")) == 0;
+                break;
+            case 2: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt",
+//                | 1  0  0 |
+//                | 0  1  0 |
+//                | 0  0  Plus[18, Times[-9, x], Times[-2, Power[x, 2]], Power[x, 3]] |
+                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("-18")) == 0;
+                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("9")) == 0;
+                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("2")) == 0;
+                break;
+            case 3: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix4.txt"
+//                | 1  0  0 |
+//                | 0  1  0 |
+//                | 0  0  Plus[Times[-1, Power[x, 2]], Power[x, 3]] |
+                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("1")) == 0;
+                break;
         }
     }
 }
