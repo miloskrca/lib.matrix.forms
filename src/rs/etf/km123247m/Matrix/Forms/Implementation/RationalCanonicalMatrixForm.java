@@ -104,6 +104,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
         // handle status events, ignore start and end events
         if (event.getType() == FormEvent.PROCESSING_STATUS) {
             ICommand lastCommand = smithMatrixForm.getCommands().getLast();
+            this.getCommands().add(lastCommand);
             try {
                 if (lastCommand.affectsColumns()) {
                     getHandler().setMatrix(getP());
