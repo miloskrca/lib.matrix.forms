@@ -9,20 +9,20 @@ import org.matheclipse.core.interfaces.IExpr;
  * package: rs.etf.km123247m.Matrix.Handler
  */
 public class CoefficientPowerPair {
-    private IExpr power;
-    private IExpr coefficient;
+    private Object power;
+    private Object coefficient;
 
     public CoefficientPowerPair() {
         this.power = null;
         this.coefficient = null;
     }
 
-    public CoefficientPowerPair(IExpr coefficient, IExpr power) {
+    public CoefficientPowerPair(Object coefficient, Object power) {
         this.power = power;
         this.coefficient = coefficient;
     }
 
-    public IExpr getPower() {
+    public Object getPower() {
         return power;
     }
 
@@ -30,7 +30,7 @@ public class CoefficientPowerPair {
         this.power = power;
     }
 
-    public IExpr getCoefficient() {
+    public Object getCoefficient() {
         return coefficient;
     }
 

@@ -181,11 +181,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         IExpr coefficient = null;
         IExpr highestPower = util.evaluate("-1");
         for(CoefficientPowerPair pair: pairs) {
-           if(highestPower.compareTo(pair.getPower()) == -1) {
-               highestPower = pair.getPower();
-               coefficient = pair.getCoefficient();
+           if(highestPower.compareTo((IExpr) pair.getPower()) == -1) {
+               highestPower = (IExpr) pair.getPower();
+               coefficient = (IExpr) pair.getCoefficient();
            } else if(coefficient == null) {
-               coefficient = pair.getCoefficient();
+               coefficient = (IExpr) pair.getCoefficient();
            }
         }
 
@@ -213,8 +213,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(evaluate(expr));
             IExpr highestPower = util.evaluate("-1");
             for(CoefficientPowerPair pair: pairs) {
-                if(highestPower.compareTo(pair.getPower()) == -1) {
-                    highestPower = pair.getPower();
+                if(highestPower.compareTo((IExpr) pair.getPower()) == -1) {
+                    highestPower = (IExpr) pair.getPower();
                 }
             }
             power = Integer.parseInt(highestPower.toString());

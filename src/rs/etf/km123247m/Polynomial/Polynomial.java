@@ -33,7 +33,7 @@ public class Polynomial implements Comparable {
         return this;
     }
 
-    public Term getTerm(int index) throws Exception {
+    public Term getTerm(int index) {
         return terms.get(index);
     }
 
@@ -92,6 +92,17 @@ public class Polynomial implements Comparable {
         }
 
         return 0;
+    }
+
+    public int getHighestPower() {
+        int highestPower = 0;
+        for (int i = 0; i < terms.size(); i++) {
+            if(highestPower < getTerm(i).getPower()) {
+                highestPower = getTerm(i).getPower();
+            }
+        }
+
+        return highestPower;
     }
 
     public String toString() {

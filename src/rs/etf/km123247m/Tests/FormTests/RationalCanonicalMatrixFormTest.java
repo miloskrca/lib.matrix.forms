@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.PolynomialRationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.Implementation.RationalCanonicalMatrixForm;
-import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.Implementation.ApacheMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
-import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.Apache.ApacheMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
@@ -25,10 +25,10 @@ public class RationalCanonicalMatrixFormTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[] {
-//            file(1),
+            file(1),
 //            file(2),
 //                file(3),
-                file(4),
+//                file(4),
         };
     }
 
@@ -42,10 +42,10 @@ public class RationalCanonicalMatrixFormTest {
         for (int i = 0; i < paths.length; i++) {
             final String path = paths[i];
             File file = new File(path);
-            IParser parser = new IExprMatrixFileParser(file);
+            IParser parser = new ApacheMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
-            MatrixHandler handler = new SymJaMatrixHandler(matrix);
+            MatrixHandler handler = new ApacheMatrixHandler(matrix);
             final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
             final int finalI = i;
