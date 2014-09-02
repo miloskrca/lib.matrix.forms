@@ -32,7 +32,8 @@ public class SmithMatrixFormOutputTest {
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix5.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix6.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix7.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix8.txt"
+            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix8.txt",
+            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix9.txt",
         };
     }
 

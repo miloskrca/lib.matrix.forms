@@ -9,12 +9,12 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
+import rs.etf.km123247m.Observer.FormObserver;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
 import java.util.Observable;
-import java.util.Observer;
 
 public class RationalCanonicalMatrixFormTest {
 
@@ -25,11 +25,15 @@ public class RationalCanonicalMatrixFormTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[] {
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix2.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt",
-            "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix4.txt"
+//            file(1),
+//            file(2),
+//                file(3),
+                file(4),
         };
+    }
+
+    protected String file(int number) {
+        return "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix" + number + ".txt";
     }
 
     @Test
@@ -45,7 +49,7 @@ public class RationalCanonicalMatrixFormTest {
             final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
             final int finalI = i;
-            Observer observer = new Observer() {
+            FormObserver observer = new FormObserver() {
                 @Override
                 public void update(Observable o, Object arg) {
                     FormEvent event = (FormEvent) arg;
@@ -79,7 +83,7 @@ public class RationalCanonicalMatrixFormTest {
                     // assert no endless loop
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-//                    System.out.println(output);
+                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);

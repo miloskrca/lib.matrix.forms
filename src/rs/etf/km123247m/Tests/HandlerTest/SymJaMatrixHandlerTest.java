@@ -47,16 +47,16 @@ public class SymJaMatrixHandlerTest {
 
     @Test
     public void testGetLeadingCoefficientOfElement() throws Exception {
-        String coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(0, 0)).toString();
+        String coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(0, 0).getElement()).toString();
         assert "1".equals(coefficient);
 
-        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(0, 1)).toString();
+        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(0, 1).getElement()).toString();
         assert "1".equals(coefficient);
 
-        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 0)).toString();
+        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 0).getElement()).toString();
         assert "-1".equals(coefficient);
 
-        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 1)).toString();
+        coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 1).getElement()).toString();
         assert "5".equals(coefficient);
     }
 }

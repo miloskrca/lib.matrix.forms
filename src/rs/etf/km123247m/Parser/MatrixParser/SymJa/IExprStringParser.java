@@ -1,7 +1,6 @@
 package rs.etf.km123247m.Parser.MatrixParser.SymJa;
 
 import org.matheclipse.core.eval.EvalUtilities;
-import org.matheclipse.core.expression.F;
 import rs.etf.km123247m.Parser.MatrixParser.Polynomial.PolynomialStringParser;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
 import rs.etf.km123247m.Polynomial.Polynomial;
@@ -20,7 +19,7 @@ public class IExprStringParser extends StringParser {
 
     public IExprStringParser(boolean nativeInput) {
         super();
-        F.initSymbols(null);
+//        F.initSymbols(null);
         this.nativeInput = nativeInput;
         if(!nativeInput) {
             this.polynomialStringParser = new PolynomialStringParser();

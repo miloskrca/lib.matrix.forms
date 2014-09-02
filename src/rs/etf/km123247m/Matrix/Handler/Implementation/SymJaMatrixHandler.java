@@ -1,14 +1,13 @@
 package rs.etf.km123247m.Matrix.Handler.Implementation;
 
 import org.matheclipse.core.eval.EvalUtilities;
-import org.matheclipse.core.expression.F;
+import org.matheclipse.core.expression.Symbol;
 import org.matheclipse.core.interfaces.IExpr;
+import org.matheclipse.core.reflection.system.PolynomialQuotientRemainder;
 import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
 
 import java.util.ArrayList;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 /**
  * Implementation of matrix operations using SymJa library
@@ -24,7 +23,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     public SymJaMatrixHandler(IMatrix matrix) {
         super(matrix);
-        F.initSymbols(null);
+//        F.initSymbols(null);
     }
 
     @Override
@@ -49,21 +48,25 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
-        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + "]");
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", x]");
         // If the method is successful it will return [List, quotient, remainder],
         // if not it will return [PolynomialQuotientRemainder, element1, element2]
-        if(results.getAt(0).toString().equals("List")) {
-            results = results.getAt(1);
+        // if the function is successful and there is no remainder
+        if(results.isList() && isZeroElement(results.getAt(2))) {
+            results = evaluate(results.getAt(1));
         } else {
-            results = evaluate(element1.toString() + " / " + element2.toString());
+            //the result will just be th expression build from elements
+            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol("x"))[0]);
         }
+
         return results;
     }
 
-    @Override
     public Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception {
-        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + "]");
-        return results.getAt(2);
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", x]");
+        return evaluate(results.getAt(2));
+//        IExpr[] results = PolynomialQuotientRemainder.quotientRemainder((IExpr) element1, (IExpr) element2, new Symbol("x"));
+//        return evaluate(results[1]);
     }
 
     @Override
@@ -72,7 +75,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
-    public int comparePowersOfElements(Object element1, Object element2) {
+    public int comparePowersOfElements(Object element1, Object element2) throws Exception {
         int power1 = getHighestPower(element1);
         int power2 = getHighestPower(element2);
         return power1 > power2 ? 1 : (power1 < power2 ? -1 : 0);
@@ -80,7 +83,9 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public boolean isZeroElement(Object element) throws Exception {
-        return getElementEquivalentToZero().toString().equals(element.toString());
+        int result = (util.evaluate(element.toString())).compareTo((IExpr) getElementEquivalentToZero());
+        return result == 0;
+//        return getElementEquivalentToZero().toString().equals(element.toString());
     }
 
     @Override
@@ -91,6 +96,13 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     @Override
     public Object getObjectFromString(String string) throws Exception {
         return util.evaluate(String.valueOf(string));
+    }
+
+    @Override
+    public boolean isElementDividing(Object element1, Object element2) throws Exception {
+        Object remainder = divideCellElementsAndReturnRemainder(element1, element2);
+        Object quotient = divideCellElements(element1, element2);
+        return !isZeroElement(quotient) && isZeroElement(remainder);
     }
 
     @Override
@@ -116,37 +128,42 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                 zero
             ));
         } else if(element.leaves() != null) {
-            String method = element.getAt(0).toString();
-            if(method.equals("Plus")) {
+            if(element.isPlus()) {
                 for(IExpr leaf: element.leaves()) {
                     pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                 }
-            } else if(method.equals("Times")) {
+            } else if(element.isTimes()) {
                 if(element.leaves().size() > 2) {
-                    throw new Exception("Fix this!");
-                }
-                CoefficientPowerPair tempCoefficientPowerPair = new CoefficientPowerPair();
-                IExpr firstLeaf = element.getAt(1);
-                IExpr secondLeaf = element.getAt(2);
-                if(secondLeaf.leaves() != null) {
-                    String method2 = secondLeaf.getAt(0).toString();
-                    if(method2.equals("Power")) {
-                        tempCoefficientPowerPair.setPower(secondLeaf.getAt(2));
-                    } else {
-                        throw new Exception("Fix this2!");
+                    for(IExpr leaf: element.leaves()) {
+                        pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                     }
-                } else if (secondLeaf.isSymbol()) {
-                    tempCoefficientPowerPair.setPower(one);
                 } else {
-                    throw new Exception("Fix this3!");
+                    IExpr firstLeaf = element.getAt(1);
+                    IExpr secondLeaf = element.getAt(2);
+                    CoefficientPowerPair tempCoefficientPowerPair = new CoefficientPowerPair();
+                    if(secondLeaf.leaves() != null) {
+                        if(secondLeaf.isPower()) {
+                            tempCoefficientPowerPair.setPower(secondLeaf.getAt(2));
+                        } else {
+                            throw new Exception("Fix this2!");
+                        }
+                    } else if (secondLeaf.isSymbol()) {
+                        tempCoefficientPowerPair.setPower(one);
+                    } else {
+                        throw new Exception("Fix this3!");
+                    }
+                    if(firstLeaf.isNumber()) {
+                        tempCoefficientPowerPair.setCoefficient(firstLeaf);
+                    } else if(firstLeaf.leaves().size() > 1) {
+                        for(IExpr leaf: element.leaves()) {
+                            pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
+                        }
+                    } else {
+                        throw new Exception("Fix this4!");
+                    }
+                    pairs.add(tempCoefficientPowerPair);
                 }
-                if(firstLeaf.isNumber()) {
-                    tempCoefficientPowerPair.setCoefficient(firstLeaf);
-                } else {
-                    throw new Exception("Fix this4!");
-                }
-                pairs.add(tempCoefficientPowerPair);
-            } else if(method.equals("Power")) {
+            } else if(element.isPower()) {
                 pairs.add(new CoefficientPowerPair(
                     one,
                     element.getAt(2)
@@ -171,30 +188,46 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                coefficient = pair.getCoefficient();
            }
         }
+
         return new CoefficientPowerPair(coefficient, highestPower);
     }
 
     protected IExpr evaluate(Object expr) throws Exception {
-        return util.evaluate("Expand[" + expr.toString() + "]");
+        IExpr result;
+        try {
+            result = util.evaluate("Expand[" + expr.toString() + "]");
+        } catch (Exception exception) {
+            result = util.evaluate(expr.toString());
+        }
+        return result;
     }
 
-    @Override
-    protected int getHighestPower(Object expr) {
-        int power = 1;
+    protected int getHighestPower(Object expr) throws Exception {
+
+        int power;
         String exprString = expr.toString().replace(" ", "");
 
         if(isNumeric(exprString)) {
             power = 0;
         } else {
-            Pattern p = Pattern.compile("Power\\[(.),(\\d+)\\]");
-            Matcher m = p.matcher(exprString);
-
-            while(m.find()) {
-                int groupPower = Integer.parseInt(m.group(2));
-                if(groupPower > power) {
-                    power = groupPower;
+            ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(evaluate(expr));
+            IExpr highestPower = util.evaluate("-1");
+            for(CoefficientPowerPair pair: pairs) {
+                if(highestPower.compareTo(pair.getPower()) == -1) {
+                    highestPower = pair.getPower();
                 }
             }
+            power = Integer.parseInt(highestPower.toString());
+
+//            Pattern p = Pattern.compile("Power\\[(.+),(.+)\\]");
+//            Matcher m = p.matcher(exprString);
+//
+//            while(m.find()) {
+//                int groupPower = Integer.parseInt(m.group(2));
+//                if(groupPower > power) {
+//                    power = groupPower;
+//                }
+//            }
         }
 
         return power;

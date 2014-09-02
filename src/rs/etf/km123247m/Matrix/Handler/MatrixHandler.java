@@ -124,8 +124,6 @@ public abstract class MatrixHandler {
         return divideElements(object1, object2);
     }
 
-    public abstract Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception;
-
     protected abstract Object addElements(Object element1, Object element2) throws Exception;
 
     protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;
@@ -134,11 +132,13 @@ public abstract class MatrixHandler {
 
     public abstract Object calculateNegativeElement(Object element) throws Exception;
 
-    public abstract int comparePowersOfElements(Object element1, Object element2);
+    public abstract int comparePowersOfElements(Object element1, Object element2) throws Exception;
 
     public abstract boolean isZeroElement(Object element) throws Exception;
 
     public abstract int compare(Object element1, Object element2);
 
     public abstract Object getObjectFromString(String string) throws Exception;
+
+    public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
 }

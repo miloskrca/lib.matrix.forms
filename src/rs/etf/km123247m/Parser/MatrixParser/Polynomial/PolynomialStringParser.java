@@ -89,6 +89,7 @@ public class PolynomialStringParser extends StringParser {
                 var = parts.charAt(0);
             } else if(Character.isDigit(parts.charAt(0))) {
                 coefficient = String.valueOf(parts.charAt(0));
+                pow = 0;
             } else {
                 throw new Exception("qurac3");
             }
