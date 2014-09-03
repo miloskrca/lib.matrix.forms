@@ -84,10 +84,13 @@ public class PolynomialStringParser extends StringParser {
     }
 
     private void handleCoefficientAndVar(String parts) throws Exception {
-        if((parts.length() == 1)) {
+        if((parts.length() == 1) || isNumeric(parts)) {
             if(Character.isLetter(parts.charAt(0))) {
                 var = parts.charAt(0);
-            } else if(Character.isDigit(parts.charAt(0))) {
+            } else if(isDouble(parts)) {
+                coefficient = String.valueOf(parts);
+                pow = 0;
+            } else if (Character.isDigit(parts.charAt(0))) {
                 coefficient = String.valueOf(parts.charAt(0));
                 pow = 0;
             } else {
@@ -119,7 +122,11 @@ public class PolynomialStringParser extends StringParser {
     }
 
     private boolean isNumeric(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || isDouble(s);
+    }
+
+    private boolean isDouble(String s) {
+        return s.matches("[-+]?\\d*\\.?\\d+");
     }
 
     @Override

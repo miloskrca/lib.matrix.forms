@@ -51,11 +51,9 @@ public class ApacheMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected Object getLeadingCoefficientOfElement(Object element) throws Exception {
-        return ((MathITPolynomial)element).lastEntry().getValue();
-    }
-
-    public Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception {
-        return ((MathITPolynomial)element1).divide(((MathITPolynomial)element2))[1];
+        return getObjectFromString(
+            String.valueOf(((MathITPolynomial)element).firstEntry().getValue())
+        );
     }
 
     @Override
@@ -75,7 +73,9 @@ public class ApacheMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public Object calculateNegativeElement(Object element) throws Exception {
-        //@TODO: check if zero
+        if(isZeroElement(element)) {
+            return element;
+        }
         MathITPolynomial negativeOne = new MathITPolynomial();
         negativeOne.put(0, (double) -1);
         return ((MathITPolynomial)element).multiply(negativeOne);
@@ -90,14 +90,13 @@ public class ApacheMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public boolean isZeroElement(Object element) throws Exception {
-        //@TODO: this lib can have 0 for all elements so size() is not good enough
-        Map.Entry<Integer, Double> entry = ((MathITPolynomial)element).firstEntry();
-        return ((MathITPolynomial)element).size() == 1 && entry.getValue() == 0 && entry.getKey() == 0;
+        return ((MathITPolynomial)element).isZero();
     }
 
     @Override
-    public int compare(Object element1, Object element2) {
-        return element1.equals(element2) ? 0 : 1;
+    public int compare(Object element1, Object element2) throws Exception {
+        MathITPolynomial result = ((MathITPolynomial)element1).subtract((MathITPolynomial)element2);
+        return isZeroElement(result) ? 0 : 1;
     }
 
     @Override

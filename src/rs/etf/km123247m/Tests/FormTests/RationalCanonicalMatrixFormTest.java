@@ -26,9 +26,9 @@ public class RationalCanonicalMatrixFormTest {
     public void setUp() throws Exception {
         paths = new String[] {
             file(1),
-//            file(2),
-//                file(3),
-//                file(4),
+            file(2),
+            file(3),
+            file(4),
         };
     }
 
@@ -80,6 +80,7 @@ public class RationalCanonicalMatrixFormTest {
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
+                    // @TODO: 4-th test case is not passing, remainder of the division is in the way
                     // assert no endless loop
                     assert !lastOutput.equals(output);
                     lastOutput = output;
@@ -103,33 +104,27 @@ public class RationalCanonicalMatrixFormTest {
                 assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
                 assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("5")) == 0;
                 break;
-            case 1: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix2.txt",
-//                | 1  0  0 |
-//                | 0  1  0 |
-//                | 0  0  Plus[Times[10, x], Times[-11, Power[x, 2]], Power[x, 3]] |
+            case 1: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
+//                | 1  0 |
+//                | 0  Plus[-2, Times[-5, x], Power[x, 2]] |
                 assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("7")) == 0;
                 assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("-10")) == 0;
-                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("11")) == 0;
+                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("6")) == 0;
                 break;
             case 2: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt",
 //                | 1  0  0 |
-//                | 0  1  0 |
-//                | 0  0  Plus[18, Times[-9, x], Times[-2, Power[x, 2]], Power[x, 3]] |
-                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
+//                | 0, x - 2, 0 |
+//                | 0, 0, x^2 - 5*x + 6 |
+                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("2")) == 0;
                 assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("-18")) == 0;
-                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
+                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
+                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("0")) == 0;
                 assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("9")) == 0;
+                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("-6")) == 0;
                 assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
                 assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("2")) == 0;
+                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("5")) == 0;
                 break;
             case 3: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix4.txt"
 //                | 1  0  0 |

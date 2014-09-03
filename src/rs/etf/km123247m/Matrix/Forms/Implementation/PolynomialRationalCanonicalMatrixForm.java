@@ -80,10 +80,11 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         for(int row = startRow; row < startRow + size; row++) {
             // (negative) coefficient to be added to block
             Object coefficient = getCoefficientForElementWithPower(blockPairs, power++);
-            if(!handler.isZeroElement(coefficient)) {
-                coefficient = handler.calculateNegativeElement(coefficient);
+            Object coefficientObject = getHandler().getObjectFromString(String.valueOf(coefficient));
+            if(!handler.isZeroElement(coefficientObject)) {
+                coefficientObject = handler.calculateNegativeElement(coefficientObject);
             }
-            getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, coefficient));
+            getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, coefficientObject));
         }
     }
 
@@ -100,7 +101,8 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         Object coefficient = null;
         while (iterator.hasNext()) {
             CoefficientPowerPair pair = iterator.next();
-            if(getHandler().compare(pair.getPower(), getHandler().getObjectFromString(String.valueOf(power))) == 0) {
+            Object powerObject = getHandler().getObjectFromString(String.valueOf(pair.getPower()));
+            if(getHandler().compare(powerObject, getHandler().getObjectFromString(String.valueOf(power))) == 0) {
                 coefficient = pair.getCoefficient();
             }
         }

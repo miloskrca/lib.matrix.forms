@@ -136,7 +136,7 @@ public abstract class MatrixHandler {
 
     public abstract boolean isZeroElement(Object element) throws Exception;
 
-    public abstract int compare(Object element1, Object element2);
+    public abstract int compare(Object element1, Object element2) throws Exception;
 
     public abstract Object getObjectFromString(String string) throws Exception;
 

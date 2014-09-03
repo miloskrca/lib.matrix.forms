@@ -56,6 +56,8 @@ public class SmithMatrixForm extends MatrixForm {
             } // } while (!isRowCleared(range));
         }
 
+        sendUpdate(FormEvent.PROCESSING_STATUS, "Fixing elements on the diagonal");
+
         for (int range = 0; range < matrixSize - 1; range++) {
             if (!isTheNextElementDividedByThisElement(range)) {
                 addTwoRows(range + 1, range); //stores in second
