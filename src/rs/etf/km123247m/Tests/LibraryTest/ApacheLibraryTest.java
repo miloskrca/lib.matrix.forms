@@ -3,12 +3,12 @@ package rs.etf.km123247m.Tests.LibraryTest;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.mathIT.algebra.Polynomial;
 import rs.etf.km123247m.Matrix.Handler.Implementation.ApacheMatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Parser.MatrixParser.Apache.ApacheMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
+import rs.etf.km123247m.Polynomial.MathITPolynomial;
 
 import java.io.File;
 
@@ -33,10 +33,10 @@ public class ApacheLibraryTest {
 
     @Test
     public void doSomeTests() throws Exception {
-        Polynomial p1 = (Polynomial) handler.getMatrix().get(0, 0).getElement();
-        Polynomial p2 = (Polynomial) handler.getMatrix().get(1, 1).getElement();
-        System.out.println(p2.divide(p1)[0]);
-        System.out.println(p2.divide(p1)[1]);
+        MathITPolynomial p1 = (MathITPolynomial) handler.getMatrix().get(0, 0).getElement();
+        MathITPolynomial p2 = (MathITPolynomial) handler.getMatrix().get(1, 1).getElement();
+        assert ("5 x^3 - 10 x^2 + 19 x - 37 ").equals(p2.divide(p1)[0].toString());
+        assert ("74 ").equals(p2.divide(p1)[1].toString());
     }
 
 }

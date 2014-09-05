@@ -29,6 +29,7 @@ public class RationalCanonicalMatrixFormTest {
             file(2),
             file(3),
             file(4),
+            file(5),
         };
     }
 
@@ -84,7 +85,7 @@ public class RationalCanonicalMatrixFormTest {
                     // assert no endless loop
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-                    System.out.println(output);
+//                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);
@@ -125,20 +126,6 @@ public class RationalCanonicalMatrixFormTest {
                 assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
                 assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
                 assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("5")) == 0;
-                break;
-            case 3: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix4.txt"
-//                | 1  0  0 |
-//                | 0  1  0 |
-//                | 0  0  Plus[Times[-1, Power[x, 2]], Power[x, 3]] |
-                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("1")) == 0;
                 break;
         }
     }

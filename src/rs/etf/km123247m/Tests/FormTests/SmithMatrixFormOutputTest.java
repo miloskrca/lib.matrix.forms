@@ -4,12 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.SmithMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
-import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.Implementation.ApacheMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
-import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.Apache.ApacheMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
@@ -29,7 +29,7 @@ public class SmithMatrixFormOutputTest {
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix2.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix3.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix4.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix5.txt",
+//            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix5.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix6.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix7.txt",
             "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix8.txt",
@@ -42,10 +42,10 @@ public class SmithMatrixFormOutputTest {
 
         for (String path : paths) {
             File file = new File(path);
-            IParser parser = new IExprMatrixFileParser(file);
+            IParser parser = new ApacheMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
-            MatrixHandler handler = new SymJaMatrixHandler(matrix);
+            MatrixHandler handler = new ApacheMatrixHandler(matrix);
             MatrixForm matrixForm = new SmithMatrixForm(handler);
 
             Observer observer = new Observer() {

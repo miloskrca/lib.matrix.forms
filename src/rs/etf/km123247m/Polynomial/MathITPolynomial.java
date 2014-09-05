@@ -1,9 +1,11 @@
 package rs.etf.km123247m.Polynomial;
 
+import org.mathIT.algebra.ExponentComparator;
 import org.mathIT.algebra.Polynomial;
+import rs.etf.km123247m.PropertyManager.PropertyManager;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
@@ -14,6 +16,7 @@ import java.util.Map;
  */
 public class MathITPolynomial {
     private final Polynomial object;
+    private static final double ACCURACY = Double.parseDouble(PropertyManager.getProperty("accuracy"));
 
     public MathITPolynomial(org.mathIT.algebra.Polynomial polynomial) {
         object = polynomial;
@@ -31,18 +34,68 @@ public class MathITPolynomial {
         };
     }
 
+    /**
+     * Multiplies element with supplied element.
+     *
+     * Not using multiply from org.mathIT.algebra.Polynomial because it
+     * throws an ConcurrentModificationException in TreeMap
+     *
+     * @param element Element to multiply with
+     * @return Result of the multiplication
+     * @throws ParseException
+     */
     public MathITPolynomial multiply(MathITPolynomial element) throws ParseException {
         if(isZero() || element.isZero()) {
             MathITPolynomial p = new MathITPolynomial();
             p.put(0, (double) 0);
             return p.roundDown();
         }
-        MathITPolynomial e = new MathITPolynomial(object.multiply(element.getObject()));
+        MathITPolynomial e = new MathITPolynomial(oMultiply(element.getObject()));
+//        MathITPolynomial e = new MathITPolynomial(object.multiply(element.getObject()));
 
         return e.roundDown();
     }
 
-    // @TODO: check if this is good enough (only 0.0, maybe rounding needed first)
+    /**
+     * Multiplies this polynomial with the given polynomial <i>q</i>.
+     * @param q the polynomial to be multiplied with this polynomial
+     * @return the product of this polynomial times <i>q</i>
+     */
+    protected Polynomial oMultiply( Polynomial q ) {
+        Polynomial p = object,
+                r = new Polynomial(new ExponentComparator());
+
+        int i, j;
+        Integer k;
+        double tmp;
+        int degP = p.deg();
+        int degQ = q.deg();
+
+        for (i = 0; i <= degP; i++) {
+            for (j = 0; j <= degQ; j++) {
+                if ( p.get(i) != null && q.get(j) != null ) {
+                    k = i + j;
+                    if ( r.get(k) != null ) {
+                        tmp = r.get(k);
+                    } else {
+                        tmp = 0;
+                    }
+                    tmp += p.get(i) * q.get(j);
+                    r.put( k, tmp);
+                }
+            }
+        }
+
+        // THIS THROWS ConcurrentModificationException  in TreeMap
+
+        // clear all terms whose coefficients are near to zero:
+//        Set<Integer> keys = r.keySet();
+//        for( Integer e : keys ) {
+//            if ( Math.abs(r.get(e)) < ACCURACY ) r.remove(e);
+//        }
+        return r;
+    }
+
     public boolean isZero() {
         for (Map.Entry<Integer, Double> integerDoubleEntry : object.entrySet()) {
             if (integerDoubleEntry.getValue() != 0.0) {
@@ -91,16 +144,19 @@ public class MathITPolynomial {
     }
 
     public MathITPolynomial roundDown() throws ParseException {
-        DecimalFormat df = new DecimalFormat("0.00000000000000");
-
+        ArrayList<Map.Entry<Integer, Double>> toDeleteList = new ArrayList<Map.Entry<Integer, Double>>();
         for (Map.Entry<Integer, Double> term : object.entrySet()) {
             Double coefficient = term.getValue();
-            // if the coefficient is too small or too large
-            if(coefficient.toString().contains("E")) {
-                String format = df.format(coefficient);
-                double finalValue = (Double)df.parse(format) ;
-                term.setValue(finalValue);
+            // if the coefficient is too small
+            if (Math.abs(coefficient) < ACCURACY) {
+                    toDeleteList.add(term);
             }
+        }
+
+        // Do removing separate because otherwise ConcurrentModificationException
+        // is thrown in TreeMap
+        for(Map.Entry<Integer, Double> term : toDeleteList) {
+            object.remove(term.getKey());
         }
 
         return this;

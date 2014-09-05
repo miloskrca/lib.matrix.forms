@@ -28,10 +28,10 @@ public class SmithMatrixForm extends MatrixForm {
 
         for (int range = 0; range < matrixSize - 1; range++) {
             while (!isRowCleared(range) || !isColumnCleared(range)) { // do {
-                // Moving smallest to start...
-                MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
-                moveCellToStartPosition(range, smallestCell);
                 while (!isColumnCleared(range)) { // do {
+                    // Moving smallest to start...
+                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
+                    moveCellToStartPosition(range, smallestCell);
                     // make all elements, except for the first one, in the left outmost column equal to 0
                     for (int nextRow = range + 1; nextRow < matrixSize; nextRow++) {
                         MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
@@ -43,12 +43,14 @@ public class SmithMatrixForm extends MatrixForm {
                     }
                 } // } while (!isColumnCleared(range));
 
-                MatrixCell firstCell = handler.getMatrix().get(range, range);
+                // Moving smallest to start...
+                MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, matrixSize);
+                moveCellToStartPosition(range, smallestCell);
                 // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
                 for (int nextColumn = range + 1; nextColumn < matrixSize; nextColumn++) {
                     MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                     if (!getHandler().isZeroElement(nextCell.getElement())) {
-                        MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
+                        MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                         MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                         multiplyColumnWithCellAndAddToColumn(range, negativeQuotient, nextColumn);
                     }
@@ -64,10 +66,10 @@ public class SmithMatrixForm extends MatrixForm {
 
                 int tempMatrixSize = range + 2;
                 while (!isColumnCleared(range) || !isRowCleared(range)) { // do {
-                    // Moving smallest to start...
-                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
-                    moveCellToStartPosition(range, smallestCell);
                     while (!isRowCleared(range)) { // do {
+                        // Moving smallest to start...
+                        MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                        moveCellToStartPosition(range, smallestCell);
                         // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
                         for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
                             MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
@@ -79,11 +81,13 @@ public class SmithMatrixForm extends MatrixForm {
                         }
                     } // while (!isRowCleared(range));
 
-                    MatrixCell firstCell = handler.getMatrix().get(range, range);
+                    // Moving smallest to start...
+                    MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                    moveCellToStartPosition(range, smallestCell);
                     for (int nextRow = range + 1; nextRow < tempMatrixSize; nextRow++) {
                         MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
                         if (!getHandler().isZeroElement(nextCell.getElement())) {
-                            MatrixCell quotient = calculateQuotientForCell(nextCell, firstCell);
+                            MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
                             MatrixCell negativeQuotient = calculateNegativeCell(quotient);
                             multiplyRowWithCellAndAddToRow(range, negativeQuotient, nextRow);
                         }

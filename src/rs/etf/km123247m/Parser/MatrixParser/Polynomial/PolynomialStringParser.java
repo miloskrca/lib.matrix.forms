@@ -39,7 +39,7 @@ public class PolynomialStringParser extends StringParser {
     @Override
     protected Object generateObject(String input) throws Exception {
         Polynomial poly = new Polynomial();
-        input = input.replace("-", "+-");
+        input = input.replace("-", "+-").replace(" ", "");
         if(input.charAt(0) == Term.PLUS_CHAR) {
             // if the input starts with a "+" sign, remove it, so the split()
             // doesn't return an empty first element
@@ -122,7 +122,11 @@ public class PolynomialStringParser extends StringParser {
     }
 
     private boolean isNumeric(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || isDouble(s);
+        return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);
+    }
+
+    private boolean isFraction(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
     }
 
     private boolean isDouble(String s) {
