@@ -70,11 +70,43 @@ public abstract class MatrixHandler {
         return resultColumn;
     }
 
+    /**
+     * Adds two rows, stores in second.
+     *
+     * @param row1 First row.
+     * @param row2 Second row.
+     * @throws Exception
+     */
+    public void addRows(int row1, int row2) throws Exception {
+        int numOfColumns = matrix.getColumnNumber();
+        for (int column = 0; column < numOfColumns; column++) {
+            Object result = addElements(matrix.get(row1, column).getElement(), matrix.get(row2, column).getElement());
+            MatrixCell resultCell = new MatrixCell(row2, column, result);
+            matrix.set(resultCell);
+        }
+    }
+
     public void addRows(int row1, MatrixCell[] objectRow) throws Exception {
         int numOfColumns = matrix.getColumnNumber();
         for (int column = 0; column < numOfColumns; column++) {
             Object result = addElements(matrix.get(row1, column).getElement(), objectRow[column].getElement());
             MatrixCell resultCell = new MatrixCell(row1, column, result);
+            matrix.set(resultCell);
+        }
+    }
+
+    /**
+     * Adds two columns, stores in second.
+     *
+     * @param column1 First column.
+     * @param column2 Second column.
+     * @throws Exception
+     */
+    public void addColumns(int column1, int column2) throws Exception {
+        int numOfRows = matrix.getRowNumber();
+        for (int row = 0; row < numOfRows; row++) {
+            Object result = addElements(matrix.get(row, column1).getElement(), matrix.get(row, column2).getElement());
+            MatrixCell resultCell = new MatrixCell(row, column2, result);
             matrix.set(resultCell);
         }
     }
@@ -141,4 +173,5 @@ public abstract class MatrixHandler {
     public abstract Object getObjectFromString(String string) throws Exception;
 
     public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
+
 }
