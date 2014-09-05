@@ -195,9 +195,8 @@ public class SmithMatrixForm extends MatrixForm {
     }
 
     protected void addTwoRows(int row1, int row2) throws Exception {
-        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
-        ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
-            row1, row2, handler.getOne()
+        ICommand command = new AddRowsAndStoreCommand(
+            row1, row2
         );
         command.execute(getHandler());
         getCommands().add(command);
