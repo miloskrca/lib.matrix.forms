@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Parser.MatrixParser.Apache;
+package rs.etf.km123247m.Parser.MatrixParser.MathIT;
 
 import rs.etf.km123247m.Parser.MatrixParser.Polynomial.PolynomialStringParser;
 import rs.etf.km123247m.Parser.ParserTypes.StringParser;
@@ -12,11 +12,11 @@ import rs.etf.km123247m.Polynomial.Term;
  * <p/>
  * package: rs.etf.km123247m.Parser
  */
-public class ApacheStringParser extends StringParser {
+public class MathITStringParser extends StringParser {
 
     private PolynomialStringParser polynomialStringParser;
 
-    public ApacheStringParser() {
+    public MathITStringParser() {
         super();
         this.polynomialStringParser = new PolynomialStringParser();
     }

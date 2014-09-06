@@ -2,7 +2,7 @@ package rs.etf.km123247m.Matrix.Handler.Implementation;
 
 import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Parser.MatrixParser.Apache.ApacheStringParser;
+import rs.etf.km123247m.Parser.MatrixParser.MathIT.MathITStringParser;
 import rs.etf.km123247m.Polynomial.MathITPolynomial;
 
 import java.util.ArrayList;
@@ -16,9 +16,9 @@ import java.util.Map;
  *
  * package: rs.etf.km123247m.Matrix.Handler.Implementation.SymJa
  */
-public class ApacheMatrixHandler extends PolynomialMatrixHandler {
+public class MathITMatrixHandler extends PolynomialMatrixHandler {
 
-    public ApacheMatrixHandler(IMatrix matrix) {
+    public MathITMatrixHandler(IMatrix matrix) {
         super(matrix);
     }
 
@@ -101,7 +101,7 @@ public class ApacheMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public Object getObjectFromString(String string) throws Exception {
-        ApacheStringParser parser = new ApacheStringParser();
+        MathITStringParser parser = new MathITStringParser();
         parser.setInputString(string);
         return parser.parseInput();
     }

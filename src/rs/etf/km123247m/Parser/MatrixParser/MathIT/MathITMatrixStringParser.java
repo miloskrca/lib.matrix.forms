@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Parser.MatrixParser.Apache;
+package rs.etf.km123247m.Parser.MatrixParser.MathIT;
 
 import rs.etf.km123247m.Parser.MatrixParser.MatrixStringParser;
 import rs.etf.km123247m.Polynomial.MathITPolynomial;
@@ -9,19 +9,19 @@ import rs.etf.km123247m.Polynomial.MathITPolynomial;
  * <p/>
  * package: rs.etf.km123247m.Parser
  */
-public class ApacheMatrixStringParser extends MatrixStringParser {
+public class MathITMatrixStringParser extends MatrixStringParser {
 
-    private ApacheStringParser apacheStringParser;
+    private MathITStringParser mathITStringParser;
 
-    public ApacheMatrixStringParser() {
+    public MathITMatrixStringParser() {
         super();
-        apacheStringParser = new ApacheStringParser();
+        mathITStringParser = new MathITStringParser();
     }
 
     @Override
     protected MathITPolynomial createMatrixElement(String s) throws Exception {
-        apacheStringParser.setInputString(s);
-        return (MathITPolynomial) apacheStringParser.parseInput();
+        mathITStringParser.setInputString(s);
+        return (MathITPolynomial) mathITStringParser.parseInput();
     }
 
     @Override

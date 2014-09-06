@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.PolynomialRationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.Implementation.RationalCanonicalMatrixForm;
-import rs.etf.km123247m.Matrix.Handler.Implementation.ApacheMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.Implementation.MathITMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
-import rs.etf.km123247m.Parser.MatrixParser.Apache.ApacheMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.MathIT.MathITMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
@@ -42,10 +42,10 @@ public class RationalCanonicalMatrixFormTest {
 
         for (final String path : paths) {
             File file = new File(path);
-            IParser parser = new ApacheMatrixFileParser(file);
+            IParser parser = new MathITMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
-            MatrixHandler handler = new ApacheMatrixHandler(matrix);
+            MatrixHandler handler = new MathITMatrixHandler(matrix);
             final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
             FormObserver observer = new FormObserver() {
