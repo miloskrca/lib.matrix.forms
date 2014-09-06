@@ -25,22 +25,27 @@ public class SmithMatrixFormOutputTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[] {
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix1.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix2.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix3.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix4.txt",
-//            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix5.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix6.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix7.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix8.txt",
-            "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix9.txt",
+                file(1),
+                file(2),
+                file(3),
+                file(4),
+
+                file(6),
+                file(7),
+                file(8),
+                file(9),
+
         };
+    }
+
+    protected String file(int number) {
+        return "./TestData/FormTests/Smith/SmithMatrixFormTestMatrix" + number + ".txt";
     }
 
     @Test
     public void testProcess() throws Exception {
 
-        for (String path : paths) {
+        for (final String path : paths) {
             File file = new File(path);
             IParser parser = new ApacheMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
@@ -51,7 +56,7 @@ public class SmithMatrixFormOutputTest {
             Observer observer = new Observer() {
                 @Override
                 public void update(Observable o, Object arg) {
-                    FormEvent event = (FormEvent)arg;
+                    FormEvent event = (FormEvent) arg;
                     MatrixForm form = (MatrixForm) o;
                     switch (event.getType()) {
                         case FormEvent.PROCESSING_START:
@@ -66,6 +71,11 @@ public class SmithMatrixFormOutputTest {
                             output = "PROCESSING_END\n";
                             output += form.getHandler().getMatrix().toString();
                             output += "PROCESSING_END\n";
+                            try {
+                                assertAllOK(form, path);
+                            } catch (Exception e) {
+                                System.out.println("Exception: " + e.getMessage());
+                            }
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
                             System.out.println("Exception: " + event.getMessage());
@@ -80,5 +90,52 @@ public class SmithMatrixFormOutputTest {
             matrixForm.addObserver(observer);
             matrixForm.start();
         }
+    }
+
+    protected void assertAllOK(MatrixForm matrixForm, String path) throws Exception {
+        if (path.equals(file(1))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "x");
+
+        } else if (path.equals(file(2))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "x^2-8*x-9");
+
+        } else if (path.equals(file(3))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3+0.5*x^2+x-1");
+
+        } else if (path.equals(file(4))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "x^4-x^2+x");
+
+        } else if (path.equals(file(6))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3-9*x^2+26*x-24");
+
+        } else if (path.equals(file(7))) {
+            check(matrixForm, 0, 0, "x-2"); check(matrixForm, 0, 1, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "x-2");
+
+        } else if (path.equals(file(8))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3+x^2-3*x-4");
+
+        } else if (path.equals(file(9))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3-7*x^2+16*x-12");
+
+        }
+    }
+
+    protected void check(MatrixForm matrixForm, int row, int column, String value) throws Exception {
+        assert matrixForm.getHandler().compare(
+                matrixForm.getHandler().getMatrix().get(row, column).getElement(),
+                matrixForm.getHandler().getObjectFromString(value)
+        ) == 0;
     }
 }

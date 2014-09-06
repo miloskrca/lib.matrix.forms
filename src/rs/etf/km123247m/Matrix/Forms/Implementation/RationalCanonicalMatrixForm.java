@@ -92,7 +92,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     @Override
     protected void process() throws Exception {
-        SmithMatrixForm form = new SmithMatrixForm(getHandler());
+        MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);
         form.start();
     }

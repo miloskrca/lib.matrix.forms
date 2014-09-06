@@ -25,11 +25,11 @@ public class RationalCanonicalMatrixFormTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[] {
-            file(1),
-            file(2),
-            file(3),
-            file(4),
-            file(5),
+                file(1),
+                file(2),
+                file(3),
+                file(4),
+                file(5),
         };
     }
 
@@ -40,8 +40,7 @@ public class RationalCanonicalMatrixFormTest {
     @Test
     public void testProcess() throws Exception {
 
-        for (int i = 0; i < paths.length; i++) {
-            final String path = paths[i];
+        for (final String path : paths) {
             File file = new File(path);
             IParser parser = new ApacheMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
@@ -49,7 +48,6 @@ public class RationalCanonicalMatrixFormTest {
             MatrixHandler handler = new ApacheMatrixHandler(matrix);
             final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
-            final int finalI = i;
             FormObserver observer = new FormObserver() {
                 @Override
                 public void update(Observable o, Object arg) {
@@ -71,7 +69,7 @@ public class RationalCanonicalMatrixFormTest {
                             output += form.getFinalMatrix().toString() + "\n";
                             output += "PROCESSING_END\n";
                             try {
-                                assertAllOK(matrixForm, finalI);
+                                assertAllOK(matrixForm, path);
                             } catch (Exception e) {
                                 System.out.println("Exception: " + e.getMessage());
                             }
@@ -81,7 +79,6 @@ public class RationalCanonicalMatrixFormTest {
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
-                    // @TODO: 4-th test case is not passing, remainder of the division is in the way
                     // assert no endless loop
                     assert !lastOutput.equals(output);
                     lastOutput = output;
@@ -93,40 +90,37 @@ public class RationalCanonicalMatrixFormTest {
         }
     }
 
-    protected void assertAllOK(PolynomialRationalCanonicalMatrixForm matrixForm, int path) throws Exception {
-        IMatrix matrix = matrixForm.getFinalMatrix();
-        MatrixHandler handler = matrixForm.getHandler();
-        switch (path) {
-            case 0: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-//                | 1  0 |
-//                | 0  Plus[-2, Times[-5, x], Power[x, 2]] |
-                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("2")) == 0;
-                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("5")) == 0;
-                break;
-            case 1: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix1.txt",
-//                | 1  0 |
-//                | 0  Plus[-2, Times[-5, x], Power[x, 2]] |
-                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("7")) == 0;
-                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("6")) == 0;
-                break;
-            case 2: // "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix3.txt",
-//                | 1  0  0 |
-//                | 0, x - 2, 0 |
-//                | 0, 0, x^2 - 5*x + 6 |
-                assert handler.compare(matrix.get(0, 0).getElement(), handler.getObjectFromString("2")) == 0;
-                assert handler.compare(matrix.get(0, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(0, 2).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 1).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(1, 2).getElement(), handler.getObjectFromString("-6")) == 0;
-                assert handler.compare(matrix.get(2, 0).getElement(), handler.getObjectFromString("0")) == 0;
-                assert handler.compare(matrix.get(2, 1).getElement(), handler.getObjectFromString("1")) == 0;
-                assert handler.compare(matrix.get(2, 2).getElement(), handler.getObjectFromString("5")) == 0;
-                break;
+    protected void assertAllOK(PolynomialRationalCanonicalMatrixForm matrixForm, String path) throws Exception {
+        if (path.equals(file(1))) {
+            check(matrixForm, 0, 0, "0"); check(matrixForm, 0, 1, "2");
+            check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "5");
+
+        } else if (path.equals(file(2))) {
+            check(matrixForm, 0, 0, "0"); check(matrixForm, 0, 1, "7");
+            check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "6");
+
+        } else if (path.equals(file(3))) {
+            check(matrixForm, 0, 0, "2"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "-6");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "5");
+
+        } else if (path.equals(file(4))) {
+            check(matrixForm, 0, 0, "0"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "12");
+            check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "-16");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "7");
+
+        } else if (path.equals(file(5))) {
+            check(matrixForm, 0, 0, "0"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "18");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "15");
+
         }
+    }
+
+    protected void check(PolynomialRationalCanonicalMatrixForm matrixForm, int row, int column, String value) throws Exception {
+        assert matrixForm.getHandler().compare(
+                matrixForm.getFinalMatrix().get(row, column).getElement(),
+                matrixForm.getHandler().getObjectFromString(value)
+        ) == 0;
     }
 }
