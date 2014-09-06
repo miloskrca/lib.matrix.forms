@@ -34,12 +34,12 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     /**
      * Matrix located left from smith form matrix.
-     * Affected by operations on columns.
+     * Affected by operations on rows.
      */
     private IMatrix p;
     /**
      * Matrix located beneath from smith form matrix.
-     * Affected by operations on rows.
+     * Affected by operations on columns.
      */
     private IMatrix q;
 
@@ -107,11 +107,11 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
             this.getCommands().add(lastCommand);
             try {
                 if (lastCommand.affectsColumns()) {
-                    getHandler().setMatrix(getP());
+                    getHandler().setMatrix(getQ());
                     lastCommand.execute(getHandler());
                 }
                 if (lastCommand.affectsRows()) {
-                    getHandler().setMatrix(getQ());
+                    getHandler().setMatrix(getP());
                     lastCommand.execute(getHandler());
                 }
             } catch (Exception e) {
