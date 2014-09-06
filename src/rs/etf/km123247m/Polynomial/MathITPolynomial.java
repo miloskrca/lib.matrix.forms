@@ -4,9 +4,11 @@ import org.mathIT.algebra.ExponentComparator;
 import org.mathIT.algebra.Polynomial;
 import rs.etf.km123247m.PropertyManager.PropertyManager;
 
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by Miloš Krsmanović.
@@ -111,7 +113,7 @@ public class MathITPolynomial {
             newPolynomial.put(term.getKey(), term.getValue());
         }
 
-        for (Map.Entry<Integer, Double> term : element.getObject().entrySet()) {
+        for (Map.Entry<Integer, Double> term : element.entrySet()) {
             if (newPolynomial.containsKey(term.getKey())) {
                 int power = term.getKey();
                 double coefficient = object.get(power);
@@ -166,7 +168,7 @@ public class MathITPolynomial {
         return object.remove(key);
     }
 
-    private boolean containsKey(Integer key) {
+    public boolean containsKey(Integer key) {
         return object.containsKey(key);
     }
 
@@ -191,10 +193,80 @@ public class MathITPolynomial {
     }
 
     public String toString() {
-        return object.toString();
+        StringBuilder s = new StringBuilder();
+        Set<Map.Entry<Integer, Double>> set = entrySet();
+        for(Map.Entry<Integer, Double> entry: set) {
+            double coefficient = entry.getValue();
+            int power = entry.getKey();
+
+            if(coefficient == 0) {
+                continue;
+            }
+
+            String coefficientString;
+            if(coefficient == 1) {
+                coefficientString = "+";
+            } else if(coefficient == -1) {
+                coefficientString = "-";
+            } else {
+                DecimalFormat dec = new DecimalFormat("0.#");
+                coefficientString = dec.format(coefficient);
+
+                if(!coefficientString.contains("+") && !coefficientString.contains("-")) {
+                    coefficientString = "+" + coefficientString;
+                }
+            }
+
+            String powerString;
+            if(power == 1) {
+                powerString = "";
+            } else {
+                powerString = power == 0 ? "" : "^" + power;
+            }
+
+            String symbolString;
+            if(power == 0) {
+                if(coefficient == 1 || coefficient == -1) {
+                    // sign set above
+                    symbolString = "1";
+                } else {
+                    symbolString = "";
+                }
+            } else {
+                if(coefficient == 1 || coefficient == -1) {
+                    symbolString = "x";
+                } else {
+                    symbolString = "*x";
+                }
+            }
+
+            s.append(coefficientString)
+                    .append(symbolString)
+                    .append(powerString)
+                    .append(" ");
+        }
+
+        String resultString = s.toString();
+        if(resultString.length() > 1) {
+            resultString = resultString.substring(0, resultString.length() - 1);
+            if(resultString.substring(0, 1).equals("+")) {
+                resultString = resultString.substring(1, resultString.length());
+            }
+        }
+
+        if(resultString.length() == 0) {
+            resultString = "0";
+        }
+
+        return resultString;
     }
 
     public Polynomial getObject() {
         return object;
     }
+
+    public double get(int power) {
+        return object.get(power);
+    }
+
 }

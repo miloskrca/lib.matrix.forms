@@ -38,6 +38,15 @@ public class ArrayMatrix implements IMatrix {
         return new MatrixCell(row, col, matrix[row][col]);
     }
 
+    @Override
+    public void initWith(Object element) throws Exception {
+        for (int j = 0; j < rowNumber; j++) {
+            for (int k = 0; k < columnNumber; k++) {
+                set(new MatrixCell(j, k, element));
+            }
+        }
+    }
+
     protected void checkColumnAndRowValues(int row, int col) throws Exception {
         if(col >= columnNumber || col < 0) {
             throw new Exception("Column number doesn't exist!");

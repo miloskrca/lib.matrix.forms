@@ -14,4 +14,5 @@ public interface IMatrix {
     public void set(MatrixCell cell) throws Exception;
     public MatrixCell get(int row, int col) throws Exception;
 
+    public void initWith(Object element) throws Exception;
 }

@@ -1,6 +1,7 @@
 package rs.etf.km123247m.Matrix.Handler;
 
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 
 /**
@@ -185,12 +186,13 @@ public abstract class MatrixHandler {
         for (int i = 0; i < matrix1.getRowNumber(); i++) {
             for (int j = 0; j < matrix2.getColumnNumber(); j++) {
                 for (int k = 0; k < matrix1.getColumnNumber(); k++) {
+                    Object tempElement = multiplyElements(
+                            matrix1.get(i, k).getElement(),
+                            matrix2.get(k, j).getElement()
+                    );
                     resultMatrix.set(
                             new MatrixCell(i, j,
-                                    multiplyElements(
-                                            matrix1.get(i, k).getElement(),
-                                            matrix2.get(k, j).getElement()
-                                    )
+                                    addElements(tempElement, resultMatrix.get(i, j).getElement())
                             )
                     );
                 }
@@ -222,4 +224,42 @@ public abstract class MatrixHandler {
 
     public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
 
+    public IMatrix power(IMatrix matrix, int power) throws Exception {
+        if(power == 1) {
+            return duplicate(matrix);
+        }
+
+        IMatrix result = null;
+        for (int i = 0; i < power; i++) {
+            if(result == null) {
+                result = duplicate(matrix);
+            } else {
+                IMatrix tempResult = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+                tempResult.initWith(getObjectFromString("0"));
+                multiply(result, matrix, tempResult);
+                result = tempResult;
+            }
+        }
+
+        return result;
+    }
+
+    public IMatrix duplicate(IMatrix matrix) throws Exception {
+        int rows = matrix.getRowNumber();
+        int columns = matrix.getColumnNumber();
+        IMatrix duplicate = new ArrayMatrix(rows, columns);
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                duplicate.set(
+                        new MatrixCell(i, j,
+                                getObjectFromString(
+                                        matrix.get(i, j).getElement().toString()
+                                )
+                        )
+                );
+            }
+        }
+
+        return duplicate;
+    }
 }
