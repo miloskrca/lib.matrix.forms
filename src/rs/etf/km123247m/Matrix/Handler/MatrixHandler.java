@@ -206,24 +206,6 @@ public abstract class MatrixHandler {
         return divideElements(object1, object2);
     }
 
-    protected abstract Object addElements(Object element1, Object element2) throws Exception;
-
-    protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;
-
-    protected abstract Object divideElements(Object element1, Object element2) throws Exception;
-
-    public abstract Object calculateNegativeElement(Object element) throws Exception;
-
-    public abstract int comparePowersOfElements(Object element1, Object element2) throws Exception;
-
-    public abstract boolean isZeroElement(Object element) throws Exception;
-
-    public abstract int compare(Object element1, Object element2) throws Exception;
-
-    public abstract Object getObjectFromString(String string) throws Exception;
-
-    public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
-
     public IMatrix power(IMatrix matrix, int power) throws Exception {
         if(power == 1) {
             return duplicate(matrix);
@@ -247,6 +229,8 @@ public abstract class MatrixHandler {
     public IMatrix duplicate(IMatrix matrix) throws Exception {
         int rows = matrix.getRowNumber();
         int columns = matrix.getColumnNumber();
+        // This should be implemented better, implementation shouldn't
+        // be mentiaoned here
         IMatrix duplicate = new ArrayMatrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -262,4 +246,22 @@ public abstract class MatrixHandler {
 
         return duplicate;
     }
+
+    protected abstract Object addElements(Object element1, Object element2) throws Exception;
+
+    protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;
+
+    protected abstract Object divideElements(Object element1, Object element2) throws Exception;
+
+    public abstract Object calculateNegativeElement(Object element) throws Exception;
+
+    public abstract int comparePowersOfElements(Object element1, Object element2) throws Exception;
+
+    public abstract boolean isZeroElement(Object element) throws Exception;
+
+    public abstract int compare(Object element1, Object element2) throws Exception;
+
+    public abstract Object getObjectFromString(String string) throws Exception;
+
+    public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
 }
