@@ -8,6 +8,7 @@ import org.matheclipse.core.interfaces.IExpr;
  * <p/>
  * package: rs.etf.km123247m.Matrix.Handler
  */
+// @TODO: This should have never been used like it is now. It can maybe be moved to SymJaMatrixHandler for internal use. Any other mention of this should be replaced with Polynomial and its Terms.
 public class CoefficientPowerPair {
     private Object power;
     private Object coefficient;
