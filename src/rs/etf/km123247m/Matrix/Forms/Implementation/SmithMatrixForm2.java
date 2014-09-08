@@ -54,7 +54,7 @@ public class SmithMatrixForm2 extends MatrixForm {
             } // } while (!isRowCleared(range));
         }
 
-        sendUpdate(FormEvent.PROCESSING_STATUS, "Fixing elements on the diagonal");
+        sendUpdate(FormEvent.PROCESSING_INFO, "Fixing elements on the diagonal", getHandler().getMatrix());
 
         for (int range = 0; range < matrixSize - 1; range++) {
             if (!isTheNextElementDividedByThisElement(range)) {
@@ -94,7 +94,7 @@ public class SmithMatrixForm2 extends MatrixForm {
     protected void executeCommand(ICommand command) throws Exception {
         command.execute(getHandler());
         getCommands().add(command);
-        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+        sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {

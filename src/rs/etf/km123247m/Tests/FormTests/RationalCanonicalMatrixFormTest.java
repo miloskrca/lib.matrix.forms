@@ -59,8 +59,8 @@ public class RationalCanonicalMatrixFormTest {
                             output += form.getStartMatrix().toString() + "\n";
                             output += form.getTransitionalMatrix().toString() + "\n";
                             break;
-                        case FormEvent.PROCESSING_STATUS:
-                            output = "PROCESSING_STATUS " + event.getMessage() + "\n";
+                        case FormEvent.PROCESSING_STEP:
+                            output = "PROCESSING_STEP " + event.getMessage() + "\n";
                             output += form.getTransitionalMatrix().toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_END:

@@ -63,8 +63,8 @@ public class SmithMatrixFormOutputTest {
                             output = "PROCESSING_START\n";
                             output += form.getHandler().getMatrix().toString();
                             break;
-                        case FormEvent.PROCESSING_STATUS:
-                            output = "PROCESSING_STATUS " + event.getMessage() + "\n";
+                        case FormEvent.PROCESSING_STEP:
+                            output = "PROCESSING_STEP " + event.getMessage() + "\n";
                             output += form.getHandler().getMatrix().toString();
                             break;
                         case FormEvent.PROCESSING_END:
@@ -77,6 +77,9 @@ public class SmithMatrixFormOutputTest {
                                 System.out.println("Exception: " + e.getMessage());
                             }
                             break;
+                        case FormEvent.PROCESSING_INFO:
+                            output = "PROCESSING_INFO " + event.getMessage() + "\n";
+                            break;
                         case FormEvent.PROCESSING_EXCEPTION:
                             System.out.println("Exception: " + event.getMessage());
                             output = "PROCESSING_EXCEPTION";
@@ -84,7 +87,7 @@ public class SmithMatrixFormOutputTest {
                     }
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-//                    System.out.println(output);
+                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);

@@ -21,7 +21,9 @@ public class MatrixFormTest {
 
         @Override
         protected void process() throws Exception {
-            sendUpdate(FormEvent.PROCESSING_STATUS, null);
+            sendUpdate(FormEvent.PROCESSING_START, null, null);
+            sendUpdate(FormEvent.PROCESSING_STEP, null, null);
+            sendUpdate(FormEvent.PROCESSING_END, null, null);
         }
     }
 
@@ -54,7 +56,7 @@ public class MatrixFormTest {
                     assert event.getType() == FormEvent.PROCESSING_START;
                 } else if(started && !processed) {
                     processed = true;
-                    assert event.getType() == FormEvent.PROCESSING_STATUS;
+                    assert event.getType() == FormEvent.PROCESSING_STEP;
                 } else if(started /* && processed*/) {
                     assert event.getType() == FormEvent.PROCESSING_END;
                 }

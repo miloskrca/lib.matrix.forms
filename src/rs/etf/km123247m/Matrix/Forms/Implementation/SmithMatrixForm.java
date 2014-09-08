@@ -23,6 +23,7 @@ public class SmithMatrixForm extends MatrixForm {
 
     @Override
     public void process() throws Exception {
+        sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         MatrixHandler handler = this.getHandler();
         int matrixSize = handler.getMatrix().getRowNumber();
 
@@ -58,7 +59,7 @@ public class SmithMatrixForm extends MatrixForm {
             } // } while (!isRowCleared(range));
         }
 
-        sendUpdate(FormEvent.PROCESSING_STATUS, "Fixing elements on the diagonal");
+        sendUpdate(FormEvent.PROCESSING_INFO, "Fixing elements on the diagonal", getHandler().getMatrix());
 
         for (int range = 0; range < matrixSize - 1; range++) {
             if (!isTheNextElementDividedByThisElement(range)) {
@@ -97,6 +98,7 @@ public class SmithMatrixForm extends MatrixForm {
         }
 
         fixLeadingCoefficients();
+        sendUpdate(FormEvent.PROCESSING_END, null, getHandler().getMatrix());
     }
 
     protected void moveCellToStartPosition(int range, MatrixCell element) throws Exception {
@@ -107,13 +109,13 @@ public class SmithMatrixForm extends MatrixForm {
             ICommand command = new SwitchColumnsCommand(range, element.getColumn());
             command.execute(getHandler());
             getCommands().add(command);
-            sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+            sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
         }
         if (element.getRow() != range) {
             ICommand command = new SwitchRowsCommand(range, element.getRow());
             command.execute(getHandler());
             getCommands().add(command);
-            sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+            sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
         }
     }
 
@@ -147,7 +149,7 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
-        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+        sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
     }
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell cell, int column2) throws Exception {
@@ -156,7 +158,7 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
-        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+        sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
     }
 
     protected MatrixCell calculateQuotientForCell(MatrixCell dividend, MatrixCell divisor) throws Exception {
@@ -200,7 +202,7 @@ public class SmithMatrixForm extends MatrixForm {
         );
         command.execute(getHandler());
         getCommands().add(command);
-        sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+        sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
     }
 
     private void fixLeadingCoefficients() throws Exception {
@@ -214,7 +216,7 @@ public class SmithMatrixForm extends MatrixForm {
                 ICommand command = new MultiplyRowWithElementAndStoreCommand(row, handler.getInverse(leadingCoefficient));
                 command.execute(getHandler());
                 getCommands().add(command);
-                sendUpdate(FormEvent.PROCESSING_STATUS, command.getDescription());
+                sendUpdate(FormEvent.PROCESSING_STEP, command.getDescription(), getHandler().getMatrix());
             }
         }
     }

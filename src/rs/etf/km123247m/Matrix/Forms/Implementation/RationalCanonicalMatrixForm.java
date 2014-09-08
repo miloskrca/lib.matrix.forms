@@ -92,6 +92,8 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     @Override
     protected void process() throws Exception {
+        sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
+        sendUpdate(FormEvent.PROCESSING_STEP, "Transitional matrix", getTransitionalMatrix());
         MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);
         form.start();
@@ -102,10 +104,12 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
         FormEvent event = (FormEvent) arg;
         MatrixForm smithMatrixForm = (MatrixForm) o;
         // handle status events, ignore start and end events
-        if (event.getType() == FormEvent.PROCESSING_STATUS) {
+        if (event.getType() == FormEvent.PROCESSING_STEP) {
             ICommand lastCommand = smithMatrixForm.getCommands().getLast();
             this.getCommands().add(lastCommand);
             try {
+                // using old commands is not a good idea, it overrides the
+                // information of the processed matrix
                 if (lastCommand.affectsColumns()) {
                     getHandler().setMatrix(getQ());
                     lastCommand.execute(getHandler());
@@ -115,24 +119,27 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     lastCommand.execute(getHandler());
                 }
             } catch (Exception e) {
-                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage());
+                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), getHandler().getMatrix());
             } finally {
                 // return original matrix to handler
                 getHandler().setMatrix(xIminusA);
                 // pass the event
-                sendUpdate(event.getType(), event.getMessage());
+                sendUpdate(event.getType(), event.getMessage(), event.getMatrix());
             }
+        } else if (event.getType() == FormEvent.PROCESSING_START) {
+            // ignore
         } else if (event.getType() == FormEvent.PROCESSING_EXCEPTION) {
             // pass the event
-            sendUpdate(event.getType(), event.getMessage());
+            sendUpdate(event.getType(), event.getMessage(), event.getMatrix());
         } else if (event.getType() == FormEvent.PROCESSING_END) {
             // Smith transformation ended
             // don't pass the event
             try {
                 generateMatrixInRationalCanonicalForm();
             } catch (Exception e) {
-                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage());
+                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
             }
+            sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
         }
     }
 
