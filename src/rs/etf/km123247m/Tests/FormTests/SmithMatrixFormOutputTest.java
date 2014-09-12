@@ -91,7 +91,7 @@ public class SmithMatrixFormOutputTest {
                 }
             };
             matrixForm.addObserver(observer);
-            matrixForm.start();
+//            matrixForm.start();
         }
     }
 
