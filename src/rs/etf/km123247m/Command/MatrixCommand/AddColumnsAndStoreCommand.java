@@ -44,6 +44,11 @@ public class AddColumnsAndStoreCommand implements ICommand {
         return false;
     }
 
+    @Override
+    public ICommand copy() {
+        return new AddColumnsAndStoreCommand(column1, column2);
+    }
+
     public int getColumn1() {
         return column1;
     }

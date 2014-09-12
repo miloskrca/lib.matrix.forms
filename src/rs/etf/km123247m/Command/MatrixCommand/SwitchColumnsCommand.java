@@ -40,6 +40,11 @@ public class SwitchColumnsCommand implements ICommand {
         return true;
     }
 
+    @Override
+    public ICommand copy() {
+        return new SwitchColumnsCommand(column1, column2);
+    }
+
     public int getColumn1() {
         return column1;
     }

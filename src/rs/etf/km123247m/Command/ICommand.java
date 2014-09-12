@@ -14,4 +14,5 @@ public interface ICommand {
     public String getDescription();
     public boolean affectsRows();
     public boolean affectsColumns();
+    public ICommand copy();
 }

@@ -42,6 +42,11 @@ public class MultiplyRowWithElementAndStoreCommand implements ICommand {
         return false;
     }
 
+    @Override
+    public ICommand copy() {
+        return new MultiplyRowWithElementAndStoreCommand(row, element);
+    }
+
     public int getRow() {
         return row;
     }

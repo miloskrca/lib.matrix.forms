@@ -44,6 +44,11 @@ public class MultiplyColumnWithElementAndAddToColumnAndStoreCommand implements I
         return true;
     }
 
+    @Override
+    public ICommand copy() {
+        return new MultiplyColumnWithElementAndAddToColumnAndStoreCommand(column1, column2, element);
+    }
+
     public int getColumn2() {
         return column2;
     }

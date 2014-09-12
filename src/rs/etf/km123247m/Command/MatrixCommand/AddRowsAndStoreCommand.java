@@ -44,6 +44,11 @@ public class AddRowsAndStoreCommand implements ICommand {
         return false;
     }
 
+    @Override
+    public ICommand copy() {
+        return new AddRowsAndStoreCommand(row1, row2);
+    }
+
     public int getRow1() {
         return row1;
     }

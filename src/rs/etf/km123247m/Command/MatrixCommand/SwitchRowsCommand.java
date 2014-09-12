@@ -40,6 +40,11 @@ public class SwitchRowsCommand implements ICommand {
         return false;
     }
 
+    @Override
+    public ICommand copy() {
+        return new SwitchRowsCommand(row1, row2);
+    }
+
     public int getRow1() {
         return row1;
     }
