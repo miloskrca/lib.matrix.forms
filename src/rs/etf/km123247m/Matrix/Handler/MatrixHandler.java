@@ -135,7 +135,7 @@ public abstract class MatrixHandler {
         }
     }
 
-    public void minus(IMatrix subtractedMatrix) throws Exception {
+    public void subtractWith(IMatrix subtractedMatrix) throws Exception {
         int rowNumber = matrix.getRowNumber();
         int columnNumber = matrix.getColumnNumber();
         for (int row = 0; row < rowNumber; row++) {

@@ -33,15 +33,15 @@ import java.util.Observable;
 public abstract class RationalCanonicalMatrixForm extends MatrixForm implements FormObserver {
 
     /**
-     * Matrix located left from smith form matrix.
+     * Matrices located left from smith form matrix.
      * Affected by operations on rows.
      */
-    private IMatrix p;
+    private IMatrix[] p = new IMatrix[2];
     /**
-     * Matrix located beneath from smith form matrix.
+     * Matrices located beneath from smith form matrix.
      * Affected by operations on columns.
      */
-    private IMatrix q;
+    private IMatrix[] q = new IMatrix[2];
 
     /**
      * Utility matrix. x*I - A. Transformed to Smith normal form.
@@ -50,6 +50,14 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      * A - smithMatrix
      */
     private IMatrix xIminusA;
+
+    /**
+     * Utility matrix. x*I - B. Transformed to Smith normal form.
+     * I - Diagonal matrix with all elements equal to 1
+     * x - x symbol
+     * B - matrix in rational form = finalMatrix
+     */
+    private IMatrix xIminusB;
 
     /**
      * Matrix transformed to Rational-Canonical form.
@@ -61,6 +69,11 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      */
     private IMatrix finalMatrix;
 
+    /**
+     * Algorithm runs twice. This cunts the rounds.
+     */
+    private int round = 0;
+
     public RationalCanonicalMatrixForm(MatrixHandler handler) throws Exception {
         super(handler);
         startMatrix = handler.getMatrix();
@@ -68,26 +81,35 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
         int columnNumber = startMatrix.getColumnNumber();
         finalMatrix = new ArrayMatrix(rowNumber, columnNumber);
         xIminusA = new ArrayMatrix(rowNumber, columnNumber);
-        p = new ArrayMatrix(rowNumber, columnNumber);
-        q = new ArrayMatrix(rowNumber, columnNumber);
+        xIminusB = new ArrayMatrix(rowNumber, columnNumber);
+        p[0] = new ArrayMatrix(rowNumber, columnNumber);
+        p[1] = new ArrayMatrix(rowNumber, columnNumber);
+        q[0] = new ArrayMatrix(rowNumber, columnNumber);
+        q[1] = new ArrayMatrix(rowNumber, columnNumber);
         Object zero = ((PolynomialMatrixHandler) handler).getZero();
         Object one = ((PolynomialMatrixHandler) handler).getOne();
         for (int row = 0; row < rowNumber; row++) {
             for (int column = 0; column < columnNumber; column++) {
                 if (row == column) {
                     xIminusA.set(new MatrixCell(row, column, getHandler().getObjectFromString("x")));
-                    p.set(new MatrixCell(row, column, one));
-                    q.set(new MatrixCell(row, column, one));
+                    xIminusB.set(new MatrixCell(row, column, getHandler().getObjectFromString("x")));
+                    p[0].set(new MatrixCell(row, column, one));
+                    p[1].set(new MatrixCell(row, column, one));
+                    q[0].set(new MatrixCell(row, column, one));
+                    q[1].set(new MatrixCell(row, column, one));
                 } else {
                     xIminusA.set(new MatrixCell(row, column, zero));
-                    p.set(new MatrixCell(row, column, zero));
-                    q.set(new MatrixCell(row, column, zero));
+                    xIminusB.set(new MatrixCell(row, column, zero));
+                    p[0].set(new MatrixCell(row, column, zero));
+                    p[1].set(new MatrixCell(row, column, zero));
+                    q[0].set(new MatrixCell(row, column, zero));
+                    q[1].set(new MatrixCell(row, column, zero));
                 }
                 finalMatrix.set(new MatrixCell(row, column, zero));
             }
         }
         handler.setMatrix(xIminusA);
-        handler.minus(startMatrix);
+        handler.subtractWith(startMatrix);
     }
 
     @Override
@@ -103,26 +125,30 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
     public void update(Observable o, Object arg) {
         FormEvent event = (FormEvent) arg;
         MatrixForm smithMatrixForm = (MatrixForm) o;
-        // handle status events, ignore start and end events
         if (event.getType() == FormEvent.PROCESSING_STEP) {
             ICommand lastCommand = smithMatrixForm.getCommands().getLast();
-            this.getCommands().add(lastCommand);
             try {
+                ICommand command = lastCommand.copy();
                 // using old commands is not a good idea, it overrides the
                 // information of the processed matrix
-                if (lastCommand.affectsColumns()) {
-                    getHandler().setMatrix(getQ());
-                    lastCommand.execute(getHandler());
+                if (command.affectsColumns()) {
+                    getHandler().setMatrix(getQ(round));
+                    command.execute(getHandler());
                 }
-                if (lastCommand.affectsRows()) {
-                    getHandler().setMatrix(getP());
-                    lastCommand.execute(getHandler());
+                if (command.affectsRows()) {
+                    getHandler().setMatrix(getP(round));
+                    command.execute(getHandler());
                 }
             } catch (Exception e) {
                 sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), getHandler().getMatrix());
             } finally {
+                this.getCommands().add(lastCommand);
                 // return original matrix to handler
-                getHandler().setMatrix(xIminusA);
+                if(round == 0) {
+                    getHandler().setMatrix(xIminusA);
+                } else {
+                    getHandler().setMatrix(xIminusB);
+                }
                 // pass the event
                 sendUpdate(event.getType(), event.getMessage(), event.getMatrix());
             }
@@ -133,13 +159,27 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
             sendUpdate(event.getType(), event.getMessage(), event.getMatrix());
         } else if (event.getType() == FormEvent.PROCESSING_END) {
             // Smith transformation ended
-            // don't pass the event
-            try {
-                generateMatrixInRationalCanonicalForm();
-            } catch (Exception e) {
-                sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
+            if(round == 0) {
+                try {
+                    generateMatrixInRationalCanonicalForm();
+                } catch (Exception e) {
+                    sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
+                }
+                round = 1;
+
+                try {
+                    getHandler().setMatrix(xIminusB);
+                    // finalMatrix = B
+                    getHandler().subtractWith(finalMatrix);
+                    MatrixForm form = new SmithMatrixForm(getHandler());
+                    form.addObserver(this);
+                    form.start();
+                } catch (Exception e) {
+                    sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
+                }
+            } else {
+                sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             }
-            sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
         }
     }
 
@@ -150,8 +190,8 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      *
      * @return IMatrix
      */
-    public IMatrix getP() {
-        return p;
+    public IMatrix getP(int round) {
+        return p[round];
     }
 
     /**
@@ -159,8 +199,8 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      *
      * @return IMatrix
      */
-    public IMatrix getQ() {
-        return q;
+    public IMatrix getQ(int round) {
+        return q[round];
     }
 
     /**
