@@ -1,19 +1,9 @@
 package rs.etf.km123247m.Tests.LibraryTest;
 
-/*
-import edu.jas.kern.ComputerThreads;
-import org.junit.Test;
 
+import org.junit.Test;
 import org.matheclipse.core.eval.EvalUtilities;
-import org.matheclipse.core.expression.F;
-import org.matheclipse.core.form.output.OutputFormFactory;
-import org.matheclipse.core.form.output.StringBufferWriter;
 import org.matheclipse.core.interfaces.IExpr;
-
-import static org.matheclipse.core.expression.F.*;
-*/
-
-import org.junit.Test;
 
 //import org.matheclipse.core.form.output.StringBufferWriter;
 
@@ -25,9 +15,18 @@ import org.junit.Test;
  */
 public class SymJaLibraryTest {
 
+    private EvalUtilities util = new EvalUtilities();
+
     @Test
     public void doSomeTests() throws Exception {
-//        F.initSymbols(null);
+        String element1 = "-x^2+4*x-4";
+        String element2 = "x-3";
+        IExpr results = util.evaluate("PolynomialQuotientRemainder[" + element1 + "," + element2 + ", x]");
+        assert "{-x+1,-1}".equals(results.toString());
+
+        String element3 = "x^2-4*x+4";
+        IExpr result = util.evaluate("Factor[" + element3 + "]");
+        assert "(x-2)^2".equals(result.toString());
 
     }
 

@@ -51,11 +51,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", x]");
         // If the method is successful it will return [List, quotient, remainder],
         // if not it will return [PolynomialQuotientRemainder, element1, element2]
-        // if the function is successful and there is no remainder
-        if(results.isList() && isZeroElement(results.getAt(2))) {
+        // if the function is successful and the quotient is not zero
+        if(results.isList() && !isZeroElement(results.getAt(1))) {
             results = evaluate(results.getAt(1));
         } else {
-            //the result will just be th expression build from elements
+            //the result will just be the expression build from elements
             results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol("x"))[0]);
         }
 
@@ -108,6 +108,33 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     @Override
     protected Object getLeadingCoefficientOfElement(Object element) throws Exception {
         return getLeadingCoefficientAndPowerOfElementRecursive((IExpr) element).getCoefficient();
+    }
+
+    // TODO: Test
+    @Override
+    public boolean hasElementWithPower(Object element, int power) throws Exception {
+        ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
+        IExpr oPower = util.evaluate(String.valueOf(power));
+        for(CoefficientPowerPair pair: pairs) {
+            if(compare(pair.getPower(), oPower) == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // TODO: Test
+    @Override
+    public Object getCoefficientForPower(Object element, int power) throws Exception {
+        ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
+        IExpr oPower = util.evaluate(String.valueOf(power));
+        for(CoefficientPowerPair pair: pairs) {
+            if(compare(pair.getPower(), oPower) == 0) {
+                return pair.getCoefficient();
+            }
+        }
+
+        return getElementEquivalentToZero();
     }
 
     /**
@@ -202,7 +229,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return result;
     }
 
-    protected int getHighestPower(Object expr) throws Exception {
+    public int getHighestPower(Object expr) throws Exception {
 
         int power;
         String exprString = expr.toString().replace(" ", "");
@@ -233,8 +260,23 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return power;
     }
 
-    protected boolean isNumeric(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$")) || s.matches("[-+]?\\d*\\.?\\d+");
+    @Override
+    public Object factor(Object element) throws Exception {
+        // using util.evaluate instead of evaluate() because we
+        // want to avoid Expand[]
+        return util.evaluate("Factor[" + element.toString() + "]");
+    }
+
+    private boolean isNumeric(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);
+    }
+
+    private boolean isFraction(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
+    }
+
+    private boolean isDouble(String s) {
+        return s.matches("[-+]?\\d*\\.?\\d+");
     }
 
 }

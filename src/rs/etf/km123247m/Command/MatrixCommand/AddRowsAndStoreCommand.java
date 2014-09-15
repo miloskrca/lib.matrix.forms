@@ -31,7 +31,7 @@ public class AddRowsAndStoreCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return this.getClass().getSimpleName() + "Row1: " + row1 + " Row2: " + row2;
+        return this.getClass().getSimpleName() + " Row1: " + row1 + " Row2: " + row2;
     }
 
     @Override

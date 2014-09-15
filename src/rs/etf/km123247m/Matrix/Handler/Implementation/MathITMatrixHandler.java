@@ -45,8 +45,24 @@ public class MathITMatrixHandler extends PolynomialMatrixHandler {
         return p;
     }
 
-    protected int getHighestPower(Object element) throws Exception {
+    @Override
+    public int getHighestPower(Object element) throws Exception {
         return ((MathITPolynomial)element).deg();
+    }
+
+    @Override
+    public Object factor(Object element) {
+        return null;
+    }
+
+    @Override
+    public boolean hasElementWithPower(Object element, int power) {
+        return ((MathITPolynomial)element).containsKey(power);
+    }
+
+    @Override
+    public Object getCoefficientForPower(Object element, int power) {
+        return ((MathITPolynomial)element).get(power);
     }
 
     @Override

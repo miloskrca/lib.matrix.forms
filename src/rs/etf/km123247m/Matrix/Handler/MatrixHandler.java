@@ -247,6 +247,103 @@ public abstract class MatrixHandler {
         return duplicate;
     }
 
+    public IMatrix invertMatrix(IMatrix matrix) throws Exception {
+        return multiplyByElement(transpose(coFactor(matrix)), divideElements(getObjectFromString("1"), determinant(matrix)));
+    }
+
+    private IMatrix multiplyByElement(IMatrix matrix, Object element) throws Exception {
+        int rows = matrix.getRowNumber();
+        int columns = matrix.getColumnNumber();
+        for (int i=0; i < rows; i++) {
+            for (int j=0; j < columns; j++) {
+                matrix.set(new MatrixCell(i, j, multiplyElements(matrix.get(i, j).getElement(), element)));
+            }
+        }
+
+        return matrix;
+    }
+
+    public IMatrix transpose(IMatrix matrix) throws Exception {
+        IMatrix transposedMatrix = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        for (int i=0; i < matrix.getRowNumber();i++) {
+            for (int j=0;j<matrix.getColumnNumber();j++) {
+                transposedMatrix.set(new MatrixCell(j, i, getObjectFromString(matrix.get(i, j).getElement().toString())));
+            }
+        }
+        return transposedMatrix;
+    }
+
+    public Object determinant(IMatrix matrix) throws Exception {
+        if (matrix.getRowNumber() == 1) {
+            return matrix.get(0, 0).getElement();
+        }
+        if (matrix.getRowNumber() == 2) {
+            return subtractElements(
+                    multiplyElements(matrix.get(0, 0).getElement(), matrix.get(1, 1).getElement()),
+                    multiplyElements(matrix.get(0, 1).getElement(), matrix.get(1, 0).getElement())
+            );
+        }
+        Object sum = getObjectFromString("0");
+        for (int i = 0; i < matrix.getColumnNumber(); i++) {
+            sum = addElements(
+                    sum,
+                    multiplyElements(
+                            changeSign(i),
+                            multiplyElements(
+                                    matrix.get(0, i).getElement(),
+                                    determinant(createSubMatrix(matrix, 0, i))
+                            )
+                    )
+            );
+        }
+        return sum;
+    }
+
+    public IMatrix createSubMatrix(IMatrix matrix, int excludingRow, int excludingCol) throws Exception {
+        IMatrix mat = new ArrayMatrix(matrix.getRowNumber()-1, matrix.getColumnNumber()-1);
+        int r = -1;
+        for (int i=0;i<matrix.getRowNumber();i++) {
+            if (i == excludingRow) {
+                continue;
+            }
+            r++;
+            int c = -1;
+            for (int j=0; j < matrix.getColumnNumber();j++) {
+                if (j == excludingCol) {
+                    continue;
+                }
+                mat.set(new MatrixCell(r, ++c, matrix.get(i, j).getElement()));
+            }
+        }
+        return mat;
+    }
+
+    public IMatrix coFactor(IMatrix matrix) throws Exception {
+        IMatrix mat = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        for (int i=0;i<matrix.getRowNumber();i++) {
+            for (int j=0; j<matrix.getColumnNumber();j++) {
+                mat.set(new MatrixCell(i, j,
+                        multiplyElements(
+                                changeSign(i),
+                                multiplyElements(
+                                        changeSign(j),
+                                        determinant(createSubMatrix(matrix, i, j))
+                                )
+                        )
+                ));
+            }
+        }
+
+        return mat;
+    }
+
+    private Object changeSign(int i) throws Exception {
+        if (i % 2 == 0) {
+            return getObjectFromString("1");
+        }
+        return getObjectFromString("-1");
+    }
+
     protected abstract Object addElements(Object element1, Object element2) throws Exception;
 
     protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;
@@ -264,4 +361,7 @@ public abstract class MatrixHandler {
     public abstract Object getObjectFromString(String string) throws Exception;
 
     public abstract boolean isElementDividing(Object element1, Object element2) throws Exception;
+
+    public abstract int getHighestPower(Object element) throws Exception;
+
 }

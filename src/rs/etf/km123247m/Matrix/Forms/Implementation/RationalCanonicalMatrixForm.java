@@ -69,6 +69,12 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      */
     private IMatrix finalMatrix;
 
+
+    /**
+     * Matrix T.
+     */
+    private IMatrix t;
+
     /**
      * Algorithm runs twice. This cunts the rounds.
      */
@@ -154,11 +160,13 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
             }
         } else if (event.getType() == FormEvent.PROCESSING_START) {
             // ignore
-        } else if (event.getType() == FormEvent.PROCESSING_EXCEPTION) {
+        } else if (event.getType() == FormEvent.PROCESSING_EXCEPTION
+                || event.getType() == FormEvent.PROCESSING_INFO) {
             // pass the event
             sendUpdate(event.getType(), event.getMessage(), event.getMatrix());
         } else if (event.getType() == FormEvent.PROCESSING_END) {
             // Smith transformation ended
+
             if(round == 0) {
                 try {
                     generateMatrixInRationalCanonicalForm();
@@ -166,6 +174,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
                 }
                 round = 1;
+                sendUpdate(FormEvent.PROCESSING_INFO, "End of round one.", finalMatrix);
 
                 try {
                     getHandler().setMatrix(xIminusB);
@@ -178,10 +187,17 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
                 }
             } else {
+                try {
+                    generateMatrixT();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             }
         }
     }
+
+    protected abstract void generateMatrixT() throws Exception;
 
     protected abstract void generateMatrixInRationalCanonicalForm() throws Exception;
 
@@ -228,5 +244,13 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      */
     public IMatrix getFinalMatrix() {
         return finalMatrix;
+    }
+
+    public IMatrix getT() {
+        return t;
+    }
+
+    protected void setT(IMatrix t) {
+        this.t = t;
     }
 }

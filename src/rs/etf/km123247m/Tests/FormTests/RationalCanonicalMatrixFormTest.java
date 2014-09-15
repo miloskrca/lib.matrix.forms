@@ -4,13 +4,13 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.PolynomialRationalCanonicalMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.Implementation.RationalCanonicalMatrixForm;
-import rs.etf.km123247m.Matrix.Handler.Implementation.MathITMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
-import rs.etf.km123247m.Parser.MatrixParser.MathIT.MathITMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
@@ -30,6 +30,7 @@ public class RationalCanonicalMatrixFormTest {
                 file(3),
                 file(4),
                 file(5),
+                file(7)
         };
     }
 
@@ -42,10 +43,10 @@ public class RationalCanonicalMatrixFormTest {
 
         for (final String path : paths) {
             File file = new File(path);
-            IParser parser = new MathITMatrixFileParser(file);
+            IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
-            MatrixHandler handler = new MathITMatrixHandler(matrix);
+            MatrixHandler handler = new SymJaMatrixHandler(matrix);
             final PolynomialRationalCanonicalMatrixForm matrixForm = new PolynomialRationalCanonicalMatrixForm(handler);
 
             FormObserver observer = new FormObserver() {
@@ -62,11 +63,19 @@ public class RationalCanonicalMatrixFormTest {
                         case FormEvent.PROCESSING_STEP:
                             output = "PROCESSING_STEP " + event.getMessage() + "\n";
                             output += form.getTransitionalMatrix().toString() + "\n";
+                            output += form.getP(0).toString() + "\n";
+                            break;
+                        case FormEvent.PROCESSING_INFO:
+                            output = "PROCESSING_INFO " + event.getMessage() + "\n";
+                            output += event.getMatrix().toString() + "\n";
+                            output += form.getP(0).toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_END:
                             output = "PROCESSING_END\n";
                             output += form.getTransitionalMatrix().toString() + "\n";
                             output += form.getFinalMatrix().toString() + "\n";
+                            output += form.getP(0).toString() + "\n";
+                            output += form.getP(1).toString() + "\n";
                             output += "PROCESSING_END\n";
                             try {
                                 assertAllOK(matrixForm, path);

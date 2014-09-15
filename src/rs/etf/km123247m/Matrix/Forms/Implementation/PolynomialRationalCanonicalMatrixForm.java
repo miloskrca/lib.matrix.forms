@@ -4,9 +4,11 @@ import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.Handler.Implementation.PolynomialMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 /**
@@ -134,6 +136,88 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         }
 
         return power;
+    }
+
+
+    @Override
+    protected void generateMatrixT() throws Exception {
+        IMatrix invertedP1 = getHandler().invertMatrix(getP(1));
+        IMatrix p = new ArrayMatrix(
+                getHandler().getMatrix().getRowNumber(),
+                getHandler().getMatrix().getColumnNumber()
+        );
+        p.initWith(getHandler().getObjectFromString("0"));
+        getHandler().multiply(invertedP1, getP(0), p);
+
+        setT(calcT(getStartMatrix(), p));
+    }
+
+    protected IMatrix calcT(IMatrix startMatrix, IMatrix matrix) throws Exception {
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        int rows = startMatrix.getRowNumber();
+        int columns = startMatrix.getColumnNumber();
+        IMatrix t = null;
+
+        HashMap<Integer, IMatrix> pMatrices = new HashMap<Integer, IMatrix>();
+        int highestPower = 0;
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                Object item = matrix.get(i, j).getElement();
+                int deg = getHandler().getHighestPower(item);
+                if(deg > highestPower) {
+                    highestPower = deg;
+                }
+                while(deg >= 0) {
+                    if(handler.hasElementWithPower(item, deg)) {
+                        Object coefficient = handler.getCoefficientForPower(item, deg).toString();
+                        initMatrix(pMatrices, deg, rows);
+                        pMatrices.get(deg).set(new MatrixCell(i, j, handler.getObjectFromString(coefficient.toString())));
+                    }
+                    deg--;
+                }
+            }
+        }
+
+        for (int power = 0; power <= highestPower; power++) {
+            if(pMatrices.containsKey(power)) {
+                if(t == null) {
+                    t = new ArrayMatrix(rows, columns);
+                    t.initWith(handler.getObjectFromString("0"));
+                    if(power == 0) {
+                        t = pMatrices.get(power);
+                    } else {
+                        handler.multiply(pMatrices.get(power), handler.power(startMatrix, power), t);
+                    }
+                } else {
+                    IMatrix tempResult = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+                    tempResult.initWith(handler.getZero());
+                    if(power == 0) {
+                        tempResult = pMatrices.get(power);
+                    } else {
+                        // tempResult =  A^n*P(n)
+                        handler.multiply(handler.power(startMatrix, power), pMatrices.get(power), tempResult);
+                    }
+                    IMatrix tempResult2 = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+                    tempResult2.initWith(handler.getZero());
+                    // tempResult2 = t + A^n*P(n)
+                    handler.add(t, tempResult, tempResult2);
+                    t = tempResult2;
+                }
+            }
+        }
+
+        return t;
+    }
+
+
+
+    protected void initMatrix(HashMap<Integer, IMatrix> pMatrices, int power, int range) throws Exception {
+        PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        if(!pMatrices.containsKey(power)) {
+            IMatrix matrix = new ArrayMatrix(range, range);
+            matrix.initWith(handler.getZero());
+            pMatrices.put(power, matrix);
+        }
     }
 
 }

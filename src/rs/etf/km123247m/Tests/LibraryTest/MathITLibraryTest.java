@@ -66,14 +66,14 @@ public class MathITLibraryTest {
         int highestPower = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
-                MathITPolynomial item = (MathITPolynomial) matrix.get(i, j).getElement();
-                int deg = item.deg();
+                Object item = matrix.get(i, j).getElement();
+                int deg = handler.getHighestPower(item);
                 if(deg > highestPower) {
                     highestPower = deg;
                 }
                 while(deg >= 0) {
-                    if(item.containsKey(deg)) {
-                        double coefficient = item.get(deg);
+                    if(handler.hasElementWithPower(item, deg)) {
+                        double coefficient = Double.parseDouble(handler.getCoefficientForPower(item, deg).toString());
                         initMatrix(pMatrices, deg, rows);
                         pMatrices.get(deg).set(new MatrixCell(i, j, handler.getObjectFromString(String.valueOf(coefficient))));
                     }
@@ -94,7 +94,7 @@ public class MathITLibraryTest {
                     }
                 } else {
                     IMatrix tempResult = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
-                    tempResult.initWith(handler.getObjectFromString("0"));
+                    tempResult.initWith(handler.getZero());
                     if(power == 0) {
                         tempResult = pMatrices.get(power);
                     } else {
@@ -102,7 +102,7 @@ public class MathITLibraryTest {
                         handler.multiply(handler.power(startMatrix, power), pMatrices.get(power), tempResult);
                     }
                     IMatrix tempResult2 = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
-                    tempResult2.initWith(handler.getObjectFromString("0"));
+                    tempResult2.initWith(handler.getZero());
                     // tempResult2 = t + A^n*P(n)
                     handler.add(t, tempResult, tempResult2);
                     t = tempResult2;
@@ -116,11 +116,7 @@ public class MathITLibraryTest {
     protected void initMatrix(HashMap<Integer, IMatrix> pMatrices, int power, int range) throws Exception {
         if(!pMatrices.containsKey(power)) {
             IMatrix matrix = new ArrayMatrix(range, range);
-            for (int i = 0; i < range; i++) {
-                for (int j = 0; j < range; j++) {
-                    matrix.set(new MatrixCell(i, j, handler.getZero()));
-                }
-            }
+            matrix.initWith(handler.getZero());
             pMatrices.put(power, matrix);
         }
     }

@@ -31,7 +31,7 @@ public class AddColumnsAndStoreCommand implements ICommand {
 
     @Override
     public String getDescription() {
-        return this.getClass().getSimpleName() + "Column1: " + column1 + " Column2: " + column2;
+        return this.getClass().getSimpleName() + " Column1: " + column1 + " Column2: " + column2;
     }
 
     @Override

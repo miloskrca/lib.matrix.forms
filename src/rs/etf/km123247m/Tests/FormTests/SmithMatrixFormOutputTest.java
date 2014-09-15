@@ -4,12 +4,12 @@ import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.SmithMatrixForm;
 import rs.etf.km123247m.Matrix.Forms.MatrixForm;
-import rs.etf.km123247m.Matrix.Handler.Implementation.MathITMatrixHandler;
+import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
-import rs.etf.km123247m.Parser.MatrixParser.MathIT.MathITMatrixFileParser;
+import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
 import java.io.File;
@@ -47,10 +47,10 @@ public class SmithMatrixFormOutputTest {
 
         for (final String path : paths) {
             File file = new File(path);
-            IParser parser = new MathITMatrixFileParser(file);
+            IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
 
-            MatrixHandler handler = new MathITMatrixHandler(matrix);
+            MatrixHandler handler = new SymJaMatrixHandler(matrix);
             MatrixForm matrixForm = new SmithMatrixForm(handler);
 
             Observer observer = new Observer() {
@@ -87,11 +87,11 @@ public class SmithMatrixFormOutputTest {
                     }
                     assert !lastOutput.equals(output);
                     lastOutput = output;
-                    System.out.println(output);
+//                    System.out.println(output);
                 }
             };
             matrixForm.addObserver(observer);
-//            matrixForm.start();
+            matrixForm.start();
         }
     }
 
@@ -107,7 +107,7 @@ public class SmithMatrixFormOutputTest {
         } else if (path.equals(file(3))) {
             check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
             check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
-            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3+0.5*x^2+x-1");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x^3+1/2*x^2+x-1");
 
         } else if (path.equals(file(4))) {
             check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0");
