@@ -69,7 +69,6 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      */
     private IMatrix finalMatrix;
 
-
     /**
      * Matrix T.
      */
@@ -121,7 +120,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
     @Override
     protected void process() throws Exception {
         sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
-        sendUpdate(FormEvent.PROCESSING_STEP, "Transitional matrix", getTransitionalMatrix());
+        sendUpdate(FormEvent.PROCESSING_INFO, "Transitional matrix", getTransitionalMatrix(round));
         MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);
         form.start();
@@ -224,8 +223,8 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      *
      * @return IMatrix
      */
-    public IMatrix getTransitionalMatrix() {
-        return xIminusA;
+    public IMatrix getTransitionalMatrix(int round) {
+        return round == 0 ? xIminusA : xIminusB;
     }
 
     /**
@@ -252,5 +251,9 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     protected void setT(IMatrix t) {
         this.t = t;
+    }
+
+    public int getRound() {
+        return round;
     }
 }

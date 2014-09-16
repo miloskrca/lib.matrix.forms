@@ -58,11 +58,11 @@ public class RationalCanonicalMatrixFormTest {
                         case FormEvent.PROCESSING_START:
                             output = "PROCESSING_START\n";
                             output += form.getStartMatrix().toString() + "\n";
-                            output += form.getTransitionalMatrix().toString() + "\n";
+                            output += form.getTransitionalMatrix(form.getRound()).toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_STEP:
                             output = "PROCESSING_STEP " + event.getMessage() + "\n";
-                            output += form.getTransitionalMatrix().toString() + "\n";
+                            output += form.getTransitionalMatrix(form.getRound()).toString() + "\n";
                             output += form.getP(0).toString() + "\n";
                             break;
                         case FormEvent.PROCESSING_INFO:
@@ -72,7 +72,7 @@ public class RationalCanonicalMatrixFormTest {
                             break;
                         case FormEvent.PROCESSING_END:
                             output = "PROCESSING_END\n";
-                            output += form.getTransitionalMatrix().toString() + "\n";
+                            output += form.getTransitionalMatrix(0).toString() + "\n";
                             output += form.getFinalMatrix().toString() + "\n";
                             output += form.getP(0).toString() + "\n";
                             output += form.getP(1).toString() + "\n";

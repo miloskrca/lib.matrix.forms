@@ -9,6 +9,8 @@ import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 
+import java.util.Arrays;
+
 /**
  * Created by Miloš Krsmanović.
  * May 2014
@@ -17,8 +19,24 @@ import rs.etf.km123247m.Observer.Event.FormEvent;
  */
 public class SmithMatrixForm extends MatrixForm {
 
+    /**
+     *
+     */
+    private IMatrix startMatrix;
+
+    /**
+     *
+     */
+    private IMatrix finalMatrix;
+
     public SmithMatrixForm(MatrixHandler handler) {
         super(handler);
+        try {
+            startMatrix = handler.duplicate(handler.getMatrix());
+        } catch (Exception exception) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, exception.getMessage() + Arrays.toString(exception.getStackTrace()), handler.getMatrix());
+        }
+        finalMatrix = handler.getMatrix();
     }
 
     @Override
@@ -221,4 +239,11 @@ public class SmithMatrixForm extends MatrixForm {
         }
     }
 
+    public IMatrix getFinalMatrix() {
+        return finalMatrix;
+    }
+
+    public IMatrix getStartMatrix() {
+        return startMatrix;
+    }
 }
