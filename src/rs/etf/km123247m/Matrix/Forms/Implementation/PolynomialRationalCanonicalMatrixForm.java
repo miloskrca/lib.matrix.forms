@@ -141,13 +141,13 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
 
     @Override
     protected void generateMatrixT() throws Exception {
-        IMatrix invertedP1 = getHandler().invertMatrix(getP(1));
+        IMatrix invertedP0 = getHandler().invertMatrix(getP(0));
         IMatrix p = new ArrayMatrix(
                 getHandler().getMatrix().getRowNumber(),
                 getHandler().getMatrix().getColumnNumber()
         );
         p.initWith(getHandler().getObjectFromString("0"));
-        getHandler().multiply(invertedP1, getP(0), p);
+        getHandler().multiply(invertedP0, getP(1), p);
 
         setT(calcT(getStartMatrix(), p));
     }

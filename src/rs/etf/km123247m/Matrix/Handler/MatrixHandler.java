@@ -202,6 +202,40 @@ public abstract class MatrixHandler {
         return resultMatrix;
     }
 
+
+
+    public IMatrix multiplyWith(IMatrix matrix) throws Exception {
+        return multiply(getMatrix(), matrix);
+    }
+
+    public IMatrix multiply(IMatrix matrix1, IMatrix matrix2) throws Exception {
+        if (matrix1.getColumnNumber() != matrix2.getRowNumber()) {
+            throw new Exception(
+                    "Column and row numbers not appropriate for multiplication: " +
+                            matrix1.getColumnNumber() + "!=" + matrix2.getRowNumber()
+            );
+        }
+        IMatrix resultMatrix = new ArrayMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
+        resultMatrix.initWith(getObjectFromString("0"));
+        for (int i = 0; i < matrix1.getRowNumber(); i++) {
+            for (int j = 0; j < matrix2.getColumnNumber(); j++) {
+                for (int k = 0; k < matrix1.getColumnNumber(); k++) {
+                    Object tempElement = multiplyElements(
+                            matrix1.get(i, k).getElement(),
+                            matrix2.get(k, j).getElement()
+                    );
+                    resultMatrix.set(
+                            new MatrixCell(i, j,
+                                    addElements(tempElement, resultMatrix.get(i, j).getElement())
+                            )
+                    );
+                }
+            }
+        }
+
+        return resultMatrix;
+    }
+
     public Object divideCellElements(Object object1, Object object2) throws Exception {
         return divideElements(object1, object2);
     }
