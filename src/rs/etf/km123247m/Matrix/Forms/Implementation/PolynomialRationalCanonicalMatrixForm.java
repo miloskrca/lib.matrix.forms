@@ -183,26 +183,11 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
                 if(t == null) {
                     t = new ArrayMatrix(rows, columns);
                     t.initWith(handler.getObjectFromString("0"));
-                    if(power == 0) {
-                        t = pMatrices.get(power);
-                    } else {
-                        handler.multiply(pMatrices.get(power), handler.power(startMatrix, power), t);
-                    }
-                } else {
-                    IMatrix tempResult = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
-                    tempResult.initWith(handler.getZero());
-                    if(power == 0) {
-                        tempResult = pMatrices.get(power);
-                    } else {
-                        // tempResult =  A^n*P(n)
-                        handler.multiply(handler.power(startMatrix, power), pMatrices.get(power), tempResult);
-                    }
-                    IMatrix tempResult2 = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
-                    tempResult2.initWith(handler.getZero());
-                    // tempResult2 = t + A^n*P(n)
-                    handler.add(t, tempResult, tempResult2);
-                    t = tempResult2;
                 }
+                // tempResult = A^n*Pn
+                IMatrix tempResult = handler.multiply(handler.power(startMatrix, power), pMatrices.get(power));
+                // t = t + A^n*Pn
+                t = handler.add(t, tempResult);
             }
         }
 

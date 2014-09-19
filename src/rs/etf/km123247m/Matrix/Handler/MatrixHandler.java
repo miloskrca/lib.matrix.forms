@@ -176,6 +176,20 @@ public abstract class MatrixHandler {
         return resultMatrix;
     }
 
+    public IMatrix add(IMatrix matrix1, IMatrix matrix2) throws Exception {
+        IMatrix resultMatrix = new ArrayMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
+        resultMatrix.initWith(getObjectFromString("0"));
+        add(matrix1, matrix2, resultMatrix);
+        return resultMatrix;
+    }
+
+    public IMatrix add(IMatrix matrix) throws Exception {
+        IMatrix resultMatrix = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        resultMatrix.initWith(getObjectFromString("0"));
+        add(getMatrix(), matrix, resultMatrix);
+        return resultMatrix;
+    }
+
     public IMatrix multiply(IMatrix matrix1, IMatrix matrix2, IMatrix resultMatrix) throws Exception {
         if (matrix1.getColumnNumber() != matrix2.getRowNumber()) {
             throw new Exception(
@@ -204,35 +218,14 @@ public abstract class MatrixHandler {
 
 
 
-    public IMatrix multiplyWith(IMatrix matrix) throws Exception {
+    public IMatrix multiply(IMatrix matrix) throws Exception {
         return multiply(getMatrix(), matrix);
     }
 
     public IMatrix multiply(IMatrix matrix1, IMatrix matrix2) throws Exception {
-        if (matrix1.getColumnNumber() != matrix2.getRowNumber()) {
-            throw new Exception(
-                    "Column and row numbers not appropriate for multiplication: " +
-                            matrix1.getColumnNumber() + "!=" + matrix2.getRowNumber()
-            );
-        }
         IMatrix resultMatrix = new ArrayMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
         resultMatrix.initWith(getObjectFromString("0"));
-        for (int i = 0; i < matrix1.getRowNumber(); i++) {
-            for (int j = 0; j < matrix2.getColumnNumber(); j++) {
-                for (int k = 0; k < matrix1.getColumnNumber(); k++) {
-                    Object tempElement = multiplyElements(
-                            matrix1.get(i, k).getElement(),
-                            matrix2.get(k, j).getElement()
-                    );
-                    resultMatrix.set(
-                            new MatrixCell(i, j,
-                                    addElements(tempElement, resultMatrix.get(i, j).getElement())
-                            )
-                    );
-                }
-            }
-        }
-
+        multiply(matrix1, matrix2, resultMatrix);
         return resultMatrix;
     }
 
@@ -243,6 +236,10 @@ public abstract class MatrixHandler {
     public IMatrix power(IMatrix matrix, int power) throws Exception {
         if(power == 1) {
             return duplicate(matrix);
+        }
+
+        if(power == 0) {
+            return diagonal(matrix.getRowNumber(), getObjectFromString("1"));
         }
 
         IMatrix result = null;
@@ -260,11 +257,29 @@ public abstract class MatrixHandler {
         return result;
     }
 
+    public IMatrix diagonal(int range, Object element) throws Exception {
+        return diagonal(range, range, element);
+    }
+
+    public IMatrix diagonal(int rowNumber, int columnNumber, Object element) throws Exception {
+        IMatrix diagonal = new ArrayMatrix(rowNumber, columnNumber);
+        for (int row = 0; row < rowNumber; row++) {
+            for (int column = 0; column < columnNumber; column++) {
+                if (row == column) {
+                    diagonal.set(new MatrixCell(row, column, element));
+                } else {
+                    diagonal.set(new MatrixCell(row, column, getObjectFromString("0")));
+                }
+            }
+        }
+
+        return diagonal;
+    }
+
     public IMatrix duplicate(IMatrix matrix) throws Exception {
         int rows = matrix.getRowNumber();
         int columns = matrix.getColumnNumber();
-        // This should be implemented better, implementation shouldn't
-        // be mentiaoned here
+        // @TODO: This should be implemented better, implementation shouldn't be mentioned here
         IMatrix duplicate = new ArrayMatrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
