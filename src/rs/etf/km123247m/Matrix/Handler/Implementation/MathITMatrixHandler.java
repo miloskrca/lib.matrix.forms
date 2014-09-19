@@ -6,6 +6,7 @@ import rs.etf.km123247m.Parser.MatrixParser.MathIT.MathITStringParser;
 import rs.etf.km123247m.Polynomial.MathITPolynomial;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -52,6 +53,16 @@ public class MathITMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public Object factor(Object element) {
+        return null;
+    }
+
+    @Override
+    public Collection<Object> getFactorsFromElement(Object element) {
+        return null;
+    }
+
+    @Override
+    public CoefficientPowerPair getCoefficientPowerPairFromFactor(Object factor) throws Exception {
         return null;
     }
 

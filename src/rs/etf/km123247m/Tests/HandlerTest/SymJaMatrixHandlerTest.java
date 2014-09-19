@@ -2,6 +2,7 @@ package rs.etf.km123247m.Tests.HandlerTest;
 
 import org.junit.Before;
 import org.junit.Test;
+import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.Handler.Implementation.SymJaMatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
@@ -26,26 +27,6 @@ public class SymJaMatrixHandlerTest {
     }
 
     @Test
-    public void testAddElements() throws Exception {
-        //TODO: Write test
-    }
-
-    @Test
-    public void testMultiplyElements() throws Exception {
-        //TODO: Write test
-    }
-
-    @Test
-    public void testDivideElements() throws Exception {
-        //TODO: Write test
-    }
-
-    @Test
-    public void testCalculateNegativeElement() throws Exception {
-        //TODO: Write test
-    }
-
-    @Test
     public void testGetLeadingCoefficientOfElement() throws Exception {
         String coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(0, 0).getElement()).toString();
         assert "1".equals(coefficient);
@@ -58,5 +39,14 @@ public class SymJaMatrixHandlerTest {
 
         coefficient = handler.getLeadingCoefficient(handler.getMatrix().get(1, 1).getElement()).toString();
         assert "5".equals(coefficient);
+    }
+
+    @Test
+    public void testFactors() throws Exception{
+        CoefficientPowerPair pair = handler.getCoefficientPowerPairFromFactor(
+                handler.getObjectFromString("x^2")
+        );
+        assert handler.compare(pair.getCoefficient(), handler.getZero()) == 0;
+        assert handler.compare(pair.getPower(), handler.getObjectFromString("2")) == 0;
     }
 }

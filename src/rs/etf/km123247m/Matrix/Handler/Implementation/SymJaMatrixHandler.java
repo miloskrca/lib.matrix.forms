@@ -8,6 +8,7 @@ import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 /**
  * Implementation of matrix operations using SymJa library
@@ -245,16 +246,6 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                 }
             }
             power = Integer.parseInt(highestPower.toString());
-
-//            Pattern p = Pattern.compile("Power\\[(.+),(.+)\\]");
-//            Matcher m = p.matcher(exprString);
-//
-//            while(m.find()) {
-//                int groupPower = Integer.parseInt(m.group(2));
-//                if(groupPower > power) {
-//                    power = groupPower;
-//                }
-//            }
         }
 
         return power;
@@ -266,6 +257,60 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         // want to avoid Expand[]
         return util.evaluate("Factor[" + element.toString() + "]");
     }
+
+    @Override
+    public Collection<Object> getFactorsFromElement(Object element) throws Exception {
+        ArrayList<Object> factors = new ArrayList<Object>();
+        String elementString = element.toString();
+        String[] factorsString = elementString.split("\\*");
+
+        for(String f: factorsString) {
+            f = f.replace("()", "");
+            factors.add(getObjectFromString(f));
+        }
+
+        return factors;
+    }
+
+    @Override
+    public CoefficientPowerPair getCoefficientPowerPairFromFactor(Object factor) throws Exception {
+        IExpr element = (IExpr) factor;
+        CoefficientPowerPair pair = new CoefficientPowerPair();
+        if(element.isPower()) {
+            for(IExpr leaf: element.leaves()) {
+                if(leaf.isNumber()) {
+                    pair.setPower(leaf);
+                } else if(leaf.isPlus()) {
+                    for(IExpr leaf2: element.leaves()) {
+                        if(!leaf2.isSymbol()) {
+                            pair.setCoefficient(leaf2);
+                        } else {
+                            throw new Exception("Un-parsable factor!");
+                        }
+                    }
+                } else if(leaf.isSymbol()) {
+                    pair.setCoefficient(getZero());
+                } else {
+                    throw new Exception("Un-parsable factor!");
+                }
+            }
+        } else if(element.isPlus()) {
+            pair.setPower(getOne());
+            for(IExpr leaf: element.leaves()) {
+               if(!leaf.isSymbol()) {
+                   pair.setCoefficient(leaf);
+               }
+            }
+        } else if(element.isSymbol()) {
+            pair.setPower(getOne());
+            pair.setCoefficient(getZero());
+        } else {
+            throw new Exception("Un-parsable factor!");
+        }
+
+        return pair;
+    }
+
 
     private boolean isNumeric(String s) {
         return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);

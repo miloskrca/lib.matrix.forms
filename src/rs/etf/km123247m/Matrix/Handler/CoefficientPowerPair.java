@@ -27,7 +27,7 @@ public class CoefficientPowerPair {
         return power;
     }
 
-    public void setPower(IExpr power) {
+    public void setPower(Object power) {
         this.power = power;
     }
 
@@ -35,7 +35,7 @@ public class CoefficientPowerPair {
         return coefficient;
     }
 
-    public void setCoefficient(IExpr coefficient) {
+    public void setCoefficient(Object coefficient) {
         this.coefficient = coefficient;
     }
 }
