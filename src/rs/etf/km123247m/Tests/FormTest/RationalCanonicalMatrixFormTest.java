@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Tests.FormTests;
+package rs.etf.km123247m.Tests.FormTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +35,7 @@ public class RationalCanonicalMatrixFormTest {
     }
 
     protected String file(int number) {
-        return "./TestData/FormTests/RationalCanonical/RationalCanonicalMatrixFormTestMatrix" + number + ".txt";
+        return "./TestData/FormTest/RationalCanonical/RationalCanonicalMatrixFormTestMatrix" + number + ".txt";
     }
 
     @Test

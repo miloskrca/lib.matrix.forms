@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Tests.FormTests;
+package rs.etf.km123247m.Tests.FormTest;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,11 +19,11 @@ public class PolynomialRationalCanonicalMatrixFormTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[] {
-            "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix1.txt",
-            "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix2.txt",
-            "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix3.txt",
-            "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
-            "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix5.txt",
+            "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix1.txt",
+            "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix2.txt",
+            "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix3.txt",
+            "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
+            "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix5.txt",
         };
     }
 
@@ -44,7 +44,7 @@ public class PolynomialRationalCanonicalMatrixFormTest {
 //            System.out.println(finalMatrix);
             switch (i) {
                 case 0:
-//                    "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix1.txt",
+//                    "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix1.txt",
 //                    | 1  0  0 |
 //                    | 0  Plus[-2, x]  0 |
 //                    | 0  0  Plus[4, Times[-3, x], Power[x, 2]] |
@@ -59,7 +59,7 @@ public class PolynomialRationalCanonicalMatrixFormTest {
                     assert handler.compare(finalMatrix.get(2, 2).getElement(), handler.getObjectFromString("3")) == 0;
                     break;
                 case 1:
-//                    "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix2.txt",
+//                    "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix2.txt",
 //                    | Plus[1, x]  0  0 |
 //                    | 0  Plus[1, x]  0 |
 //                    | 0  0  Plus[1, x] |
@@ -74,7 +74,7 @@ public class PolynomialRationalCanonicalMatrixFormTest {
                     assert handler.compare(finalMatrix.get(2, 2).getElement(), handler.getObjectFromString("-1")) == 0;
                     break;
                 case 2:
-//                    "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix3.txt",
+//                    "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix3.txt",
 //                    | 1  0  0 |
 //                    | 0  1  0 |
 //                    | 0  0  Plus[4, Times[-3, x], Times[-5, Power[x, 2]], Power[x, 3]] |
@@ -89,7 +89,7 @@ public class PolynomialRationalCanonicalMatrixFormTest {
                     assert handler.compare(finalMatrix.get(2, 2).getElement(), handler.getObjectFromString("5")) == 0;
                     break;
                 case 3:
-//                    "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
+//                    "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
 //                    | 1  0 |
 //                    | 0  Plus[3, Times[2, x], Power[x, 2]] |
                     assert handler.compare(finalMatrix.get(0, 0).getElement(), handler.getObjectFromString("0")) == 0;
@@ -98,7 +98,7 @@ public class PolynomialRationalCanonicalMatrixFormTest {
                     assert handler.compare(finalMatrix.get(1, 1).getElement(), handler.getObjectFromString("-2")) == 0;
                     break;
                 case 4:
-//                    "./TestData/FormTests/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
+//                    "./TestData/FormTest/RationalCanonical/Polynomial/PolynomialRationalCanonicalMatrixFormTestMatrix4.txt",
 //                    | Plus[-2, x]  0 |
 //                    | 0  Plus[-2, x] |
                     assert handler.compare(finalMatrix.get(0, 0).getElement(), handler.getObjectFromString("2")) == 0;
