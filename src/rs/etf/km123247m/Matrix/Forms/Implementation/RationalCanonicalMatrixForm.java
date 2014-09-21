@@ -173,12 +173,12 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
                 }
                 round = 1;
-                sendUpdate(FormEvent.PROCESSING_INFO, "End of round one.", finalMatrix);
 
                 try {
                     getHandler().setMatrix(xIminusB);
                     // finalMatrix = B
                     getHandler().subtractWith(finalMatrix);
+                    sendUpdate(FormEvent.PROCESSING_INFO, "End of round one.", finalMatrix);
                     MatrixForm form = new SmithMatrixForm(getHandler());
                     form.addObserver(this);
                     form.start();
@@ -188,10 +188,11 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
             } else {
                 try {
                     generateMatrixT();
+                    sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
                 } catch (Exception e) {
                     e.printStackTrace();
+                    sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
                 }
-                sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             }
         }
     }

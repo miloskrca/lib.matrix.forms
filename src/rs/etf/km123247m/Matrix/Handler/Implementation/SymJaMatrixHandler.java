@@ -262,11 +262,18 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public Collection<Object> getFactorsFromElement(Object element) throws Exception {
         ArrayList<Object> factors = new ArrayList<Object>();
         String elementString = element.toString();
-        String[] factorsString = elementString.split("\\*");
+        String[] factorsString = elementString.split("\\*\\(");
 
         for(String f: factorsString) {
-            f = f.replace("()", "");
-            factors.add(getObjectFromString(f));
+            if(f.charAt(0) != '(' && f.charAt(f.length() - 1) == ')') {
+                f = f.replace(")", "");
+            } if (f.contains("^")) {
+                f = "(" + f;
+            }
+            IExpr factor = (IExpr) getObjectFromString(f);
+            if(!factor.isNumber()) {
+                factors.add(factor);
+            }
         }
 
         return factors;
@@ -281,13 +288,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                 if(leaf.isNumber()) {
                     pair.setPower(leaf);
                 } else if(leaf.isPlus()) {
-                    for(IExpr leaf2: element.leaves()) {
-                        if(!leaf2.isSymbol()) {
-                            pair.setCoefficient(leaf2);
-                        } else {
-                            throw new Exception("Un-parsable factor!");
-                        }
-                    }
+                    setFactorCoefficient(pair, leaf);
                 } else if(leaf.isSymbol()) {
                     pair.setCoefficient(getZero());
                 } else {
@@ -296,11 +297,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             }
         } else if(element.isPlus()) {
             pair.setPower(getOne());
-            for(IExpr leaf: element.leaves()) {
-               if(!leaf.isSymbol()) {
-                   pair.setCoefficient(leaf);
-               }
-            }
+            setFactorCoefficient(pair, element);
         } else if(element.isSymbol()) {
             pair.setPower(getOne());
             pair.setCoefficient(getZero());
@@ -311,6 +308,33 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return pair;
     }
 
+    protected void setFactorCoefficient(CoefficientPowerPair pair, IExpr leaf) throws Exception {
+        Object leftoverCoefficient = null;
+        for(IExpr plusLeaf: leaf.leaves()) {
+            if(plusLeaf.isNumber()) {
+                // set found coefficient
+                pair.setCoefficient(plusLeaf);
+            } else if(plusLeaf.isTimes()) {
+                // if we found times than the factoring didn't go as planned
+                // we got something like (a*x-b)^n instead of (x-b)^n
+                // so we need to fix the factor like (x-b/a)^n
+                for(IExpr timesLeaf: plusLeaf.leaves()) {
+                    if(timesLeaf.isNumber()) {
+                        // we remember the faulty factor
+                        leftoverCoefficient = timesLeaf;
+                    }
+                }
+            } else if(!plusLeaf.isSymbol()) {
+                throw new Exception("Un-parsable factor!");
+            }
+        }
+        // faulty factor found, we fix it here
+        if(leftoverCoefficient != null) {
+            pair.setCoefficient(
+                    divideElements(pair.getCoefficient(), leftoverCoefficient)
+            );
+        }
+    }
 
     private boolean isNumeric(String s) {
         return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);

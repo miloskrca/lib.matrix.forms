@@ -85,11 +85,11 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                 postProcessTransitionalMatrix();
                 sendUpdate(FormEvent.PROCESSING_INFO, "Factored elements on diagonal.", transitionalMatrix);
                 findFactors();
+                sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             } catch (Exception e) {
                 e.printStackTrace();
                 sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
             }
-            sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
         }
     }
 
@@ -118,8 +118,12 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                 }
             }
         }
-        for(Object element: elements) {
-            factors.addAll(((PolynomialMatrixHandler)getHandler()).getFactorsFromElement(element));
+        try {
+            for(Object element: elements) {
+                factors.addAll(((PolynomialMatrixHandler)getHandler()).getFactorsFromElement(element));
+            }
+        } catch (Exception e) {
+            throw new Exception("Factors couldn't be created");
         }
         generateBlocks();
     }
@@ -136,19 +140,6 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
             }
             pairs.add(pair);
         }
-
-        //sort power/coefficient pairs
-        Collections.sort(pairs, new Comparator<CoefficientPowerPair>() {
-            public int compare(CoefficientPowerPair pair1, CoefficientPowerPair pair2) {
-                try {
-                    return handler.compare(pair1.getCoefficient(), pair2.getCoefficient());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), null);
-                }
-                return 0;
-            }
-        });
 
         int index = 0;
         int row = 0;
