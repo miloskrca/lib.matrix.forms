@@ -24,6 +24,11 @@ public class MathITMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    protected boolean isElementSymbol(Object element) {
+        return false;
+    }
+
+    @Override
     public ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(Object element) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
         for (Map.Entry<Integer, Double> entry : ((MathITPolynomial) element).entrySet()) {

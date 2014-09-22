@@ -43,6 +43,12 @@ public class SmithMatrixForm extends MatrixForm {
     public void process() throws Exception {
         sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         MatrixHandler handler = this.getHandler();
+
+        if(handler.isSingular()) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is singular.", null);
+            return;
+        }
+
         int matrixSize = handler.getMatrix().getRowNumber();
 
         for (int range = 0; range < matrixSize - 1; range++) {

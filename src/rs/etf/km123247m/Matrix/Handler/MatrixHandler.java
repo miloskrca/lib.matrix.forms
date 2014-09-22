@@ -393,6 +393,36 @@ public abstract class MatrixHandler {
         return getObjectFromString("-1");
     }
 
+    public boolean isSingular() throws Exception {
+        IMatrix matrix = getMatrix();
+        Object total = getObjectFromString("1");
+        for (int i=0;i< this.matrix.getRowNumber();i++) {
+            for (int j=0; j< this.matrix.getColumnNumber();j++) {
+                if(i == j) {
+                    total = multiplyElements(total, matrix.get(i, j).getElement());
+                }
+            }
+        }
+
+        return compare(total, getObjectFromString("0")) == 0;
+    }
+
+    public boolean containsSymbol() throws Exception {
+        IMatrix matrix = getMatrix();
+        Object total = getObjectFromString("1");
+        for (int i=0;i< this.matrix.getRowNumber();i++) {
+            for (int j=0; j< this.matrix.getColumnNumber();j++) {
+                if(isElementSymbol(matrix.get(i, j).getElement())) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    protected abstract boolean isElementSymbol(Object element);
+
     protected abstract Object addElements(Object element1, Object element2) throws Exception;
 
     protected abstract Object multiplyElements(Object element1, Object element2) throws Exception;

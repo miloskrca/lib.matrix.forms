@@ -59,6 +59,13 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
 
     @Override
     protected void process() throws Exception {
+        getHandler().setMatrix(startMatrix);
+        if (getHandler().containsSymbol()) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
+            return;
+        }
+        getHandler().setMatrix(transitionalMatrix);
+
         sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
         MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);

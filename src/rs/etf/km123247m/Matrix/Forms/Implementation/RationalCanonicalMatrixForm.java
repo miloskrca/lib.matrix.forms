@@ -119,6 +119,12 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     @Override
     protected void process() throws Exception {
+        getHandler().setMatrix(startMatrix);
+        if (getHandler().containsSymbol()) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
+            return;
+        }
+        getHandler().setMatrix(xIminusA);
         sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
         sendUpdate(FormEvent.PROCESSING_INFO, "Transitional matrix", getTransitionalMatrix(round));
         MatrixForm form = new SmithMatrixForm(getHandler());

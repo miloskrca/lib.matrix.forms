@@ -28,6 +28,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    protected boolean isElementSymbol(Object element) {
+        return element.toString().contains("x");
+    }
+
+    @Override
     protected Object getElementEquivalentToOne() throws Exception {
         return util.evaluate("1");
     }
@@ -91,7 +96,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public int compare(Object element1, Object element2) {
-        return ((IExpr)element1).compareTo((IExpr)element2);
+        return ((IExpr)element1).compareTo((IExpr) element2);
     }
 
     @Override
