@@ -1,7 +1,6 @@
 package rs.etf.km123247m.Matrix.Handler;
 
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 
 /**
@@ -177,14 +176,14 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix add(IMatrix matrix1, IMatrix matrix2) throws Exception {
-        IMatrix resultMatrix = new ArrayMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
+        IMatrix resultMatrix = matrix.createMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
         resultMatrix.initWith(getObjectFromString("0"));
         add(matrix1, matrix2, resultMatrix);
         return resultMatrix;
     }
 
     public IMatrix add(IMatrix matrix) throws Exception {
-        IMatrix resultMatrix = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        IMatrix resultMatrix = matrix.createMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
         resultMatrix.initWith(getObjectFromString("0"));
         add(getMatrix(), matrix, resultMatrix);
         return resultMatrix;
@@ -223,7 +222,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix multiply(IMatrix matrix1, IMatrix matrix2) throws Exception {
-        IMatrix resultMatrix = new ArrayMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
+        IMatrix resultMatrix = matrix.createMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
         resultMatrix.initWith(getObjectFromString("0"));
         multiply(matrix1, matrix2, resultMatrix);
         return resultMatrix;
@@ -247,7 +246,7 @@ public abstract class MatrixHandler {
             if(result == null) {
                 result = duplicate(matrix);
             } else {
-                IMatrix tempResult = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+                IMatrix tempResult = matrix.createMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
                 tempResult.initWith(getObjectFromString("0"));
                 multiply(result, matrix, tempResult);
                 result = tempResult;
@@ -262,7 +261,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix diagonal(int rowNumber, int columnNumber, Object element) throws Exception {
-        IMatrix diagonal = new ArrayMatrix(rowNumber, columnNumber);
+        IMatrix diagonal = matrix.createMatrix(rowNumber, columnNumber);
         for (int row = 0; row < rowNumber; row++) {
             for (int column = 0; column < columnNumber; column++) {
                 if (row == column) {
@@ -279,8 +278,7 @@ public abstract class MatrixHandler {
     public IMatrix duplicate(IMatrix matrix) throws Exception {
         int rows = matrix.getRowNumber();
         int columns = matrix.getColumnNumber();
-        // @TODO: This should be implemented better, implementation shouldn't be mentioned here
-        IMatrix duplicate = new ArrayMatrix(rows, columns);
+        IMatrix duplicate = matrix.createMatrix(rows, columns);
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
                 duplicate.set(
@@ -313,7 +311,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix transpose(IMatrix matrix) throws Exception {
-        IMatrix transposedMatrix = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        IMatrix transposedMatrix = matrix.createMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
         for (int i=0; i < matrix.getRowNumber();i++) {
             for (int j=0;j<matrix.getColumnNumber();j++) {
                 transposedMatrix.set(new MatrixCell(j, i, getObjectFromString(matrix.get(i, j).getElement().toString())));
@@ -349,7 +347,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix createSubMatrix(IMatrix matrix, int excludingRow, int excludingCol) throws Exception {
-        IMatrix mat = new ArrayMatrix(matrix.getRowNumber()-1, matrix.getColumnNumber()-1);
+        IMatrix mat = matrix.createMatrix(matrix.getRowNumber()-1, matrix.getColumnNumber()-1);
         int r = -1;
         for (int i=0;i<matrix.getRowNumber();i++) {
             if (i == excludingRow) {
@@ -368,7 +366,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix coFactor(IMatrix matrix) throws Exception {
-        IMatrix mat = new ArrayMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
+        IMatrix mat = matrix.createMatrix(matrix.getRowNumber(), matrix.getColumnNumber());
         for (int i=0;i<matrix.getRowNumber();i++) {
             for (int j=0; j<matrix.getColumnNumber();j++) {
                 mat.set(new MatrixCell(i, j,

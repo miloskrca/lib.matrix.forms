@@ -47,6 +47,11 @@ public class ArrayMatrix implements IMatrix {
         }
     }
 
+    @Override
+    public IMatrix createMatrix(int rowNumber, int columnNumber) throws Exception {
+        return new ArrayMatrix(rowNumber, columnNumber);
+    }
+
     protected void checkColumnAndRowValues(int row, int col) throws Exception {
         if(col >= columnNumber || col < 0) {
             throw new Exception("Column number doesn't exist!");
