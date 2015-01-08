@@ -5,14 +5,11 @@ import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.Handler.Implementation.PolynomialMatrixHandler;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Observable;
 
 /**
@@ -48,19 +45,19 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         startMatrix = handler.duplicate(handler.getMatrix());
         int rowNumber = startMatrix.getRowNumber();
         int columnNumber = startMatrix.getColumnNumber();
-        finalMatrix = new ArrayMatrix(rowNumber, columnNumber);
+        finalMatrix = startMatrix.createMatrix(rowNumber, columnNumber);
         Object zero = ((PolynomialMatrixHandler) handler).getZero();
-        transitionalMatrix = handler.diagonal(startMatrix.getRowNumber(), getHandler().getObjectFromString("x"));
         finalMatrix.initWith(zero);
+        transitionalMatrix = handler.diagonal(startMatrix.getRowNumber(), getHandler().getObjectFromString("x"));
 
+        transitionalMatrix = handler.subtract(transitionalMatrix, startMatrix);
         handler.setMatrix(transitionalMatrix);
-        handler.subtractWith(startMatrix);
     }
 
     @Override
     protected void process() throws Exception {
         getHandler().setMatrix(startMatrix);
-        if (getHandler().containsSymbol()) {
+        if (getHandler().matrixContainsSymbol()) {
             sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
             return;
         }

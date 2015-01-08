@@ -148,6 +148,36 @@ public abstract class MatrixHandler {
         }
     }
 
+    public IMatrix subtract(IMatrix matrix1, IMatrix matrix2, IMatrix resultMatrix) throws Exception {
+        if (matrix1.getColumnNumber() != matrix2.getRowNumber()) {
+            throw new Exception(
+                    "Column and row numbers not appropriate for subtraction: " +
+                            matrix1.getColumnNumber() + "!=" + matrix2.getRowNumber()
+            );
+        }
+        for (int i = 0; i < matrix1.getRowNumber(); i++) {
+            for (int j = 0; j < matrix2.getColumnNumber(); j++) {
+                resultMatrix.set(
+                        new MatrixCell(i, j,
+                                subtractElements(
+                                        matrix1.get(i, j).getElement(),
+                                        matrix2.get(i, j).getElement()
+                                )
+                        )
+                );
+            }
+        }
+
+        return resultMatrix;
+    }
+
+    public IMatrix subtract(IMatrix matrix1, IMatrix matrix2) throws Exception {
+        IMatrix resultMatrix = matrix.createMatrix(matrix1.getRowNumber(), matrix2.getColumnNumber());
+        resultMatrix.initWith(getObjectFromString("0"));
+        subtract(matrix1, matrix2, resultMatrix);
+        return resultMatrix;
+    }
+
     public Object subtractElements(Object element1, Object element2) throws Exception {
         return addElements(element1, calculateNegativeElement(element2));
     }
@@ -405,7 +435,7 @@ public abstract class MatrixHandler {
         return compare(total, getObjectFromString("0")) == 0;
     }
 
-    public boolean containsSymbol() throws Exception {
+    public boolean matrixContainsSymbol() throws Exception {
         IMatrix matrix = getMatrix();
         for (int i=0;i< this.matrix.getRowNumber();i++) {
             for (int j=0; j< this.matrix.getColumnNumber();j++) {

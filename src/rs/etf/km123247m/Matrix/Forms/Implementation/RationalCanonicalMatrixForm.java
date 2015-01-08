@@ -120,7 +120,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
     @Override
     protected void process() throws Exception {
         getHandler().setMatrix(startMatrix);
-        if (getHandler().containsSymbol()) {
+        if (getHandler().matrixContainsSymbol()) {
             sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
             return;
         }
