@@ -27,6 +27,7 @@ public class JordanMatrixFormOutputTest {
         paths = new String[] {
                 file(1),
                 file(2),
+                file(3),
         };
     }
 
