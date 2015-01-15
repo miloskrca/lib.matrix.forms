@@ -64,7 +64,6 @@ public class EJMLPolynomialHandler implements PolynomialHandler {
             strings[i] = strings[i].replace("+-", "-");
         }
 
-
         return strings;
     }
 

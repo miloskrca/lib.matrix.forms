@@ -13,6 +13,7 @@ import rs.etf.km123247m.Polynomial.Term;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Observable;
 
 /**
@@ -101,7 +102,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
     }
 
 
-    // Work in progress
+    // Work in progress...
     protected void postProcessTransitionalMatrix2() throws Exception {
         PolynomialMatrixHandler handler = ((PolynomialMatrixHandler) getHandler());
         EJMLPolynomialHandler polyHandler = new EJMLPolynomialHandler();
@@ -150,33 +151,41 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
             }
         }
 
-//        System.out.println();
-//        System.out.println(transitionalMatrix);
-
         if(factors.size() > 0) {
             // SymJa way
             generateBlocks();
         } else {
             // EJML way
-            int index = 0;
+
+            // sort all roots so we can check for re-occurring ones
+            Collections.sort(roots, new Comparator<Object>(){
+                public int compare(Object root1, Object root2) {
+                    return root1.toString().compareTo(root2.toString());
+                }
+            });
+
             int row = 0;
             while(row < finalMatrix.getRowNumber()) {
                 int power = 1;
-                // @TODO: detect repeating roots when not using CoefficientPowerPair
+                // Detect repeating roots when not using CoefficientPowerPair
+                while (roots.size() > row + power
+                        && roots.get(row).toString().equals(roots.get(row + power).toString())) {
+                    power++;
+                }
+
                 if(power > 1) {
                     // add ones in diagonal above the main diagonal
                     // but only inside the current block
-                    for(int row1 = row; row1 < row + power - 1; row1++) {
+                    for(int i = row; i < row + power - 1; i++) {
                         Object one = handler.getOne();
-                        finalMatrix.set(new MatrixCell(row1, row1 + 1, one));
+                        finalMatrix.set(new MatrixCell(i, i + 1, one));
                     }
                 }
-                for(int row1 = row; row1 < row + power; row1++) {
-                    finalMatrix.set(new MatrixCell(row1, row1, roots.get(index)));
+                for(int i = row; i < row + power; i++) {
+                    finalMatrix.set(new MatrixCell(i, i, roots.get(row)));
                 }
 
                 row += power;
-                index++;
             }
         }
     }

@@ -1,11 +1,9 @@
 package rs.etf.km123247m.Tests.LibraryTest;
 
 
-import org.ejml.data.Complex64F;
 import org.junit.Test;
 import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.interfaces.IExpr;
-import rs.etf.km123247m.Tests.PolynomialRootFinder;
 
 /**
  * Created by Miloš Krsmanović.

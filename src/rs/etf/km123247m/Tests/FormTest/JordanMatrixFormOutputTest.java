@@ -102,8 +102,8 @@ public class JordanMatrixFormOutputTest {
             check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "3");
         }
         if (path.equals(file(3))) {
-            check(finalMatrix, 0, 0, "0.37228132326901475"); check(finalMatrix, 0, 1, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "-5.372281323269016");
+            check(finalMatrix, 0, 0, "-5.372281323269016"); check(finalMatrix, 0, 1, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "0.37228132326901475");
         }
         if (path.equals(file(4))) {
             check(finalMatrix, 0, 0, "2.5+1.936491673103709*i"); check(finalMatrix, 0, 1, "0");
