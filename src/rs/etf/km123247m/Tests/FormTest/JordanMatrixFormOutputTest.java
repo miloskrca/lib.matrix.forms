@@ -28,7 +28,7 @@ public class JordanMatrixFormOutputTest {
                 file(1),
                 file(2),
                 file(3),
-//                file(4),
+                file(4),
         };
     }
 
@@ -89,18 +89,29 @@ public class JordanMatrixFormOutputTest {
         }
     }
 
-    protected void assertAllOK(MatrixForm matrixForm, String path) throws Exception {
-//        if (path.equals(file(1))) {
-//            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0");
-//            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "x");
-//
-//        }
+    protected void assertAllOK(JordanMatrixForm matrixForm, String path) throws Exception {
+        IMatrix finalMatrix = matrixForm.getFinalMatrix();
+        if (path.equals(file(1))) {
+            check(finalMatrix, 0, 0, "3"); check(finalMatrix, 0, 1, "0"); check(finalMatrix, 0, 2, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2"); check(finalMatrix, 1, 2, "1");
+            check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "2");
+        }
+        if (path.equals(file(2))) {
+            check(finalMatrix, 0, 0, "0"); check(finalMatrix, 0, 1, "0"); check(finalMatrix, 0, 2, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "4"); check(finalMatrix, 1, 2, "0");
+            check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "3");
+        }
+        if (path.equals(file(3))) {
+            check(finalMatrix, 0, 0, "0.37228132326901475"); check(finalMatrix, 0, 1, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "-5.372281323269016");
+        }
+        if (path.equals(file(4))) {
+            check(finalMatrix, 0, 0, "2.5+1.936491673103709*i"); check(finalMatrix, 0, 1, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2.5-1.936491673103709*i");
+        }
     }
 
-    protected void check(MatrixForm matrixForm, int row, int column, String value) throws Exception {
-        assert matrixForm.getHandler().compare(
-                matrixForm.getHandler().getMatrix().get(row, column).getElement(),
-                matrixForm.getHandler().getObjectFromString(value)
-        ) == 0;
+    protected void check(IMatrix matrix, int row, int column, String value) throws Exception {
+        assert matrix.get(row, column).getElement().toString().equals(value);
     }
 }

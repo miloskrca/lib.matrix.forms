@@ -150,8 +150,8 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
             }
         }
 
-        System.out.println();
-        System.out.println(transitionalMatrix);
+//        System.out.println();
+//        System.out.println(transitionalMatrix);
 
         if(factors.size() > 0) {
             // SymJa way

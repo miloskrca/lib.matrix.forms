@@ -54,11 +54,11 @@ public class EJMLPolynomialHandler implements PolynomialHandler {
             if (cRoot.getReal() == 0.0 && cRoot.getImaginary() == 0.0) {
                 strings[i] = String.valueOf(Term.X);
             } else if (cRoot.getReal() == 0.0) {
-                strings[i] = "+" + (cRoot.getImaginary() * -1.0) + "*i";
+                strings[i] = (cRoot.getImaginary() * -1.0) + "*i";
             } else if (cRoot.getImaginary() == 0.0) {
-                strings[i] = "+" + (cRoot.getReal() * -1.0);
+                strings[i] = (cRoot.getReal() * -1.0) + "";
             } else {
-                strings[i] = "+" + cRoot.getReal() + "+" + cRoot.getImaginary() + "*i";
+                strings[i] = cRoot.getReal() + "+" + cRoot.getImaginary() + "*i";
             }
             // add * between brackets, add space after/before + and -, replace +- with -
             strings[i] = strings[i].replace("+-", "-");
