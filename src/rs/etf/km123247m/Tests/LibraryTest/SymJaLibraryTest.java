@@ -1,11 +1,11 @@
 package rs.etf.km123247m.Tests.LibraryTest;
 
 
+import org.ejml.data.Complex64F;
 import org.junit.Test;
 import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.interfaces.IExpr;
-
-//import org.matheclipse.core.form.output.StringBufferWriter;
+import rs.etf.km123247m.Tests.PolynomialRootFinder;
 
 /**
  * Created by Miloš Krsmanović.
@@ -28,6 +28,15 @@ public class SymJaLibraryTest {
         IExpr result = util.evaluate("Factor[" + element3 + "]");
         assert "(x-2)^2".equals(result.toString());
 
+        String element4 = "x^4-19*x^3+77*x^2+251*x-1430";
+        result = util.evaluate(element4);
+//        System.out.println(result);
+
+//        Complex64F[] b = PolynomialRootFinder.findRoots(-1430,251,77,-19,1);
+//        for (Complex64F aB : b) {
+//            System.out.println(aB.getReal() + " " + aB.getImaginary() + "i");
+//            System.out.println(aB.getImaginary() % 1 == 0 ? "is zero" : "not zero");
+//        }
     }
 
 }

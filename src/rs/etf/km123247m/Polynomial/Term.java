@@ -13,6 +13,7 @@ public class Term implements Comparable {
     public static char MINUS_CHAR = '-';
     public static char PLUS_CHAR = '+';
     public static char NULL = '\u0000';
+    public static char X = 'x';
 
     private int power;
     private String coefficient;

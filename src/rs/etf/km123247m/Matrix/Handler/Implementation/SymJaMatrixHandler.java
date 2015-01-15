@@ -6,6 +6,7 @@ import org.matheclipse.core.interfaces.IExpr;
 import org.matheclipse.core.reflection.system.PolynomialQuotientRemainder;
 import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Polynomial.Term;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -272,7 +273,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         for(String f: factorsString) {
             if(f.charAt(0) != '(' && f.charAt(f.length() - 1) == ')') {
                 f = f.replace(")", "");
-            } if (f.contains("^")) {
+            } if (f.contains(")^")) {
                 f = "(" + f;
             }
             IExpr factor = (IExpr) getObjectFromString(f);
@@ -311,6 +312,35 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         }
 
         return pair;
+    }
+
+    @Override
+    public Object[] quadraticFormula(Object element) throws Exception {
+        int highestPower = getHighestPower(element);
+        if(highestPower != 2) {
+            throw new Exception("sad");
+        }
+
+        Object a = getCoefficientForPower(element, 2);
+        Object b = getCoefficientForPower(element, 1);
+        Object c = getCoefficientForPower(element, 0);
+
+        // ((b)*(-1) + ((b)^2 - 4*(a)*(c))^(1/2))/(2*(a));
+        String string1 = "((" + b + ")*(-1) + ((" + b + ")^2 - 4*(" + a + ")*(" + c + "))^(1/2))" + "/" + "(2*(" + a + "))";
+        // ((b)*(-1) - ((b)^2 - 4*(a)*(c))^(1/2))/(2*(a));
+        String string2 = "((" + b + ")*(-1) - ((" + b + ")^2 - 4*(" + a + ")*(" + c + "))^(1/2))" + "/" + "(2*(" + a + "))";
+
+        return new Object[] {evaluate(string1), evaluate(string2)};
+    }
+
+    @Override
+    public String getFactorsStringFromRoots(Object[] roots) throws Exception {
+        String factors = "";
+        for (Object root : roots) {
+            factors += "*(" + (getObjectFromString(Term.X + "- (" + root.toString() + ")")).toString() + ")";
+        }
+
+        return factors.replace("+-", "-").substring(1);
     }
 
     protected void setFactorCoefficient(CoefficientPowerPair pair, IExpr leaf) throws Exception {

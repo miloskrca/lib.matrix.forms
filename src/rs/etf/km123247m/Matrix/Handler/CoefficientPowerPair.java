@@ -1,7 +1,5 @@
 package rs.etf.km123247m.Matrix.Handler;
 
-import org.matheclipse.core.interfaces.IExpr;
-
 /**
  * Created by Miloš Krsmanović.
  * Aug 2014

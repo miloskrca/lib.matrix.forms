@@ -48,4 +48,6 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
     public abstract Object factor (Object element) throws Exception;
     public abstract Collection<Object> getFactorsFromElement(Object element) throws Exception;
     public abstract CoefficientPowerPair getCoefficientPowerPairFromFactor(Object factor) throws Exception;
+    public abstract Object[] quadraticFormula(Object element) throws Exception;
+    public abstract String getFactorsStringFromRoots(Object[] roots) throws Exception;
 }
