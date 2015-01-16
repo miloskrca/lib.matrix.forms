@@ -422,17 +422,8 @@ public abstract class MatrixHandler {
     }
 
     public boolean isSingular() throws Exception {
-        IMatrix matrix = getMatrix();
-        Object total = getObjectFromString("1");
-        for (int i=0;i< this.matrix.getRowNumber();i++) {
-            for (int j=0; j< this.matrix.getColumnNumber();j++) {
-                if(i == j) {
-                    total = multiplyElements(total, matrix.get(i, j).getElement());
-                }
-            }
-        }
-
-        return compare(total, getObjectFromString("0")) == 0;
+        // Determinant of singular matrices is 0
+        return compare(determinant(getMatrix()), getObjectFromString("0")) == 0;
     }
 
     public boolean matrixContainsSymbol() throws Exception {
