@@ -12,7 +12,9 @@ import rs.etf.km123247m.Parser.ParserTypes.IParser;
 import java.io.File;
 
 /**
- * TODO: Add test cases for most of the methods
+ * SymJaMatrixHandlerTest.txt
+ * | 2+x,                x^2-x;       |
+ * | -3+8*x^2-x^8+7*x^4, 5*x^4-x^2+x; |
  */
 public class SymJaMatrixHandlerTest {
 
@@ -48,5 +50,30 @@ public class SymJaMatrixHandlerTest {
         );
         assert handler.compare(pair.getCoefficient(), handler.getZero()) == 0;
         assert handler.compare(pair.getPower(), handler.getObjectFromString("2")) == 0;
+    }
+
+    @Test
+    public void testHasElementWithPower() throws Exception {
+        // Test for powers that are in polynomial
+
+        // 2+x
+        assert handler.hasElementWithPower(handler.getMatrix().get(0, 0).getElement(), 0);
+        // x^2-x
+        assert handler.hasElementWithPower(handler.getMatrix().get(0, 1).getElement(), 2);
+        // -3+8*x^2-x^8+7*x^4
+        assert handler.hasElementWithPower(handler.getMatrix().get(1, 0).getElement(), 8);
+        // 5*x^4-x^2+x
+        assert handler.hasElementWithPower(handler.getMatrix().get(1, 1).getElement(), 4);
+
+        // Test for powers that are not in polynomial
+
+        // 2+x
+        assert !handler.hasElementWithPower(handler.getMatrix().get(0, 0).getElement(), 2);
+        // x^2-x
+        assert !handler.hasElementWithPower(handler.getMatrix().get(0, 1).getElement(), 0);
+        // -3+8*x^2-x^8+7*x^4
+        assert !handler.hasElementWithPower(handler.getMatrix().get(1, 0).getElement(), 1);
+        // 5*x^4-x^2+x
+        assert !handler.hasElementWithPower(handler.getMatrix().get(1, 1).getElement(), 3);
     }
 }

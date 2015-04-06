@@ -117,7 +117,6 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return getLeadingCoefficientAndPowerOfElementRecursive((IExpr) element).getCoefficient();
     }
 
-    // TODO: Test
     @Override
     public boolean hasElementWithPower(Object element, int power) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
