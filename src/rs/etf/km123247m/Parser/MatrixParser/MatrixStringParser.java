@@ -20,7 +20,7 @@ public abstract class MatrixStringParser extends StringParser {
 
     @Override
     protected void preInputParseChecks(String inputString) throws Exception {
-        if(inputString == null) {
+        if (inputString == null) {
             throw new Exception("No matrix string to parse");
         }
     }
@@ -37,47 +37,44 @@ public abstract class MatrixStringParser extends StringParser {
     }
 
     @Override
-    protected IMatrix generateObject(String input) {
-        IMatrix matrix = null;
+    protected IMatrix generateObject(String input) throws Exception {
+        IMatrix matrix;
         ArrayList<ArrayList<String>> list = new ArrayList<ArrayList<String>>();
-        try {
-            Pattern rowPattern = Pattern.compile("(.*?);");
-            Matcher rowMatcher = rowPattern.matcher(this.getInputString());
 
-            int i = 0;
-            while (rowMatcher.find()) {
-                list.add(new ArrayList<String>());
-                String[] elemArray = rowMatcher.group().split(",");
-                for (int j = 0; j < elemArray.length; j++) {
-                    elemArray[j] = elemArray[j].replace(";", "").replace(" ",
-                            "");
-                    list.get(i).add(elemArray[j]);
-                }
-                i++;
+        Pattern rowPattern = Pattern.compile("(.*?);");
+        Matcher rowMatcher = rowPattern.matcher(this.getInputString());
+
+        int i = 0;
+        while (rowMatcher.find()) {
+            list.add(new ArrayList<String>());
+            String[] elemArray = rowMatcher.group().split(",");
+            for (int j = 0; j < elemArray.length; j++) {
+                elemArray[j] = elemArray[j].replace(";", "").replace(" ",
+                        "");
+                list.get(i).add(elemArray[j]);
             }
-
-            for (i = 0; i < list.size(); i++) {
-                if (list.size() != list.get(i).size())
-                    throw new Exception("Matrix format error! m != n");
-            }
-            int min = Integer.parseInt(PropertyManager.getProperty("min_power"));
-            int max = Integer.parseInt(PropertyManager.getProperty("max_power"));
-            if (min > list.size() || max < list.size()) {
-                throw new Exception(("Wrong matrix size!") + list.size());
-            }
-
-            matrix = new ArrayMatrix(list.size(), list.get(0).size());
-
-            for (i = 0; i < list.size(); i++) {
-                for (int j = 0; j < list.get(i).size(); j++) {
-                    Object o = createMatrixElement(list.get(i).get(j));
-                    matrix.set(new MatrixCell(i, j, o));
-                }
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+            i++;
         }
+
+        for (i = 0; i < list.size(); i++) {
+            if (list.size() != list.get(i).size())
+                throw new Exception("Matrix format error! m != n");
+        }
+        int min = Integer.parseInt(PropertyManager.getProperty("min_power"));
+        int max = Integer.parseInt(PropertyManager.getProperty("max_power"));
+        if (min > list.size() || max < list.size()) {
+            throw new Exception(("Wrong matrix size!") + list.size());
+        }
+
+        matrix = new ArrayMatrix(list.size(), list.get(0).size());
+
+        for (i = 0; i < list.size(); i++) {
+            for (int j = 0; j < list.get(i).size(); j++) {
+                Object o = createMatrixElement(list.get(i).get(j));
+                matrix.set(new MatrixCell(i, j, o));
+            }
+        }
+
         return matrix;
     }
 
