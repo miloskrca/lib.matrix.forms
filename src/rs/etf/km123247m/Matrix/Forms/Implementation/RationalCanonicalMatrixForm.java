@@ -9,6 +9,7 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
+import rs.etf.km123247m.Polynomial.Term;
 
 import java.util.Observable;
 
@@ -96,8 +97,8 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
         for (int row = 0; row < rowNumber; row++) {
             for (int column = 0; column < columnNumber; column++) {
                 if (row == column) {
-                    xIminusA.set(new MatrixCell(row, column, getHandler().getObjectFromString("x")));
-                    xIminusB.set(new MatrixCell(row, column, getHandler().getObjectFromString("x")));
+                    xIminusA.set(new MatrixCell(row, column, getHandler().getObjectFromString(String.valueOf(Term.X))));
+                    xIminusB.set(new MatrixCell(row, column, getHandler().getObjectFromString(String.valueOf(Term.X))));
                     p[0].set(new MatrixCell(row, column, one));
                     p[1].set(new MatrixCell(row, column, one));
                     q[0].set(new MatrixCell(row, column, one));
@@ -113,20 +114,19 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                 finalMatrix.set(new MatrixCell(row, column, zero));
             }
         }
-        handler.setMatrix(xIminusA);
-        handler.subtractWith(startMatrix);
     }
 
     @Override
     protected void process() throws Exception {
         getHandler().setMatrix(startMatrix);
         if (getHandler().matrixContainsSymbol()) {
-            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, null);
             return;
         }
-        getHandler().setMatrix(xIminusA);
         sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
-        sendUpdate(FormEvent.PROCESSING_INFO, "Transitional matrix", getTransitionalMatrix(round));
+        getHandler().setMatrix(xIminusA);
+        getHandler().subtractWith(startMatrix);
+        sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_SUBTRACT_FOR_SMITH, getTransitionalMatrix(round));
         MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);
         form.start();
@@ -184,7 +184,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     getHandler().setMatrix(xIminusB);
                     // finalMatrix = B
                     getHandler().subtractWith(finalMatrix);
-                    sendUpdate(FormEvent.PROCESSING_INFO, "End of round one.", finalMatrix);
+                    sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_FINISH_RATIONAL_START_T, finalMatrix);
                     MatrixForm form = new SmithMatrixForm(getHandler());
                     form.addObserver(this);
                     form.start();

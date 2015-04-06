@@ -10,11 +10,26 @@ import rs.etf.km123247m.Matrix.IMatrix;
  */
 public class FormEvent {
 
+    // message types
     public static final int PROCESSING_START = 1;
     public static final int PROCESSING_STEP = 2;
     public static final int PROCESSING_INFO = 3;
     public static final int PROCESSING_END = 4;
     public static final int PROCESSING_EXCEPTION = 5;
+
+    // message codes
+    public static final String INFO_FIX_ELEMENTS_ON_DIAGONAL = "INFO_FIX_ELEMENTS_ON_DIAGONAL";
+    public static final String INFO_END_FIX_ELEMENTS_ON_DIAGONAL = "INFO_END_FIX_ELEMENTS_ON_DIAGONAL";
+    public static final String INFO_FIX_LEADING_COEFFICIENTS = "INFO_FIX_LEADING_COEFFICIENTS";
+    public static final String INFO_END_FIX_LEADING_COEFFICIENTS = "INFO_END_FIX_LEADING_COEFFICIENTS";
+    // rational message codes
+    public static final String INFO_RATIONAL_FINISH_RATIONAL_START_T = "INFO_RATIONAL_FINISH_RATIONAL_START_T";
+    public static final String INFO_SUBTRACT_FOR_SMITH = "INFO_SUBTRACT_FOR_SMITH";
+
+    // exception types
+    public static final String EXCEPTION_MATRIX_IS_SINGULAR = "EXCEPTION_MATRIX_IS_SINGULAR";
+    public static final String EXCEPTION_MATRIX_NOT_NUMERICAL = "EXCEPTION_MATRIX_NOT_NUMERICAL";
+
     private final IMatrix matrix;
 
     private int type;
@@ -31,16 +46,8 @@ public class FormEvent {
         return type;
     }
 
-    public void setType(int type) {
-        this.type = type;
-    }
-
     public String getMessage() {
         return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
     }
 
     public IMatrix getMatrix() {

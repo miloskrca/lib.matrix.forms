@@ -52,22 +52,23 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         finalMatrix = startMatrix.createMatrix(rowNumber, columnNumber);
         Object zero = ((PolynomialMatrixHandler) handler).getZero();
         finalMatrix.initWith(zero);
-        transitionalMatrix = handler.diagonal(startMatrix.getRowNumber(), getHandler().getObjectFromString("x"));
-
-        transitionalMatrix = handler.subtract(transitionalMatrix, startMatrix);
-        handler.setMatrix(transitionalMatrix);
+        transitionalMatrix = handler.diagonal(startMatrix.getRowNumber(), getHandler().getObjectFromString(String.valueOf(Term.X)));
     }
 
     @Override
     protected void process() throws Exception {
         getHandler().setMatrix(startMatrix);
         if (getHandler().matrixContainsSymbol()) {
-            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is not numerical.", null);
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, null);
             return;
         }
-        getHandler().setMatrix(transitionalMatrix);
 
         sendUpdate(FormEvent.PROCESSING_START, null, getStartMatrix());
+
+        transitionalMatrix = getHandler().subtract(transitionalMatrix, startMatrix);
+        getHandler().setMatrix(transitionalMatrix);
+        sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_SUBTRACT_FOR_SMITH, getHandler().getMatrix());
+
         MatrixForm form = new SmithMatrixForm(getHandler());
         form.addObserver(this);
         form.start();
@@ -91,7 +92,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
             // Smith transformation ended
             try {
                 postProcessTransitionalMatrix2();
-                sendUpdate(FormEvent.PROCESSING_INFO, "Factored elements on diagonal.", transitionalMatrix);
+                sendUpdate(FormEvent.PROCESSING_INFO, "ne znam sta je ovo", transitionalMatrix);
 //                generateJMatrix();
                 sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             } catch (Exception e) {
@@ -190,46 +191,40 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         }
     }
 
-
-
-
-
-
-
-    protected void postProcessTransitionalMatrix() throws Exception {
-        PolynomialMatrixHandler handler = ((PolynomialMatrixHandler)getHandler());
-        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
-            for (int column = 0; column < getTransitionalMatrix().getColumnNumber(); column++) {
-                Object temp = transitionalMatrix.get(row, column).getElement();
-                if(handler.compare(temp, handler.getZero()) != 0
-                        && handler.compare(temp, handler.getOne()) != 0) {
-                    temp = handler.factor(temp);
-                    transitionalMatrix.set(new MatrixCell(row, column, temp));
-                }
-            }
-        }
-    }
-
-    protected void generateJMatrix() throws Exception {
-        ArrayList<Object> elements = new ArrayList<Object>();
-        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
-            for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
-                Object element = transitionalMatrix.get(row, column).getElement();
-                if(!getHandler().isZeroElement(element)
-                        && getHandler().compare(getHandler().getObjectFromString("1"), element) != 0) {
-                    elements.add(element);
-                }
-            }
-        }
-        try {
-            for(Object element: elements) {
-                factors.addAll(((PolynomialMatrixHandler)getHandler()).getFactorsFromElement(element));
-            }
-        } catch (Exception e) {
-            throw new Exception("Factors couldn't be created");
-        }
-        generateBlocks();
-    }
+//    protected void postProcessTransitionalMatrix() throws Exception {
+//        PolynomialMatrixHandler handler = ((PolynomialMatrixHandler)getHandler());
+//        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
+//            for (int column = 0; column < getTransitionalMatrix().getColumnNumber(); column++) {
+//                Object temp = transitionalMatrix.get(row, column).getElement();
+//                if(handler.compare(temp, handler.getZero()) != 0
+//                        && handler.compare(temp, handler.getOne()) != 0) {
+//                    temp = handler.factor(temp);
+//                    transitionalMatrix.set(new MatrixCell(row, column, temp));
+//                }
+//            }
+//        }
+//    }
+//
+//    protected void generateJMatrix() throws Exception {
+//        ArrayList<Object> elements = new ArrayList<Object>();
+//        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
+//            for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
+//                Object element = transitionalMatrix.get(row, column).getElement();
+//                if(!getHandler().isZeroElement(element)
+//                        && getHandler().compare(getHandler().getObjectFromString("1"), element) != 0) {
+//                    elements.add(element);
+//                }
+//            }
+//        }
+//        try {
+//            for(Object element: elements) {
+//                factors.addAll(((PolynomialMatrixHandler)getHandler()).getFactorsFromElement(element));
+//            }
+//        } catch (Exception e) {
+//            throw new Exception("Factors couldn't be created");
+//        }
+//        generateBlocks();
+//    }
 
     private void generateBlocks() throws Exception {
         final PolynomialMatrixHandler handler = (PolynomialMatrixHandler)getHandler();

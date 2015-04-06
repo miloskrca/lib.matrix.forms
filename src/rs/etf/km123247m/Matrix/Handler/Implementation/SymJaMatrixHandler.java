@@ -30,7 +30,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected boolean isElementSymbol(Object element) {
-        return element.toString().contains(Character.toString(Term.X));
+        return element.toString().contains(String.valueOf(Term.X));
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             results = evaluate(results.getAt(1));
         } else {
             //the result will just be the expression build from elements
-            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol(Character.toString(Term.X)))[0]);
+            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol(String.valueOf(Term.X)))[0]);
         }
 
         return results;

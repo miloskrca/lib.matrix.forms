@@ -19,14 +19,8 @@ import java.util.Arrays;
  */
 public class SmithMatrixForm extends MatrixForm {
 
-    /**
-     *
-     */
     private IMatrix startMatrix;
 
-    /**
-     *
-     */
     private IMatrix finalMatrix;
 
     public SmithMatrixForm(MatrixHandler handler) {
@@ -45,7 +39,7 @@ public class SmithMatrixForm extends MatrixForm {
         MatrixHandler handler = this.getHandler();
 
         if(handler.isSingular()) {
-            sendUpdate(FormEvent.PROCESSING_EXCEPTION, "Matrix is singular.", null);
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_IS_SINGULAR, null);
             return;
         }
 
@@ -83,8 +77,11 @@ public class SmithMatrixForm extends MatrixForm {
             } // } while (!isRowCleared(range));
         }
 
-        sendUpdate(FormEvent.PROCESSING_INFO, "Fixing elements on the diagonal", getHandler().getMatrix());
+        if(!isTheDiagonalOk()) {
+            sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_FIX_ELEMENTS_ON_DIAGONAL, getHandler().getMatrix());
+        }
 
+        int numOfCommandsBeforeFixing = getCommands().size();
         while(!isTheDiagonalOk()) {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (!isTheNextElementDividedByThisElement(range)) {
@@ -123,7 +120,15 @@ public class SmithMatrixForm extends MatrixForm {
             }
         }
 
+        if(getCommands().size() > numOfCommandsBeforeFixing) {
+            sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_END_FIX_ELEMENTS_ON_DIAGONAL, getHandler().getMatrix());
+        }
+        sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_FIX_LEADING_COEFFICIENTS, getHandler().getMatrix());
+        numOfCommandsBeforeFixing = getCommands().size();
         fixLeadingCoefficients();
+        if(getCommands().size() > numOfCommandsBeforeFixing) {
+            sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_END_FIX_LEADING_COEFFICIENTS, getHandler().getMatrix());
+        }
         sendUpdate(FormEvent.PROCESSING_END, null, getHandler().getMatrix());
     }
 
