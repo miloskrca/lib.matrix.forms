@@ -377,7 +377,7 @@ public abstract class MatrixHandler {
     }
 
     public IMatrix createSubMatrix(IMatrix matrix, int excludingRow, int excludingCol) throws Exception {
-        IMatrix mat = matrix.createMatrix(matrix.getRowNumber()-1, matrix.getColumnNumber()-1);
+        IMatrix mat = matrix.createMatrix(matrix.getRowNumber() - 1, matrix.getColumnNumber() - 1);
         int r = -1;
         for (int i=0;i<matrix.getRowNumber();i++) {
             if (i == excludingRow) {
@@ -437,6 +437,18 @@ public abstract class MatrixHandler {
         }
 
         return false;
+    }
+
+    public boolean isNumeric(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);
+    }
+
+    public boolean isFraction(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
+    }
+
+    public boolean isDouble(String s) {
+        return s.matches("[-+]?\\d*\\.?\\d+");
     }
 
     protected abstract boolean isElementSymbol(Object element);

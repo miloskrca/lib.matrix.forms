@@ -313,6 +313,9 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    /**
+     * @return Array with two roots
+     */
     public Object[] quadraticFormula(Object element) throws Exception {
         int highestPower = getHighestPower(element);
         if(highestPower != 2) {
@@ -368,17 +371,4 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             );
         }
     }
-
-    private boolean isNumeric(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);
-    }
-
-    private boolean isFraction(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
-    }
-
-    private boolean isDouble(String s) {
-        return s.matches("[-+]?\\d*\\.?\\d+");
-    }
-
 }

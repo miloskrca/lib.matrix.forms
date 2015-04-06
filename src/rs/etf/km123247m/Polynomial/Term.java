@@ -100,6 +100,6 @@ public class Term implements Comparable {
     }
 
     public char getSignChar() {
-        return sign == PLUS ? PLUS_CHAR : MINUS_CHAR;
+        return sign == MINUS ? MINUS_CHAR : PLUS_CHAR;
     }
 }

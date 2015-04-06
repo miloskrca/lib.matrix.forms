@@ -17,7 +17,6 @@ import java.util.Iterator;
  * <p/>
  * package: rs.etf.km123247m.Matrix.Forms.Implementation
  */
-// TODO: do security checks for power, matrix degree, number of polynomials, powers of the polynomials...
 public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatrixForm {
 
     public PolynomialRationalCanonicalMatrixForm(MatrixHandler handler) throws Exception {
@@ -193,8 +192,6 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
 
         return t;
     }
-
-
 
     protected void initMatrix(HashMap<Integer, IMatrix> pMatrices, int power, int range) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
