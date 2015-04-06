@@ -30,7 +30,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected boolean isElementSymbol(Object element) {
-        return element.toString().contains("x");
+        return element.toString().contains(Character.toString(Term.X));
     }
 
     @Override
@@ -55,7 +55,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected Object divideElements(Object element1, Object element2) throws Exception {
-        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", x]");
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", " + Term.X + "]");
         // If the method is successful it will return [List, quotient, remainder],
         // if not it will return [PolynomialQuotientRemainder, element1, element2]
         // if the function is successful and the quotient is not zero
@@ -63,14 +63,14 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             results = evaluate(results.getAt(1));
         } else {
             //the result will just be the expression build from elements
-            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol("x"))[0]);
+            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol(Character.toString(Term.X)))[0]);
         }
 
         return results;
     }
 
     public Object divideCellElementsAndReturnRemainder(Object element1, Object element2) throws Exception {
-        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", x]");
+        IExpr results = evaluate("PolynomialQuotientRemainder[" + element1.toString() + "," + element2.toString() + ", " + Term.X + "]");
         return evaluate(results.getAt(2));
 //        IExpr[] results = PolynomialQuotientRemainder.quotientRemainder((IExpr) element1, (IExpr) element2, new Symbol("x"));
 //        return evaluate(results[1]);
