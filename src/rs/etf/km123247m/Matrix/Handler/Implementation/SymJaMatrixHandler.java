@@ -129,7 +129,6 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return false;
     }
 
-    // TODO: Test
     @Override
     public Object getCoefficientForPower(Object element, int power) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);

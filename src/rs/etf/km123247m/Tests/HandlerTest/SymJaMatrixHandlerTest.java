@@ -76,4 +76,22 @@ public class SymJaMatrixHandlerTest {
         // 5*x^4-x^2+x
         assert !handler.hasElementWithPower(handler.getMatrix().get(1, 1).getElement(), 3);
     }
+
+    @Test
+    public void testGetCoefficientForPower() throws Exception {
+        // 2+x
+        assert "2".equals(handler.getCoefficientForPower(handler.getMatrix().get(0, 0).getElement(), 0).toString());
+        // x^2-x
+        assert "1".equals(handler.getCoefficientForPower(handler.getMatrix().get(0, 1).getElement(), 2).toString());
+        // -3+8*x^2-x^8+7*x
+        assert "-1".equals(handler.getCoefficientForPower(handler.getMatrix().get(1, 0).getElement(), 8).toString());
+        // -3+8*x^2-x^8+7*x^4
+        assert "8".equals(handler.getCoefficientForPower(handler.getMatrix().get(1, 0).getElement(), 2).toString());
+        // 5*x^4-x^2+x
+        assert "5".equals(handler.getCoefficientForPower(handler.getMatrix().get(1, 1).getElement(), 4).toString());
+
+        assert "1/2".equals(handler.getCoefficientForPower(handler.getObjectFromString("1/2*x^2"), 2).toString());
+        assert "0".equals(handler.getCoefficientForPower(handler.getObjectFromString("x^2 + 3"), 1).toString());
+
+    }
 }
