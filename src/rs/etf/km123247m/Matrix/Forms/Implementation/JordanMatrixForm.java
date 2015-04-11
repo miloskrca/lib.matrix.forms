@@ -40,10 +40,21 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
     private IMatrix finalMatrix;
 
     /**
+     * Found roots that will be transformed to factors
+     */
+    private ArrayList<Object> roots = new ArrayList<Object>();
+
+    /**
      * Found factors.
      */
     private ArrayList<Object> factors = new ArrayList<Object>();
 
+    /**
+     * Constructor
+     *
+     * @param handler Handler
+     * @throws Exception
+     */
     public JordanMatrixForm(MatrixHandler handler) throws Exception {
         super(handler);
         startMatrix = handler.duplicate(handler.getMatrix());
@@ -91,9 +102,9 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         } else if (event.getType() == FormEvent.PROCESSING_END) {
             // Smith transformation ended
             try {
-                postProcessTransitionalMatrix2();
-                sendUpdate(FormEvent.PROCESSING_INFO, "ne znam sta je ovo", transitionalMatrix);
-//                generateJMatrix();
+                sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_JORDAN_GENERATE_BLOCKS, transitionalMatrix);
+                generateRootsFactorsAndBlocks();
+                sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_JORDAN_END_GENERATE_BLOCKS, transitionalMatrix);
                 sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -104,12 +115,11 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
 
 
     // Work in progress...
-    protected void postProcessTransitionalMatrix2() throws Exception {
+    protected void generateRootsFactorsAndBlocks() throws Exception {
         PolynomialMatrixHandler handler = ((PolynomialMatrixHandler) getHandler());
         EJMLPolynomialHandler polyHandler = new EJMLPolynomialHandler();
-        ArrayList<Object> roots = new ArrayList<Object>();
         for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
-            for (int column = 0; column < getTransitionalMatrix().getColumnNumber(); column++) {
+            for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
                 Object currentElement = transitionalMatrix.get(row, column).getElement();
                 if (handler.compare(currentElement, handler.getZero()) != 0
                         && handler.compare(currentElement, handler.getOne()) != 0) {
@@ -119,7 +129,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                     Object factoredCurrentElement = handler.factor(currentElement);
                     String factorsString;
 
-                    if(!currentElement.toString().equals(factoredCurrentElement.toString()) && !factoredCurrentElement.toString().contains(Term.X + "^")) {
+                    if (!currentElement.toString().equals(factoredCurrentElement.toString()) && !factoredCurrentElement.toString().contains(Term.X + "^")) {
                         factorsString = factoredCurrentElement.toString();
                         factors.addAll(((PolynomialMatrixHandler) getHandler()).getFactorsFromElement(factoredCurrentElement));
                     } else {
@@ -141,32 +151,31 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                                 }
 
                                 Object[] tempRoots = polyHandler.findRoots(coefficients);
-                                Collections.addAll(roots, polyHandler.formatRoots(tempRoots));
+                                Collections.addAll(roots, tempRoots);
                                 factorsString = polyHandler.mergeRoots(tempRoots);
                         }
                     }
 
                     transitionalMatrix.set(new MatrixCell(row, column, factorsString));
-
                 }
             }
         }
 
-        if(factors.size() > 0) {
+        if (factors.size() > 0) {
             // SymJa way
             generateBlocks();
         } else {
             // EJML way
 
             // sort all roots so we can check for re-occurring ones
-            Collections.sort(roots, new Comparator<Object>(){
+            Collections.sort(roots, new Comparator<Object>() {
                 public int compare(Object root1, Object root2) {
                     return root1.toString().compareTo(root2.toString());
                 }
             });
 
             int row = 0;
-            while(row < finalMatrix.getRowNumber()) {
+            while (row < finalMatrix.getRowNumber()) {
                 int power = 1;
                 // Detect repeating roots when not using CoefficientPowerPair
                 while (roots.size() > row + power
@@ -174,15 +183,15 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                     power++;
                 }
 
-                if(power > 1) {
+                if (power > 1) {
                     // add ones in diagonal above the main diagonal
                     // but only inside the current block
-                    for(int i = row; i < row + power - 1; i++) {
+                    for (int i = row; i < row + power - 1; i++) {
                         Object one = handler.getOne();
                         finalMatrix.set(new MatrixCell(i, i + 1, one));
                     }
                 }
-                for(int i = row; i < row + power; i++) {
+                for (int i = row; i < row + power; i++) {
                     finalMatrix.set(new MatrixCell(i, i, roots.get(row)));
                 }
 
@@ -191,55 +200,30 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         }
     }
 
-//    protected void postProcessTransitionalMatrix() throws Exception {
-//        PolynomialMatrixHandler handler = ((PolynomialMatrixHandler)getHandler());
-//        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
-//            for (int column = 0; column < getTransitionalMatrix().getColumnNumber(); column++) {
-//                Object temp = transitionalMatrix.get(row, column).getElement();
-//                if(handler.compare(temp, handler.getZero()) != 0
-//                        && handler.compare(temp, handler.getOne()) != 0) {
-//                    temp = handler.factor(temp);
-//                    transitionalMatrix.set(new MatrixCell(row, column, temp));
-//                }
-//            }
-//        }
-//    }
-//
-//    protected void generateJMatrix() throws Exception {
-//        ArrayList<Object> elements = new ArrayList<Object>();
-//        for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
-//            for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
-//                Object element = transitionalMatrix.get(row, column).getElement();
-//                if(!getHandler().isZeroElement(element)
-//                        && getHandler().compare(getHandler().getObjectFromString("1"), element) != 0) {
-//                    elements.add(element);
-//                }
-//            }
-//        }
-//        try {
-//            for(Object element: elements) {
-//                factors.addAll(((PolynomialMatrixHandler)getHandler()).getFactorsFromElement(element));
-//            }
-//        } catch (Exception e) {
-//            throw new Exception("Factors couldn't be created");
-//        }
-//        generateBlocks();
-//    }
-
+    /**
+     * Generate blocks from factors and store them in final matrix
+     *
+     * @throws Exception
+     */
     private void generateBlocks() throws Exception {
-        final PolynomialMatrixHandler handler = (PolynomialMatrixHandler)getHandler();
+        final PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
         //generate a list of power/coefficient pairs
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
-        for(Object factor: factors) {
+        for (Object factor : factors) {
             CoefficientPowerPair pair = handler.getCoefficientPowerPairFromFactor(factor);
             Object coefficient = pair.getCoefficient();
             pair.setCoefficient(handler.calculateNegativeElement(coefficient));
             pairs.add(pair);
+            if (!coefficient.toString().equals("0")) {
+                for (int i = 0; i < Integer.parseInt(pair.getPower().toString()); i++) {
+                    roots.add(handler.calculateNegativeElement(coefficient).toString());
+                }
+            }
         }
 
         int index = 0;
         int row = 0;
-        while(row < finalMatrix.getRowNumber()) {
+        while (row < finalMatrix.getRowNumber()) {
             int power = Integer.parseInt(pairs.get(index).getPower().toString());
             setBlock(row, power, pairs.get(index));
             row += power;
@@ -250,23 +234,23 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
     /**
      * Generates and adds a block to final matrix.
      *
-     * @param startRow Row the block starts from.
-     * @param size Size of the block.
+     * @param startRow  Row the block starts from.
+     * @param size      Size of the block.
      * @param blockPair Coefficient-Power pars gotten from
-     *                   corresponding polynomial from which the block is generated.
+     *                  corresponding polynomial from which the block is generated.
      * @throws Exception
      */
     protected void setBlock(int startRow, int size, CoefficientPowerPair blockPair) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
-        if(size > 1) {
+        if (size > 1) {
             // add ones in diagonal above the main diagonal
             // but only inside the current block
-            for(int row = startRow; row < startRow + size - 1; row++) {
+            for (int row = startRow; row < startRow + size - 1; row++) {
                 Object one = handler.getOne();
                 finalMatrix.set(new MatrixCell(row, row + 1, one));
             }
         }
-        for(int row = startRow; row < startRow + size; row++) {
+        for (int row = startRow; row < startRow + size; row++) {
             finalMatrix.set(new MatrixCell(row, row, blockPair.getCoefficient()));
         }
     }
@@ -298,4 +282,21 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         return finalMatrix;
     }
 
+    /**
+     * Roots
+     *
+     * @return ArrayList<Object>
+     */
+    public ArrayList<Object> getRoots() {
+        return roots;
+    }
+
+    /**
+     * Factors
+     *
+     * @return ArrayList<Object>
+     */
+    public ArrayList<Object> getFactors() {
+        return factors;
+    }
 }

@@ -11,6 +11,7 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
+import static org.junit.Assert.*;
 
 import java.io.File;
 import java.util.Observable;
@@ -102,16 +103,16 @@ public class JordanMatrixFormOutputTest {
             check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "3");
         }
         if (path.equals(file(3))) {
-            check(finalMatrix, 0, 0, "-5.372281323269016"); check(finalMatrix, 0, 1, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "0.37228132326901475");
+            check(finalMatrix, 0, 0, "-0.37228132326901475"); check(finalMatrix, 0, 1, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "5.372281323269016");
         }
         if (path.equals(file(4))) {
-            check(finalMatrix, 0, 0, "2.5+1.936491673103709*i"); check(finalMatrix, 0, 1, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2.5-1.936491673103709*i");
+            check(finalMatrix, 0, 0, "2.5 -1.936491673103709i"); check(finalMatrix, 0, 1, "0");
+            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2.5 1.936491673103709i");
         }
     }
 
     protected void check(IMatrix matrix, int row, int column, String value) throws Exception {
-        assert matrix.get(row, column).getElement().toString().equals(value);
+        assertEquals("Error", value, matrix.get(row, column).getElement().toString());
     }
 }

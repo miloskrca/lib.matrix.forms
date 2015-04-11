@@ -45,28 +45,6 @@ public class EJMLPolynomialHandler implements PolynomialHandler {
         return roots;
     }
 
-    public Object[] formatRoots(Object[] roots) {
-        String[] strings = new String[roots.length];
-
-        for (int i = 0; i < roots.length; i++) {
-            Object root = roots[i];
-            Complex64F cRoot = (Complex64F) root;
-            if (cRoot.getReal() == 0.0 && cRoot.getImaginary() == 0.0) {
-                strings[i] = String.valueOf(Term.X);
-            } else if (cRoot.getReal() == 0.0) {
-                strings[i] = (cRoot.getImaginary() * -1.0) + "*i";
-            } else if (cRoot.getImaginary() == 0.0) {
-                strings[i] = (cRoot.getReal() * -1.0) + "";
-            } else {
-                strings[i] = cRoot.getReal() + "+" + cRoot.getImaginary() + "*i";
-            }
-            // add * between brackets, add space after/before + and -, replace +- with -
-            strings[i] = strings[i].replace("+-", "-");
-        }
-
-        return strings;
-    }
-
     @Override
     public String mergeRoots(Object[] roots) {
         String string = "";
