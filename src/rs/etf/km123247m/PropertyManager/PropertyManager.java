@@ -41,7 +41,7 @@ public abstract class PropertyManager {
                 // load the properties file
                 properties.load(is);
             } catch (FileNotFoundException e) {
-                e.printStackTrace();
+                System.out.println("Properties file (" + getPropertiesFileName() + ") not found, using default values!");
             } catch (IOException e) {
                 e.printStackTrace();
             }

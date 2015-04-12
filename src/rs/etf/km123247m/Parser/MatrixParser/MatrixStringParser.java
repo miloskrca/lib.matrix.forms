@@ -18,6 +18,16 @@ import java.util.regex.Pattern;
  */
 public abstract class MatrixStringParser extends StringParser {
 
+    /**
+     *
+     */
+    private int min_power = 2;
+
+    /**
+     *
+     */
+    private int max_power = 4;
+
     @Override
     protected void preInputParseChecks(String inputString) throws Exception {
         if (inputString == null) {
@@ -60,9 +70,15 @@ public abstract class MatrixStringParser extends StringParser {
             if (list.size() != list.get(i).size())
                 throw new Exception("Matrix format error! m != n");
         }
-        int min = Integer.parseInt(PropertyManager.getProperty("min_power"));
-        int max = Integer.parseInt(PropertyManager.getProperty("max_power"));
-        if (min > list.size() || max < list.size()) {
+        String sMin = PropertyManager.getProperty("min_power");
+        if(sMin != null) {
+            min_power = Integer.parseInt(sMin);
+        }
+        String sMax = PropertyManager.getProperty("max_power");
+        if(sMax != null) {
+            max_power = Integer.parseInt(sMax);
+        }
+        if (min_power > list.size() || max_power < list.size()) {
             throw new Exception(("Wrong matrix size!") + list.size());
         }
 

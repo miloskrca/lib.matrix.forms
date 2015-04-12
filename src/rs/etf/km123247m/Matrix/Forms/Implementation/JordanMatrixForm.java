@@ -113,8 +113,11 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         }
     }
 
-
-    // Work in progress...
+    /**
+     * Generates roots, factors and Jordan blocks
+     *
+     * @throws Exception
+     */
     protected void generateRootsFactorsAndBlocks() throws Exception {
         PolynomialMatrixHandler handler = ((PolynomialMatrixHandler) getHandler());
         EJMLPolynomialHandler polyHandler = new EJMLPolynomialHandler();
@@ -151,11 +154,13 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                                 }
 
                                 Object[] tempRoots = polyHandler.findRoots(coefficients);
-                                Collections.addAll(roots, tempRoots);
-                                factorsString = polyHandler.mergeRoots(tempRoots);
+                                Collections.addAll(roots, polyHandler.toRational(tempRoots));
+                                factorsString = polyHandler.rootsToFactors(tempRoots);
                         }
                     }
 
+                    // Save factors in transitional matrix for presentational use
+                    // For actual generation of blocks, roots are used
                     transitionalMatrix.set(new MatrixCell(row, column, factorsString));
                 }
             }
@@ -289,14 +294,5 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      */
     public ArrayList<Object> getRoots() {
         return roots;
-    }
-
-    /**
-     * Factors
-     *
-     * @return ArrayList<Object>
-     */
-    public ArrayList<Object> getFactors() {
-        return factors;
     }
 }

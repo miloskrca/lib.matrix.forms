@@ -1,5 +1,6 @@
 package rs.etf.km123247m.Tests.FormTest;
 
+import org.ejml.data.Complex64F;
 import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.JordanMatrixForm;
@@ -11,9 +12,12 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
+import rs.etf.km123247m.PropertyManager.PropertyManager;
+
 import static org.junit.Assert.*;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,7 +29,7 @@ public class JordanMatrixFormOutputTest {
 
     @Before
     public void setUp() throws Exception {
-        paths = new String[] {
+        paths = new String[]{
                 file(1),
                 file(2),
                 file(3),
@@ -91,28 +95,83 @@ public class JordanMatrixFormOutputTest {
     }
 
     protected void assertAllOK(JordanMatrixForm matrixForm, String path) throws Exception {
-        IMatrix finalMatrix = matrixForm.getFinalMatrix();
+        IMatrix matrix = matrixForm.getTransitionalMatrix();
+        ArrayList<Object> roots = matrixForm.getRoots();
+        String[] rootStrings = new String[roots.size()];
+        for (int i = 0; i < roots.size(); i++) {
+            rootStrings[i] = roots.get(i).toString();
+        }
         if (path.equals(file(1))) {
-            check(finalMatrix, 0, 0, "3"); check(finalMatrix, 0, 1, "0"); check(finalMatrix, 0, 2, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2"); check(finalMatrix, 1, 2, "1");
-            check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "2");
+            check(matrix, 0, 0, "1");
+            check(matrix, 0, 1, "0");
+            check(matrix, 0, 2, "0");
+            check(matrix, 1, 0, "0");
+            check(matrix, 1, 1, "1");
+            check(matrix, 1, 2, "0");
+            check(matrix, 2, 0, "0");
+            check(matrix, 2, 1, "0");
+            check(matrix, 2, 2, "(x-3)*(x-2)^2");
+            assertArrayEquals(new String[]{"3", "2", "2"}, rootStrings);
         }
         if (path.equals(file(2))) {
-            check(finalMatrix, 0, 0, "0"); check(finalMatrix, 0, 1, "0"); check(finalMatrix, 0, 2, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "4"); check(finalMatrix, 1, 2, "0");
-            check(finalMatrix, 2, 0, "0"); check(finalMatrix, 2, 1, "0"); check(finalMatrix, 2, 2, "3");
+            check(matrix, 0, 0, "1");
+            check(matrix, 0, 1, "0");
+            check(matrix, 0, 2, "0");
+            check(matrix, 1, 0, "0");
+            check(matrix, 1, 1, "1");
+            check(matrix, 1, 2, "0");
+            check(matrix, 2, 0, "0");
+            check(matrix, 2, 1, "0");
+            check(matrix, 2, 2, "x*(x-4)*(x-3)");
+            assertArrayEquals(new String[]{"4", "3"}, rootStrings);
         }
         if (path.equals(file(3))) {
-            check(finalMatrix, 0, 0, "-0.37228132326901475"); check(finalMatrix, 0, 1, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "5.372281323269016");
+            if (PropertyManager.getProperty("convert_to_rational").equals("0")) {
+                check(matrix, 0, 0, "1");
+                check(matrix, 0, 1, "0");
+                check(matrix, 1, 0, "0");
+                check(matrix, 1, 1, "(x+0.37228132326901475)*(x-5.372281323269016)");
+                assertArrayEquals(new String[]{
+                        (new Complex64F(-0.37228132326901475, 0.0)).toString(),
+                        (new Complex64F(5.372281323269016, 0.0)).toString()
+                }, rootStrings);
+            } else {
+                check(matrix, 0, 0, "1");
+                check(matrix, 0, 1, "0");
+                check(matrix, 1, 0, "0");
+                check(matrix, 1, 1, "(x+137/368)*(x-736/137)");
+                assertArrayEquals(new String[]{
+                        "-137/368",
+                        "736/137"
+                }, rootStrings);
+
+            }
         }
         if (path.equals(file(4))) {
-            check(finalMatrix, 0, 0, "2.5 -1.936491673103709i"); check(finalMatrix, 0, 1, "0");
-            check(finalMatrix, 1, 0, "0"); check(finalMatrix, 1, 1, "2.5 1.936491673103709i");
+            if (PropertyManager.getProperty("convert_to_rational").equals("0")) {
+                check(matrix, 0, 0, "1");
+                check(matrix, 0, 1, "0");
+                check(matrix, 1, 0, "0");
+                check(matrix, 1, 1, "(x-(2.5+1.936491673103709*i))*(x-(2.5-1.936491673103709*i))");
+                assertArrayEquals(new String[]{
+                        (new Complex64F(2.5, -1.936491673103709)).toString(),
+                        (new Complex64F(2.5, 1.936491673103709)).toString()
+                }, rootStrings);
+            } else {
+                check(matrix, 0, 0, "1");
+                check(matrix, 0, 1, "0");
+                check(matrix, 1, 0, "0");
+                check(matrix, 1, 1, "(x-(5/2+122/63*i))*(x-(5/2-122/63*i))");
+                assertArrayEquals(new String[]{
+                        "5/2+122/63*i",
+                        "5/2-122/63*i"
+                }, rootStrings);
+
+            }
         }
     }
 
     protected void check(IMatrix matrix, int row, int column, String value) throws Exception {
-        assertEquals("Error", value, matrix.get(row, column).getElement().toString());
+        assertEquals(value, matrix.get(row, column).getElement().toString());
     }
 }
