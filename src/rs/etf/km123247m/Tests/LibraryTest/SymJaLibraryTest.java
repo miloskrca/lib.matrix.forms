@@ -101,7 +101,7 @@ public class SymJaLibraryTest {
         f.convert(sb, handler.getObjectFromString("-I*1/2*3^(1/2)+1/2"), 0);
         assertEquals(
                 "Expected LaTex",
-                "\\frac{1}{2} + \\left( \\frac{-1}{2}\\,\\imag\\right) \\,{3}^{\\frac{1}{2}}",
+                "\\frac{1}{2}+\\left( \\frac{-1}{2}\\,i \\right) \\,\\sqrt{3}",
                 sb.toString()
         );
     }
