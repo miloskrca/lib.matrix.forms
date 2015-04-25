@@ -6,7 +6,6 @@ import org.matheclipse.core.interfaces.IExpr;
 import org.matheclipse.core.reflection.system.PolynomialQuotientRemainder;
 import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
-import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprFactorisation;
 import rs.etf.km123247m.Polynomial.Term;
 import java.util.ArrayList;
 

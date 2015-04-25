@@ -1,4 +1,4 @@
-package rs.etf.km123247m.Parser.MatrixParser.SymJa;
+package rs.etf.km123247m.Matrix.Handler.Implementation;
 
 import org.matheclipse.core.eval.EvalUtilities;
 import org.matheclipse.core.interfaces.IExpr;
