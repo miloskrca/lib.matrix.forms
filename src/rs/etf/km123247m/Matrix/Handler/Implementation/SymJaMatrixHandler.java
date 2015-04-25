@@ -6,22 +6,22 @@ import org.matheclipse.core.interfaces.IExpr;
 import org.matheclipse.core.reflection.system.PolynomialQuotientRemainder;
 import rs.etf.km123247m.Matrix.Handler.CoefficientPowerPair;
 import rs.etf.km123247m.Matrix.IMatrix;
+import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprFactorisation;
 import rs.etf.km123247m.Polynomial.Term;
-
 import java.util.ArrayList;
-import java.util.Collection;
 
 /**
  * Implementation of matrix operations using SymJa library
- *
+ * <p/>
  * Created by Miloš Krsmanović.
  * May 2014
- *
+ * <p/>
  * package: rs.etf.km123247m.Matrix.Handler.Implementation.SymJa
  */
 public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     private EvalUtilities util = new EvalUtilities();
+    private IExprFactorisation iExprFactorisation;
 
     public SymJaMatrixHandler(IMatrix matrix) {
         super(matrix);
@@ -59,11 +59,11 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         // If the method is successful it will return [List, quotient, remainder],
         // if not it will return [PolynomialQuotientRemainder, element1, element2]
         // if the function is successful and the quotient is not zero
-        if(results.isList() && !isZeroElement(results.getAt(1))) {
+        if (results.isList() && !isZeroElement(results.getAt(1))) {
             results = evaluate(results.getAt(1));
         } else {
             //the result will just be the expression build from elements
-            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr)element1, (IExpr)element2, new Symbol(String.valueOf(Term.X)))[0]);
+            results = evaluate(PolynomialQuotientRemainder.quotientRemainder((IExpr) element1, (IExpr) element2, new Symbol(String.valueOf(Term.X)))[0]);
         }
 
         return results;
@@ -97,7 +97,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public int compare(Object element1, Object element2) {
-        return ((IExpr)element1).compareTo((IExpr) element2);
+        return ((IExpr) element1).compareTo((IExpr) element2);
     }
 
     @Override
@@ -121,8 +121,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public boolean hasElementWithPower(Object element, int power) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
         IExpr oPower = util.evaluate(String.valueOf(power));
-        for(CoefficientPowerPair pair: pairs) {
-            if(compare(pair.getPower(), oPower) == 0) {
+        for (CoefficientPowerPair pair : pairs) {
+            if (compare(pair.getPower(), oPower) == 0) {
                 return true;
             }
         }
@@ -133,8 +133,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public Object getCoefficientForPower(Object element, int power) throws Exception {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
         IExpr oPower = util.evaluate(String.valueOf(power));
-        for(CoefficientPowerPair pair: pairs) {
-            if(compare(pair.getPower(), oPower) == 0) {
+        for (CoefficientPowerPair pair : pairs) {
+            if (compare(pair.getPower(), oPower) == 0) {
                 return pair.getCoefficient();
             }
         }
@@ -154,27 +154,27 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         IExpr zero = (IExpr) getElementEquivalentToZero();
         IExpr one = (IExpr) getElementEquivalentToOne();
         ArrayList<CoefficientPowerPair> pairs = new ArrayList<CoefficientPowerPair>();
-        if(element.isNumber()) {
+        if (element.isNumber()) {
             pairs.add(new CoefficientPowerPair(
-                element,
-                zero
+                    element,
+                    zero
             ));
-        } else if(element.leaves() != null) {
-            if(element.isPlus()) {
-                for(IExpr leaf: element.leaves()) {
+        } else if (element.leaves() != null) {
+            if (element.isPlus()) {
+                for (IExpr leaf : element.leaves()) {
                     pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                 }
-            } else if(element.isTimes()) {
-                if(element.leaves().size() > 2) {
-                    for(IExpr leaf: element.leaves()) {
+            } else if (element.isTimes()) {
+                if (element.leaves().size() > 2) {
+                    for (IExpr leaf : element.leaves()) {
                         pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                     }
                 } else {
                     IExpr firstLeaf = element.getAt(1);
                     IExpr secondLeaf = element.getAt(2);
                     CoefficientPowerPair tempCoefficientPowerPair = new CoefficientPowerPair();
-                    if(secondLeaf.leaves() != null) {
-                        if(secondLeaf.isPower()) {
+                    if (secondLeaf.leaves() != null) {
+                        if (secondLeaf.isPower()) {
                             tempCoefficientPowerPair.setPower(secondLeaf.getAt(2));
                         } else {
                             throw new Exception("Fix this2!");
@@ -184,10 +184,10 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                     } else {
                         throw new Exception("Fix this3!");
                     }
-                    if(firstLeaf.isNumber()) {
+                    if (firstLeaf.isNumber()) {
                         tempCoefficientPowerPair.setCoefficient(firstLeaf);
-                    } else if(firstLeaf.leaves().size() > 1) {
-                        for(IExpr leaf: element.leaves()) {
+                    } else if (firstLeaf.leaves().size() > 1) {
+                        for (IExpr leaf : element.leaves()) {
                             pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                         }
                     } else {
@@ -195,10 +195,10 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                     }
                     pairs.add(tempCoefficientPowerPair);
                 }
-            } else if(element.isPower()) {
+            } else if (element.isPower()) {
                 pairs.add(new CoefficientPowerPair(
-                    one,
-                    element.getAt(2)
+                        one,
+                        element.getAt(2)
                 ));
             }
         } else if (element.isSymbol()) {
@@ -212,13 +212,13 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(element);
         IExpr coefficient = null;
         IExpr highestPower = util.evaluate("-1");
-        for(CoefficientPowerPair pair: pairs) {
-           if(highestPower.compareTo((IExpr) pair.getPower()) == -1) {
-               highestPower = (IExpr) pair.getPower();
-               coefficient = (IExpr) pair.getCoefficient();
-           } else if(coefficient == null) {
-               coefficient = (IExpr) pair.getCoefficient();
-           }
+        for (CoefficientPowerPair pair : pairs) {
+            if (highestPower.compareTo((IExpr) pair.getPower()) == -1) {
+                highestPower = (IExpr) pair.getPower();
+                coefficient = (IExpr) pair.getCoefficient();
+            } else if (coefficient == null) {
+                coefficient = (IExpr) pair.getCoefficient();
+            }
         }
 
         return new CoefficientPowerPair(coefficient, highestPower);
@@ -239,13 +239,13 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         int power;
         String exprString = expr.toString().replace(" ", "");
 
-        if(isNumeric(exprString)) {
+        if (isNumeric(exprString)) {
             power = 0;
         } else {
             ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(evaluate(expr));
             IExpr highestPower = util.evaluate("-1");
-            for(CoefficientPowerPair pair: pairs) {
-                if(highestPower.compareTo((IExpr) pair.getPower()) == -1) {
+            for (CoefficientPowerPair pair : pairs) {
+                if (highestPower.compareTo((IExpr) pair.getPower()) == -1) {
                     highestPower = (IExpr) pair.getPower();
                 }
             }
@@ -256,26 +256,46 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
-    public Object factor(Object element) throws Exception {
-        // using util.evaluate instead of evaluate() because we
-        // want to avoid Expand[]
-        return util.evaluate("Factor[" + element.toString() + "]");
+    public ArrayList<Object> factor(Object element) throws Exception {
+        Object basicFactors = util.evaluate("Factor[" + element + "]");
+        if (!element.equals(basicFactors.toString()) && !basicFactors.toString().contains(Term.X + "^")) {
+            getIExprFactorisation(true);
+            return getFactorsFromElement(basicFactors);
+        }
+
+        IExprFactorisation f = getIExprFactorisation(true);
+        f.factorize(element);
+        if(!f.isFactorisationCorrect()) {
+            System.out.println("Warning: SymJa couldn't confirm successful factorisation for polynomial: " + element);
+        }
+        return f.getFactors();
     }
 
     @Override
-    public Collection<Object> getFactorsFromElement(Object element) throws Exception {
+    public ArrayList<Object> getRoots(Object element) throws Exception {
+        IExprFactorisation f = getIExprFactorisation(true);
+        f.factorize(element);
+        if(!f.isFactorisationCorrect()) {
+            System.out.println("Warning: SymJa couldn't confirm successful factorisation for polynomial: " + element);
+        }
+        return f.getRoots();
+    }
+
+    @Override
+    public ArrayList<Object> getFactorsFromElement(Object element) throws Exception {
         ArrayList<Object> factors = new ArrayList<Object>();
         String elementString = element.toString();
         String[] factorsString = elementString.split("\\*\\(");
 
-        for(String f: factorsString) {
-            if(f.charAt(0) != '(' && f.charAt(f.length() - 1) == ')') {
+        for (String f : factorsString) {
+            if (f.charAt(0) != '(' && f.charAt(f.length() - 1) == ')') {
                 f = f.replace(")", "");
-            } if (f.contains(")^")) {
+            }
+            if (f.contains(")^") && f.charAt(0) != '(') {
                 f = "(" + f;
             }
             IExpr factor = (IExpr) getObjectFromString(f);
-            if(!factor.isNumber()) {
+            if (!factor.isNumber()) {
                 factors.add(factor);
             }
         }
@@ -287,22 +307,22 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public CoefficientPowerPair getCoefficientPowerPairFromFactor(Object factor) throws Exception {
         IExpr element = (IExpr) factor;
         CoefficientPowerPair pair = new CoefficientPowerPair();
-        if(element.isPower()) {
-            for(IExpr leaf: element.leaves()) {
-                if(leaf.isNumber()) {
+        if (element.isPower()) {
+            for (IExpr leaf : element.leaves()) {
+                if (leaf.isNumber()) {
                     pair.setPower(leaf);
-                } else if(leaf.isPlus()) {
+                } else if (leaf.isPlus()) {
                     setFactorCoefficient(pair, leaf);
-                } else if(leaf.isSymbol()) {
+                } else if (leaf.isSymbol()) {
                     pair.setCoefficient(getZero());
                 } else {
                     throw new Exception("Un-parsable factor!");
                 }
             }
-        } else if(element.isPlus()) {
+        } else if (element.isPlus()) {
             pair.setPower(getOne());
             setFactorCoefficient(pair, element);
-        } else if(element.isSymbol()) {
+        } else if (element.isSymbol()) {
             pair.setPower(getOne());
             pair.setCoefficient(getZero());
         } else {
@@ -318,7 +338,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
      */
     public Object[] quadraticFormula(Object element) throws Exception {
         int highestPower = getHighestPower(element);
-        if(highestPower != 2) {
+        if (highestPower != 2) {
             throw new Exception("sad");
         }
 
@@ -331,7 +351,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         // ((b)*(-1) - ((b)^2 - 4*(a)*(c))^(1/2))/(2*(a));
         String string2 = "((" + b + ")*(-1) - ((" + b + ")^2 - 4*(" + a + ")*(" + c + "))^(1/2))" + "/" + "(2*(" + a + "))";
 
-        return new Object[] {evaluate(string1), evaluate(string2)};
+        return new Object[]{evaluate(string1), evaluate(string2)};
     }
 
     @Override
@@ -346,29 +366,43 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     protected void setFactorCoefficient(CoefficientPowerPair pair, IExpr leaf) throws Exception {
         Object leftoverCoefficient = null;
-        for(IExpr plusLeaf: leaf.leaves()) {
-            if(plusLeaf.isNumber()) {
+        for (IExpr plusLeaf : leaf.leaves()) {
+            if (plusLeaf.isNumber()) {
                 // set found coefficient
                 pair.setCoefficient(plusLeaf);
-            } else if(plusLeaf.isTimes()) {
+            } else if (plusLeaf.isTimes()) {
                 // if we found times than the factoring didn't go as planned
                 // we got something like (a*x-b)^n instead of (x-b)^n
                 // so we need to fix the factor like (x-b/a)^n
-                for(IExpr timesLeaf: plusLeaf.leaves()) {
-                    if(timesLeaf.isNumber()) {
+                for (IExpr timesLeaf : plusLeaf.leaves()) {
+                    if (timesLeaf.isNumber()) {
                         // we remember the faulty factor
                         leftoverCoefficient = timesLeaf;
                     }
                 }
-            } else if(!plusLeaf.isSymbol()) {
+            } else if (!plusLeaf.isSymbol()) {
                 throw new Exception("Un-parsable factor!");
             }
         }
         // faulty factor found, we fix it here
-        if(leftoverCoefficient != null) {
+        if (leftoverCoefficient != null) {
             pair.setCoefficient(
                     divideElements(pair.getCoefficient(), leftoverCoefficient)
             );
         }
+    }
+
+    public IExprFactorisation getIExprFactorisation() {
+        return getIExprFactorisation(false);
+    }
+
+    public IExprFactorisation getIExprFactorisation(boolean reset) {
+        if(this.iExprFactorisation == null) {
+            this.iExprFactorisation = new IExprFactorisation(this);
+        }
+        if(reset) {
+            this.iExprFactorisation.resetRootsAndFactors();
+        }
+        return this.iExprFactorisation;
     }
 }

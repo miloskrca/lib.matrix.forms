@@ -1,6 +1,5 @@
 package rs.etf.km123247m.Tests.FormTest;
 
-import org.ejml.data.Complex64F;
 import org.junit.Before;
 import org.junit.Test;
 import rs.etf.km123247m.Matrix.Forms.Implementation.JordanMatrixForm;
@@ -12,7 +11,6 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
-import rs.etf.km123247m.PropertyManager.PropertyManager;
 
 import static org.junit.Assert.*;
 
@@ -34,6 +32,7 @@ public class JordanMatrixFormOutputTest {
                 file(2),
                 file(3),
                 file(4),
+                file(5),
         };
     }
 
@@ -111,9 +110,8 @@ public class JordanMatrixFormOutputTest {
             check(matrix, 2, 0, "0");
             check(matrix, 2, 1, "0");
             check(matrix, 2, 2, "(x-3)*(x-2)^2");
-            assertArrayEquals(new String[]{"3", "2", "2"}, rootStrings);
-        }
-        if (path.equals(file(2))) {
+            assertArrayEquals(new String[]{"2", "2", "3"}, rootStrings);
+        } else if (path.equals(file(2))) {
             check(matrix, 0, 0, "1");
             check(matrix, 0, 1, "0");
             check(matrix, 0, 2, "0");
@@ -123,55 +121,53 @@ public class JordanMatrixFormOutputTest {
             check(matrix, 2, 0, "0");
             check(matrix, 2, 1, "0");
             check(matrix, 2, 2, "x*(x-4)*(x-3)");
-            assertArrayEquals(new String[]{"4", "3"}, rootStrings);
-        }
-        if (path.equals(file(3))) {
-            if (PropertyManager.getProperty("convert_to_rational").equals("0")) {
-                check(matrix, 0, 0, "1");
-                check(matrix, 0, 1, "0");
-                check(matrix, 1, 0, "0");
-                check(matrix, 1, 1, "(x+0.37228132326901475)*(x-5.372281323269016)");
-                assertArrayEquals(new String[]{
-                        (new Complex64F(-0.37228132326901475, 0.0)).toString(),
-                        (new Complex64F(5.372281323269016, 0.0)).toString()
-                }, rootStrings);
-            } else {
-                check(matrix, 0, 0, "1");
-                check(matrix, 0, 1, "0");
-                check(matrix, 1, 0, "0");
-                check(matrix, 1, 1, "(x+137/368)*(x-736/137)");
-                assertArrayEquals(new String[]{
-                        "-137/368",
-                        "736/137"
-                }, rootStrings);
-
-            }
-        }
-        if (path.equals(file(4))) {
-            if (PropertyManager.getProperty("convert_to_rational").equals("0")) {
-                check(matrix, 0, 0, "1");
-                check(matrix, 0, 1, "0");
-                check(matrix, 1, 0, "0");
-                check(matrix, 1, 1, "(x-(2.5+1.936491673103709*i))*(x-(2.5-1.936491673103709*i))");
-                assertArrayEquals(new String[]{
-                        (new Complex64F(2.5, -1.936491673103709)).toString(),
-                        (new Complex64F(2.5, 1.936491673103709)).toString()
-                }, rootStrings);
-            } else {
-                check(matrix, 0, 0, "1");
-                check(matrix, 0, 1, "0");
-                check(matrix, 1, 0, "0");
-                check(matrix, 1, 1, "(x-(5/2+122/63*i))*(x-(5/2-122/63*i))");
-                assertArrayEquals(new String[]{
-                        "5/2+122/63*i",
-                        "5/2-122/63*i"
-                }, rootStrings);
-
-            }
+            assertArrayEquals(new String[]{"0", "3", "4"}, rootStrings);
+        } else if (path.equals(file(3))) {
+            check(matrix, 0, 0, "1");
+            check(matrix, 0, 1, "0");
+            check(matrix, 1, 0, "0");
+            check(matrix, 1, 1, "(x+1/2*33^(1/2)-5/2)*(x-1/2*33^(1/2)-5/2)");
+            assertArrayEquals(new String[]{
+                    "-1/2*33^(1/2)+5/2",
+                    "1/2*33^(1/2)+5/2"
+            }, rootStrings);
+        } else if (path.equals(file(4))) {
+            check(matrix, 0, 0, "1");
+            check(matrix, 0, 1, "0");
+            check(matrix, 1, 0, "0");
+            check(matrix, 1, 1, "(x+I*1/2*15^(1/2)-5/2)*(x-I*1/2*15^(1/2)-5/2)");
+            assertArrayEquals(new String[]{
+                    "-I*1/2*15^(1/2)+5/2",
+                    "I*1/2*15^(1/2)+5/2"
+            }, rootStrings);
+        } else if (path.equals(file(5))) {
+            check(matrix, 0, 0, "1");
+            check(matrix, 0, 1, "0");
+            check(matrix, 0, 2, "0");
+            check(matrix, 0, 3, "0");
+            check(matrix, 1, 0, "0");
+            check(matrix, 1, 1, "1");
+            check(matrix, 1, 2, "0");
+            check(matrix, 1, 3, "0");
+            check(matrix, 2, 0, "0");
+            check(matrix, 2, 1, "0");
+            check(matrix, 2, 2, "1");
+            check(matrix, 2, 3, "0");
+            check(matrix, 3, 0, "0");
+            check(matrix, 3, 1, "0");
+            check(matrix, 3, 2, "0");
+            check(matrix, 3, 3, "(x-7)*(x-2)*(x-5)^2");
+            assertEquals("Matrix output string wrong!",
+                    "| 2  0  0  0 |" +
+                            "| 0  5  1  0 |" +
+                            "| 0  0  5  0 |" +
+                            "| 0  0  0  7 |",
+                    matrixForm.getFinalMatrix().toString().replace("\n", ""));
+            assertArrayEquals(new String[]{"2", "5", "5", "7"}, rootStrings);
         }
     }
 
     protected void check(IMatrix matrix, int row, int column, String value) throws Exception {
-        assertEquals(value, matrix.get(row, column).getElement().toString());
+        assertEquals("Element not correct!", value, matrix.get(row, column).getElement().toString());
     }
 }

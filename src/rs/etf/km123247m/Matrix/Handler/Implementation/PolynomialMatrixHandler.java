@@ -45,7 +45,8 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
 
     public abstract boolean hasElementWithPower(Object element, int power) throws Exception;
     public abstract Object getCoefficientForPower(Object element, int power) throws Exception;
-    public abstract Object factor (Object element) throws Exception;
+    public abstract ArrayList<Object> factor (Object element) throws Exception;
+    public abstract ArrayList<Object> getRoots (Object element) throws Exception;
     public abstract Collection<Object> getFactorsFromElement(Object element) throws Exception;
     public abstract CoefficientPowerPair getCoefficientPowerPairFromFactor(Object factor) throws Exception;
     public abstract Object[] quadraticFormula(Object element) throws Exception;
