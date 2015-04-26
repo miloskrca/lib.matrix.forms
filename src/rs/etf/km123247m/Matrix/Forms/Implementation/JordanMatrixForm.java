@@ -134,9 +134,10 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                     } else {
                         roots.add(handler.getRoots(currentElement));
                         for (Object factor : currentFactors) {
-                            if (factor.toString().startsWith("(")) {
+                            /*if (factor.toString().startsWith("(")) {
+                                // not precise enough
                                 factorsString += "*" + factor;
-                            } else if (factor.toString().equals(String.valueOf(Term.X))) {
+                            } else */if (factor.toString().equals(String.valueOf(Term.X))) {
                                 factorsString += "*" + factor.toString();
                             } else {
                                 factorsString += "*(" + factor + ")";
