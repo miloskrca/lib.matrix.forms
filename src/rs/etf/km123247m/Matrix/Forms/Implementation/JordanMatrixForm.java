@@ -43,12 +43,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
     /**
      * Found roots that will be transformed to factors
      */
-    private ArrayList<Object> roots = new ArrayList<Object>();
-
-    /**
-     * Found factors.
-     */
-    private ArrayList<Object> factors = new ArrayList<Object>();
+    private ArrayList<ArrayList<Object>> roots = new ArrayList<ArrayList<Object>>();
 
     /**
      * Constructor
@@ -133,11 +128,11 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                     }
 
                     String factorsString = "";
-                    if(!((SymJaMatrixHandler)handler).getIExprFactorisation().isFactorisationCorrect()
+                    if (!((SymJaMatrixHandler) handler).getIExprFactorisation().isFactorisationCorrect()
                             && PropertyManager.getProperty("use_EJML").equals("1")) {
-                        factorsString = generateFactorsStringUsingEJML(currentElement);
+                        factorsString = generateFactorsStringUsingEJMLAndAddRoots(currentElement);
                     } else {
-                        roots.addAll(handler.getRoots(currentElement));
+                        roots.add(handler.getRoots(currentElement));
                         for (Object factor : currentFactors) {
                             if (factor.toString().startsWith("(")) {
                                 factorsString += "*" + factor;
@@ -157,27 +152,34 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
             }
         }
 
-        // sort all roots so we can check for re-occurring ones
-        Collections.sort(roots, new Comparator<Object>() {
-            public int compare(Object root1, Object root2) {
-                return root1.toString().compareTo(root2.toString());
-            }
-        });
+        for (ArrayList<Object> rootsItem : roots) {
+            // sort all roots so we can check for re-occurring ones
+            Collections.sort(rootsItem, new Comparator<Object>() {
+                public int compare(Object root1, Object root2) {
+                    return root1.toString().compareTo(root2.toString());
+                }
+            });
+        }
 
+        int rootsIndex = 0;
         int row = 0;
         while (row < finalMatrix.getRowNumber()) {
-            int power = 1;
-            // Detect repeating roots
-            while (roots.size() > row + power
-                    && roots.get(row).toString().equals(roots.get(row + power).toString())) {
-                power++;
+            ArrayList<Object> rootsForBuilding = roots.get(rootsIndex);
+            int rootsForBuildingIndex = 0;
+            while (rootsForBuildingIndex < rootsForBuilding.size()) {
+                // Detect repeating roots
+                // easy to iterate since we sorted the roots the previously
+                int power = Collections.frequency(rootsForBuilding, rootsForBuilding.get(rootsForBuildingIndex));
+                Object root = rootsForBuilding.get(rootsForBuildingIndex);
+                setBlockFromRoot(row, power, root);
+                rootsForBuildingIndex += power;
+                row += power;
             }
-            setBlockFromRoot(row, power, roots.get(row));
-            row += power;
+            rootsIndex++;
         }
     }
 
-    protected String generateFactorsStringUsingEJML(Object currentElement) throws Exception {
+    protected String generateFactorsStringUsingEJMLAndAddRoots(Object currentElement) throws Exception {
         // EJML way
         PolynomialMatrixHandler handler = ((PolynomialMatrixHandler) getHandler());
         EJMLPolynomialHandler polyHandler = new EJMLPolynomialHandler();
@@ -188,7 +190,9 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         }
 
         Object[] tempRoots = polyHandler.findRoots(coefficients);
-        Collections.addAll(roots, polyHandler.toRational(tempRoots));
+        ArrayList<Object> arrayListRoots = new ArrayList<Object>();
+        Collections.addAll(arrayListRoots, polyHandler.toRational(tempRoots));
+        roots.add(arrayListRoots);
 
         return polyHandler.rootsToFactors(tempRoots);
     }
@@ -395,7 +399,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      *
      * @return ArrayList<Object>
      */
-    public ArrayList<Object> getRoots() {
+    public ArrayList<ArrayList<Object>> getRoots() {
         return roots;
     }
 }

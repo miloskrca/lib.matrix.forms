@@ -28,11 +28,12 @@ public class JordanMatrixFormOutputTest {
     @Before
     public void setUp() throws Exception {
         paths = new String[]{
-                file(1),
-                file(2),
-                file(3),
-                file(4),
-                file(5),
+//                file(1),
+//                file(2),
+//                file(3),
+//                file(4),
+//                file(5),
+                file(6),
         };
     }
 
@@ -95,11 +96,14 @@ public class JordanMatrixFormOutputTest {
 
     protected void assertAllOK(JordanMatrixForm matrixForm, String path) throws Exception {
         IMatrix matrix = matrixForm.getTransitionalMatrix();
-        ArrayList<Object> roots = matrixForm.getRoots();
-        String[] rootStrings = new String[roots.size()];
-        for (int i = 0; i < roots.size(); i++) {
-            rootStrings[i] = roots.get(i).toString();
+        ArrayList<ArrayList<Object>> roots = matrixForm.getRoots();
+        ArrayList<String> rootStringsArrayList = new ArrayList<String>();
+        for (ArrayList<Object> rootList : roots) {
+            for (Object rootListItem : rootList) {
+                rootStringsArrayList.add(rootListItem.toString());
+            }
         }
+        String[] rootStrings = rootStringsArrayList.toArray(new String[rootStringsArrayList.size()]);
         if (path.equals(file(1))) {
             check(matrix, 0, 0, "1");
             check(matrix, 0, 1, "0");
@@ -164,6 +168,18 @@ public class JordanMatrixFormOutputTest {
                             "| 0  0  0  7 |",
                     matrixForm.getFinalMatrix().toString().replace("\n", ""));
             assertArrayEquals(new String[]{"2", "5", "5", "7"}, rootStrings);
+        } else if (path.equals(file(6))) {
+            assertEquals("Matrix output string wrong!",
+                    "| 1  0  0 |" +
+                            "| 0  (x-2)  0 |" +
+                            "| 0  0  (x-3)*(x-2) |",
+                    matrix.toString().replace("\n", ""));
+            assertEquals("Matrix output string wrong!",
+                    "| 2  0  0 |" +
+                            "| 0  2  0 |" +
+                            "| 0  0  3 |",
+                    matrixForm.getFinalMatrix().toString().replace("\n", ""));
+            assertArrayEquals(new String[]{"2", "2", "3"}, rootStrings);
         }
     }
 
