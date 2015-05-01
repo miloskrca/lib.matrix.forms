@@ -14,7 +14,6 @@ import rs.etf.km123247m.PropertyManager.PropertyManager;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Observable;
 
 /**
@@ -44,6 +43,11 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      * Found roots that will be transformed to factors
      */
     private ArrayList<ArrayList<Object>> roots = new ArrayList<ArrayList<Object>>();
+
+    /**
+     * Jordans blocks
+     */
+    private ArrayList<IMatrix> jordanBlocks = new ArrayList<IMatrix>();
 
     /**
      * Constructor
@@ -98,8 +102,10 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         } else if (event.getType() == FormEvent.PROCESSING_END) {
             // Smith transformation ended
             try {
+                sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_JORDAN_GENERATE_FACTORS, transitionalMatrix);
+                generateRootsAndFactors();
                 sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_JORDAN_GENERATE_BLOCKS, transitionalMatrix);
-                generateRootsFactorsAndBlocks();
+                generateBlocks();
                 sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_JORDAN_END_GENERATE_BLOCKS, transitionalMatrix);
                 sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
             } catch (Exception e) {
@@ -114,7 +120,7 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      *
      * @throws Exception
      */
-    protected void generateRootsFactorsAndBlocks() throws Exception {
+    protected void generateRootsAndFactors() throws Exception {
         PolynomialMatrixHandler handler = ((PolynomialMatrixHandler) getHandler());
         for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
             for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
@@ -152,16 +158,9 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
                 }
             }
         }
+    }
 
-        for (ArrayList<Object> rootsItem : roots) {
-            // sort all roots so we can check for re-occurring ones
-            Collections.sort(rootsItem, new Comparator<Object>() {
-                public int compare(Object root1, Object root2) {
-                    return root1.toString().compareTo(root2.toString());
-                }
-            });
-        }
-
+    protected void generateBlocks() throws Exception {
         int rootsIndex = 0;
         int row = 0;
         while (row < finalMatrix.getRowNumber()) {
@@ -332,16 +331,24 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      */
     protected void setBlockFromRoot(int startRow, int size, Object root) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        IMatrix matrixBlock = handler.getMatrix().createMatrix(size, size);
+        matrixBlock.initWith(handler.getZero());
         if (size > 1) {
             // add ones in diagonal above the main diagonal
             // but only inside the current block
             for (int row = startRow; row < startRow + size - 1; row++) {
                 finalMatrix.set(new MatrixCell(row, row + 1, handler.getOne()));
+                // set in jordans block
+                matrixBlock.set(new MatrixCell(row - startRow, row - startRow + 1, handler.getOne()));
             }
         }
         for (int row = startRow; row < startRow + size; row++) {
             finalMatrix.set(new MatrixCell(row, row, root));
+            // set in jordans block
+            matrixBlock.set(new MatrixCell(row - startRow, row - startRow, root));
         }
+
+        jordanBlocks.add(matrixBlock);
     }
 
 //    /**
@@ -402,5 +409,14 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
      */
     public ArrayList<ArrayList<Object>> getRoots() {
         return roots;
+    }
+
+    /**
+     * Jordans blocks
+     *
+     * @return ArrayList<IMatrix>
+     */
+    public ArrayList<IMatrix> getJordanBlocks() {
+        return jordanBlocks;
     }
 }

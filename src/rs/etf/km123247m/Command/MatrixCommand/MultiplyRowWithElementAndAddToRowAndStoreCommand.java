@@ -10,7 +10,7 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class MultiplyRowWithElementAndAddToRowAndStoreCommand implements ICommand {
+public class MultiplyRowWithElementAndAddToRowAndStoreCommand extends AbstractCommand {
 
     private int row1;
     private int row2;
@@ -23,7 +23,7 @@ public class MultiplyRowWithElementAndAddToRowAndStoreCommand implements IComman
     }
 
     @Override
-    public MatrixCell[] execute(MatrixHandler handler) throws Exception {
+    protected MatrixCell[] executeCommand(MatrixHandler handler) throws Exception {
         MatrixCell[] rowCells = handler.multipleRowWithElement(row1, element);
         handler.addRows(row2, rowCells);
         return rowCells;

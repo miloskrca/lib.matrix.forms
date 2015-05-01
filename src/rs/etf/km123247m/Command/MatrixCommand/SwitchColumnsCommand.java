@@ -9,7 +9,7 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class SwitchColumnsCommand implements ICommand {
+public class SwitchColumnsCommand extends AbstractCommand {
 
     private int column1;
     private int column2;
@@ -20,7 +20,7 @@ public class SwitchColumnsCommand implements ICommand {
     }
 
     @Override
-    public Object execute(MatrixHandler handler) throws Exception {
+    protected Object executeCommand(MatrixHandler handler) throws Exception {
         handler.switchColumns(column1, column2);
         return null;
     }

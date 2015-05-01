@@ -1,6 +1,7 @@
 package rs.etf.km123247m.Command;
 
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
+import rs.etf.km123247m.Matrix.IMatrix;
 
 /**
  * Created by Miloš Krsmanović.
@@ -9,10 +10,12 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  * package: rs.etf.km123247m.Command
  */
 public interface ICommand {
-    public abstract Object execute(MatrixHandler handler) throws Exception;
+    Object execute(MatrixHandler handler) throws Exception;
 
-    public String getDescription();
-    public boolean affectsRows();
-    public boolean affectsColumns();
-    public ICommand copy();
+    String getDescription();
+    boolean affectsRows();
+    boolean affectsColumns();
+    ICommand copy();
+    IMatrix getMatrixBefore();
+    IMatrix getMatrixAfter();
 }

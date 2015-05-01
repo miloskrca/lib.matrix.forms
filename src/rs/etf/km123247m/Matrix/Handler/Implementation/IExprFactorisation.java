@@ -45,18 +45,10 @@ public class IExprFactorisation {
     }
 
     public ArrayList<Object> generateRoots(Object poly) throws Exception {
-        IExpr solved = util.evaluate("Solve[" + poly + "==0,x]");
+        IExpr solved = util.evaluate("Roots[" + poly + "]");
         ArrayList<Object> roots = new ArrayList<Object>();
         for (IExpr leaf : solved.leaves()) {
-            if (leaf.isList()) {
-                for (IExpr leaf2 : leaf.leaves()) {
-                    if (leaf2.isRuleAST()) {
-                        String root = leaf2.getAt(2).toString();
-                        IExpr o = util.evaluate(root);
-                        roots.add(o);
-                    }
-                }
-            }
+            roots.add(util.evaluate(leaf));
         }
 
         return roots;
@@ -90,8 +82,14 @@ public class IExprFactorisation {
                 Object tempPolyO = handler.getObjectFromString(setOfFactorCombinationsString);
                 tempPolyO = util.evaluate("Expand[" + tempPolyO.toString() + "]");
                 if (handler.compare(tempPolyO, poly) == 0) {
-                    roots.addAll(setOfRootCombinations);
                     tempPolyBase = setOfFactorCombinationsString;
+                    roots.addAll(setOfRootCombinations);
+                    // sort roots
+                    Collections.sort(roots, new Comparator<Object>() {
+                        public int compare(Object root1, Object root2) {
+                            return root1.toString().compareTo(root2.toString());
+                        }
+                    });
                 }
             }
         }

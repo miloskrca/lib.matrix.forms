@@ -12,7 +12,7 @@ import rs.etf.km123247m.Matrix.MatrixCell;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class AddColumnsAndStoreCommand implements ICommand {
+public class AddColumnsAndStoreCommand extends AbstractCommand {
 
     private int column1;
     private int column2;
@@ -23,7 +23,7 @@ public class AddColumnsAndStoreCommand implements ICommand {
     }
 
     @Override
-    public MatrixCell[] execute(MatrixHandler handler) throws Exception {
+    protected MatrixCell[] executeCommand(MatrixHandler handler) throws Exception {
         //Stores in second.
         handler.addColumns(column1, column2);
         return null;

@@ -26,6 +26,7 @@ public class FormEvent {
     public static final String INFO_RATIONAL_FINISH_RATIONAL_START_T = "INFO_RATIONAL_FINISH_RATIONAL_START_T";
     public static final String INFO_SUBTRACT_FOR_SMITH = "INFO_SUBTRACT_FOR_SMITH";
     // jordan message codes
+    public static final String INFO_JORDAN_GENERATE_FACTORS = "INFO_JORDAN_GENERATE_FACTORS";
     public static final String INFO_JORDAN_GENERATE_BLOCKS = "INFO_JORDAN_GENERATE_BLOCKS";
     public static final String INFO_JORDAN_END_GENERATE_BLOCKS = "INFO_JORDAN_END_GENERATE_BLOCKS";
 

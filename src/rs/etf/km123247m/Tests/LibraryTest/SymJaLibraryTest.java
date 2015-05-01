@@ -30,11 +30,11 @@ public class SymJaLibraryTest {
         String element1 = "-x^2+4*x-4";
         String element2 = "x-3";
         IExpr results = util.evaluate("PolynomialQuotientRemainder[" + element1 + "," + element2 + ", x]");
-        assert "{-x+1,-1}".equals(results.toString());
+        assertEquals("{-x+1,-1}", results.toString());
 
         String element3 = "x^2-4*x+4";
         IExpr result = util.evaluate("Factor[" + element3 + "]");
-        assert "(x-2)^2".equals(result.toString());
+        assertEquals("(-x+2)^2", result.toString());
 
         String[] polynomialsForFactorisation = new String[]{
                 "x^3-5/3*x^2+5/3*x-2/3",
@@ -73,7 +73,7 @@ public class SymJaLibraryTest {
                 assertEquals("Factors not OK!", "[x, x-4, x-3]", factors.toString());
             } else if (poly.equals("x^2-4*x+4")) {
                 assertEquals("Roots not OK!", "[2, 2]", roots.toString());
-                assertEquals("Factors not OK!", "[(x-2)^2]", factors.toString());
+                assertEquals("Factors not OK!", "[(-x+2)^2]", factors.toString());
             } else if (poly.equals("x^3+10*x^2+169*x")) {
                 assertEquals("Roots not OK!", "[0, -5-I*12, -5+I*12]", roots.toString());
                 assertEquals("Factors not OK!", "[x, x+5+I*12, x+5-I*12]", factors.toString());
@@ -81,8 +81,8 @@ public class SymJaLibraryTest {
                 assertEquals("Roots not OK!", "[5, 11, -1/2*113^(1/2)+3/2, 1/2*113^(1/2)+3/2]", roots.toString());
                 assertEquals("Factors not OK!", "[x-5, x-11, x+1/2*113^(1/2)-3/2, x-1/2*113^(1/2)-3/2]", factors.toString());
             } else if (poly.equals("x^4+2*x^3-11*x^2-12*x+36")) {
-                assertEquals("Roots not OK!", "[-3, 2, -3, 2]", roots.toString());
-                assertEquals("Factors not OK!", "[(x-2)^2, (x+3)^2]", factors.toString());
+                assertEquals("Roots not OK!", "[-3, -3, 2, 2]", roots.toString());
+                assertEquals("Factors not OK!", "[(-x+2)^2, (x+3)^2]", factors.toString());
             } else {
                 System.out.println("----------------------------------------");
                 System.out.println("Poly: " + poly);

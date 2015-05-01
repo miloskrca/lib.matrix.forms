@@ -113,7 +113,7 @@ public class JordanMatrixFormOutputTest {
             check(matrix, 1, 2, "0");
             check(matrix, 2, 0, "0");
             check(matrix, 2, 1, "0");
-            check(matrix, 2, 2, "(x-3)*((x-2)^2)");
+            check(matrix, 2, 2, "(x-3)*((-x+2)^2)");
             assertArrayEquals(new String[]{"2", "2", "3"}, rootStrings);
         } else if (path.equals(file(2))) {
             check(matrix, 0, 0, "1");
@@ -160,7 +160,7 @@ public class JordanMatrixFormOutputTest {
             check(matrix, 3, 0, "0");
             check(matrix, 3, 1, "0");
             check(matrix, 3, 2, "0");
-            check(matrix, 3, 3, "(x-7)*(x-2)*((x-5)^2)");
+            check(matrix, 3, 3, "(x-7)*(x-2)*((-x+5)^2)");
             assertEquals("Matrix output string wrong!",
                     "| 2  0  0  0 |" +
                             "| 0  5  1  0 |" +

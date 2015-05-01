@@ -2,6 +2,7 @@ package rs.etf.km123247m.Command.MatrixCommand;
 
 import rs.etf.km123247m.Command.ICommand;
 import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
+import rs.etf.km123247m.Matrix.IMatrix;
 
 /**
  * Created by Miloš Krsmanović.
@@ -9,7 +10,7 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
  * <p/>
  * package: rs.etf.km123247m.Command.MatrixCommand
  */
-public class SwitchRowsCommand implements ICommand {
+public class SwitchRowsCommand extends AbstractCommand {
 
     private int row1;
     private int row2;
@@ -20,7 +21,7 @@ public class SwitchRowsCommand implements ICommand {
     }
 
     @Override
-    public Object execute(MatrixHandler handler) throws Exception {
+    protected Object executeCommand(MatrixHandler handler) throws Exception {
         handler.switchRows(row1, row2);
         return null;
     }
