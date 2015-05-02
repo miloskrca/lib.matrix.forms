@@ -11,6 +11,7 @@ import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
 import rs.etf.km123247m.Polynomial.Term;
 
+import java.util.HashMap;
 import java.util.Observable;
 
 /**
@@ -79,6 +80,11 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      * Algorithm runs twice. This cunts the rounds.
      */
     private int round = 0;
+
+    /**
+     * P matrices
+     */
+    private HashMap<Integer, IMatrix> pMatrices;
 
     public RationalCanonicalMatrixForm(MatrixHandler handler) throws Exception {
         super(handler);
@@ -175,6 +181,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
             if(round == 0) {
                 try {
                     generateMatrixInRationalCanonicalForm();
+                    sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_FINISH, finalMatrix);
                 } catch (Exception e) {
                     sendUpdate(FormEvent.PROCESSING_EXCEPTION, e.getMessage(), event.getMatrix());
                 }
@@ -184,7 +191,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                     getHandler().setMatrix(xIminusB);
                     // finalMatrix = B
                     getHandler().subtractWith(finalMatrix);
-                    sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_FINISH_RATIONAL_START_T, finalMatrix);
+                    sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_PREPARE_T, getFinalMatrix());
                     MatrixForm form = new SmithMatrixForm(getHandler());
                     form.addObserver(this);
                     form.start();
@@ -193,6 +200,7 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
                 }
             } else {
                 try {
+                    sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_GENERATE_T, finalMatrix);
                     generateMatrixT();
                     sendUpdate(FormEvent.PROCESSING_END, null, getFinalMatrix());
                 } catch (Exception e) {
@@ -262,5 +270,13 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     public int getRound() {
         return round;
+    }
+
+    public HashMap<Integer, IMatrix> getpMatrices() {
+        return pMatrices;
+    }
+
+    public void setpMatrices(HashMap<Integer, IMatrix> pMatrices) {
+        this.pMatrices = pMatrices;
     }
 }

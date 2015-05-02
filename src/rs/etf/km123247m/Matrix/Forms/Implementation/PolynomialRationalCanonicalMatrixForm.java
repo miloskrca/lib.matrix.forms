@@ -6,6 +6,7 @@ import rs.etf.km123247m.Matrix.Handler.MatrixHandler;
 import rs.etf.km123247m.Matrix.IMatrix;
 import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 import rs.etf.km123247m.Matrix.MatrixCell;
+import rs.etf.km123247m.Observer.Event.FormEvent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -148,16 +149,17 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         p.initWith(getHandler().getObjectFromString("0"));
         getHandler().multiply(invertedP0, getP(1), p);
 
-        setT(calcT(getStartMatrix(), p));
+        sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_GENERATE_PX, p);
+        calcT(getStartMatrix(), p);
     }
 
-    protected IMatrix calcT(IMatrix startMatrix, IMatrix matrix) throws Exception {
+    protected void calcT(IMatrix startMatrix, IMatrix matrix) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
         int rows = startMatrix.getRowNumber();
         int columns = startMatrix.getColumnNumber();
         IMatrix t = null;
 
-        HashMap<Integer, IMatrix> pMatrices = new HashMap<Integer, IMatrix>();
+        setpMatrices(new HashMap<Integer, IMatrix>());
         int highestPower = 0;
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < columns; j++) {
@@ -169,8 +171,8 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
                 while(deg >= 0) {
                     if(handler.hasElementWithPower(item, deg)) {
                         Object coefficient = handler.getCoefficientForPower(item, deg).toString();
-                        initMatrix(pMatrices, deg, rows);
-                        pMatrices.get(deg).set(new MatrixCell(i, j, handler.getObjectFromString(coefficient.toString())));
+                        initMatrix(getpMatrices(), deg, rows);
+                        getpMatrices().get(deg).set(new MatrixCell(i, j, handler.getObjectFromString(coefficient.toString())));
                     }
                     deg--;
                 }
@@ -178,19 +180,20 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         }
 
         for (int power = 0; power <= highestPower; power++) {
-            if(pMatrices.containsKey(power)) {
+            if(getpMatrices().containsKey(power)) {
                 if(t == null) {
                     t = new ArrayMatrix(rows, columns);
                     t.initWith(handler.getObjectFromString("0"));
                 }
                 // tempResult = A^n*Pn
-                IMatrix tempResult = handler.multiply(handler.power(startMatrix, power), pMatrices.get(power));
+                IMatrix tempResult = handler.multiply(handler.power(startMatrix, power), getpMatrices().get(power));
                 // t = t + A^n*Pn
                 t = handler.add(t, tempResult);
             }
         }
 
-        return t;
+        setT(t);
+        sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_RATIONAL_END_GENERATE_PX, matrix);
     }
 
     protected void initMatrix(HashMap<Integer, IMatrix> pMatrices, int power, int range) throws Exception {

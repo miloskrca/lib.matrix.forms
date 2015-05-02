@@ -22,9 +22,13 @@ public class FormEvent {
     public static final String INFO_END_FIX_ELEMENTS_ON_DIAGONAL = "INFO_END_FIX_ELEMENTS_ON_DIAGONAL";
     public static final String INFO_FIX_LEADING_COEFFICIENTS = "INFO_FIX_LEADING_COEFFICIENTS";
     public static final String INFO_END_FIX_LEADING_COEFFICIENTS = "INFO_END_FIX_LEADING_COEFFICIENTS";
-    // rational message codes
-    public static final String INFO_RATIONAL_FINISH_RATIONAL_START_T = "INFO_RATIONAL_FINISH_RATIONAL_START_T";
     public static final String INFO_SUBTRACT_FOR_SMITH = "INFO_SUBTRACT_FOR_SMITH";
+    // rational message codes
+    public static final String INFO_RATIONAL_FINISH = "INFO_RATIONAL_FINISH";
+    public static final String INFO_RATIONAL_PREPARE_T = "INFO_RATIONAL_PREPARE_T";
+    public static final String INFO_RATIONAL_GENERATE_T = "INFO_RATIONAL_GENERATE_T";
+    public static final String INFO_RATIONAL_GENERATE_PX = "INFO_RATIONAL_GENERATE_PX";
+    public static final String INFO_RATIONAL_END_GENERATE_PX = "INFO_RATIONAL_END_GENERATE_PX";
     // jordan message codes
     public static final String INFO_JORDAN_GENERATE_FACTORS = "INFO_JORDAN_GENERATE_FACTORS";
     public static final String INFO_JORDAN_GENERATE_BLOCKS = "INFO_JORDAN_GENERATE_BLOCKS";
