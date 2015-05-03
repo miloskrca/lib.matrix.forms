@@ -6,7 +6,7 @@ import rs.etf.km123247m.Matrix.MatrixCell;
 /**
  * Created by Miloš Krsmanović.
  * 2014
- *
+ * <p/>
  * package: rs.etf.km123247m.Matrix
  */
 public class ArrayMatrix implements IMatrix {
@@ -53,11 +53,11 @@ public class ArrayMatrix implements IMatrix {
     }
 
     protected void checkColumnAndRowValues(int row, int col) throws Exception {
-        if(col >= columnNumber || col < 0) {
-            throw new Exception("Column number doesn't exist!");
+        if (col >= columnNumber || col < 0) {
+            throw new Exception("Column number " + col + " doesn't exist!");
         }
-        if(row >= rowNumber || row < 0) {
-            throw new Exception("Row number doesn't exist!");
+        if (row >= rowNumber || row < 0) {
+            throw new Exception("Row number " + row + " doesn't exist!");
         }
     }
 

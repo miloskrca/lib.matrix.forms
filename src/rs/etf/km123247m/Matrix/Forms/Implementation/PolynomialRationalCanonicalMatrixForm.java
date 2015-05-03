@@ -56,7 +56,6 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
             row += power;
             index++;
         }
-
     }
 
     /**
@@ -70,12 +69,16 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
      */
     protected void setBlock(int startRow, int size, ArrayList<CoefficientPowerPair> blockPairs) throws Exception {
         PolynomialMatrixHandler handler = (PolynomialMatrixHandler) getHandler();
+        IMatrix matrixBlock = handler.getMatrix().createMatrix(size, size);
+        matrixBlock.initWith(handler.getZero());
         if(size > 1) {
             // add ones in diagonal below the main diagonal
             // but only inside the current block
             for(int row = startRow + 1; row < startRow + size; row++) {
                 Object one = handler.getOne();
                 getFinalMatrix().set(new MatrixCell(row, row - 1, one));
+                // set in rational block
+                matrixBlock.set(new MatrixCell(row - startRow, row - startRow - 1, one));
             }
         }
         int power = 0;
@@ -87,7 +90,11 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
                 coefficientObject = handler.calculateNegativeElement(coefficientObject);
             }
             getFinalMatrix().set(new MatrixCell(row, startRow + size - 1, coefficientObject));
+            // set in rational block
+            matrixBlock.set(new MatrixCell(row - startRow, size - 1, coefficientObject));
         }
+
+        getRationalBlocks().add(matrixBlock);
     }
 
     /**

@@ -13,6 +13,8 @@ import rs.etf.km123247m.Observer.FormObserver;
 import rs.etf.km123247m.Parser.MatrixParser.SymJa.IExprMatrixFileParser;
 import rs.etf.km123247m.Parser.ParserTypes.IParser;
 
+import static org.junit.Assert.*;
+
 import java.io.File;
 import java.util.Observable;
 
@@ -127,9 +129,9 @@ public class RationalCanonicalMatrixFormTest {
     }
 
     protected void check(PolynomialRationalCanonicalMatrixForm matrixForm, int row, int column, String value) throws Exception {
-        assert matrixForm.getHandler().compare(
-                matrixForm.getFinalMatrix().get(row, column).getElement(),
-                matrixForm.getHandler().getObjectFromString(value)
-        ) == 0;
+        assertEquals(
+                matrixForm.getFinalMatrix().get(row, column).getElement().toString(),
+                matrixForm.getHandler().getObjectFromString(value).toString()
+        );
     }
 }

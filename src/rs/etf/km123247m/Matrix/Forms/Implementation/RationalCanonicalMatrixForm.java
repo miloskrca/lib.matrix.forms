@@ -11,6 +11,7 @@ import rs.etf.km123247m.Observer.Event.FormEvent;
 import rs.etf.km123247m.Observer.FormObserver;
 import rs.etf.km123247m.Polynomial.Term;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -80,6 +81,11 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
      * Algorithm runs twice. This cunts the rounds.
      */
     private int round = 0;
+
+    /**
+     * Rational blocks
+     */
+    private ArrayList<IMatrix> rationalBlocks = new ArrayList<IMatrix>();
 
     /**
      * P matrices
@@ -278,5 +284,13 @@ public abstract class RationalCanonicalMatrixForm extends MatrixForm implements 
 
     public void setpMatrices(HashMap<Integer, IMatrix> pMatrices) {
         this.pMatrices = pMatrices;
+    }
+
+    public ArrayList<IMatrix> getRationalBlocks() {
+        return rationalBlocks;
+    }
+
+    public void setRationalBlocks(ArrayList<IMatrix> rationalBlocks) {
+        this.rationalBlocks = rationalBlocks;
     }
 }
