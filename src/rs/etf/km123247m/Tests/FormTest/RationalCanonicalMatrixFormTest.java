@@ -32,7 +32,8 @@ public class RationalCanonicalMatrixFormTest {
                 file(3),
                 file(4),
                 file(5),
-                file(7)
+                file(7),
+                file(8)
         };
     }
 
@@ -86,7 +87,7 @@ public class RationalCanonicalMatrixFormTest {
                             }
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
-                            System.out.println("Exception: " + event.getMessage());
+                            assertExceptionOk(event, path);
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
@@ -98,6 +99,14 @@ public class RationalCanonicalMatrixFormTest {
             };
             matrixForm.addObserver(observer);
             matrixForm.start();
+        }
+    }
+
+    private void assertExceptionOk(FormEvent event, String path) {
+        if (path.equals(file(8))) {
+            assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, event.getMessage());
+        } else {
+            fail("Not expected exception: " + event.getMessage());
         }
     }
 

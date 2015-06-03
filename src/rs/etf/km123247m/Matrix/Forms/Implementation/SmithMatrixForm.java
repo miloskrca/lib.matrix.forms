@@ -38,7 +38,7 @@ public class SmithMatrixForm extends MatrixForm {
         sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         MatrixHandler handler = this.getHandler();
 
-        if(handler.isSingular()) {
+        if (handler.isSingular()) {
             sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_IS_SINGULAR, null);
             return;
         }
@@ -77,12 +77,12 @@ public class SmithMatrixForm extends MatrixForm {
             } // } while (!isRowCleared(range));
         }
 
-        if(!isTheDiagonalOk()) {
+        if (!isTheDiagonalOk()) {
             sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_FIX_ELEMENTS_ON_DIAGONAL, getHandler().getMatrix());
         }
 
         int numOfCommandsBeforeFixing = getCommands().size();
-        while(!isTheDiagonalOk()) {
+        while (!isTheDiagonalOk()) {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (!isTheNextElementDividedByThisElement(range)) {
                     addTwoRows(range + 1, range); //stores in second
@@ -120,13 +120,13 @@ public class SmithMatrixForm extends MatrixForm {
             }
         }
 
-        if(getCommands().size() > numOfCommandsBeforeFixing) {
+        if (getCommands().size() > numOfCommandsBeforeFixing) {
             sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_END_FIX_ELEMENTS_ON_DIAGONAL, getHandler().getMatrix());
         }
         sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_FIX_LEADING_COEFFICIENTS, getHandler().getMatrix());
         numOfCommandsBeforeFixing = getCommands().size();
         fixLeadingCoefficients();
-        if(getCommands().size() > numOfCommandsBeforeFixing) {
+        if (getCommands().size() > numOfCommandsBeforeFixing) {
             sendUpdate(FormEvent.PROCESSING_INFO, FormEvent.INFO_END_FIX_LEADING_COEFFICIENTS, getHandler().getMatrix());
         }
         sendUpdate(FormEvent.PROCESSING_END, null, getHandler().getMatrix());
@@ -176,7 +176,7 @@ public class SmithMatrixForm extends MatrixForm {
 
     protected void multiplyRowWithCellAndAddToRow(int row1, MatrixCell cell, int row2) throws Exception {
         ICommand command = new MultiplyRowWithElementAndAddToRowAndStoreCommand(
-            row1, row2, cell.getElement()
+                row1, row2, cell.getElement()
         );
         command.execute(getHandler());
         getCommands().add(command);
@@ -185,7 +185,7 @@ public class SmithMatrixForm extends MatrixForm {
 
     protected void multiplyColumnWithCellAndAddToColumn(int column1, MatrixCell cell, int column2) throws Exception {
         ICommand command = new MultiplyColumnWithElementAndAddToColumnAndStoreCommand(
-            column1, column2, cell.getElement()
+                column1, column2, cell.getElement()
         );
         command.execute(getHandler());
         getCommands().add(command);
@@ -215,6 +215,11 @@ public class SmithMatrixForm extends MatrixForm {
                         && !getHandler().isZeroElement(cell.getElement())) {
                     smallestCell = cell;
                 }
+
+                if (getHandler().isZeroElement(smallestCell.getElement())
+                        && !getHandler().isZeroElement(cell.getElement())) {
+                    smallestCell = cell;
+                }
             }
         }
         return smallestCell;
@@ -231,7 +236,7 @@ public class SmithMatrixForm extends MatrixForm {
     private boolean isTheDiagonalOk() throws Exception {
         int rowNumber = getHandler().getMatrix().getRowNumber();
         for (int range = 0; range < rowNumber - 1; range++) {
-            if(!isTheNextElementDividedByThisElement(range)) {
+            if (!isTheNextElementDividedByThisElement(range)) {
                 return false;
             }
         }
@@ -240,7 +245,7 @@ public class SmithMatrixForm extends MatrixForm {
 
     protected void addTwoRows(int row1, int row2) throws Exception {
         ICommand command = new AddRowsAndStoreCommand(
-            row1, row2
+                row1, row2
         );
         command.execute(getHandler());
         getCommands().add(command);
