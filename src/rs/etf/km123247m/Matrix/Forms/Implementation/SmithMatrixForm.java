@@ -202,6 +202,16 @@ public class SmithMatrixForm extends MatrixForm {
         return new MatrixCell(cell.getRow(), cell.getColumn(), object);
     }
 
+    /**
+     * Find smallest non-zero element
+     *
+     * @param rangeFrom Starting row
+     * @param rangeTo Ending row
+     *
+     * @return Smallest MatrixCell
+     *
+     * @throws Exception
+     */
     protected MatrixCell findCellWithElementWithSmallestPower(int rangeFrom, int rangeTo) throws Exception {
         IMatrix matrix = getHandler().getMatrix();
         MatrixCell smallestCell = matrix.get(rangeFrom, rangeFrom);
@@ -211,13 +221,9 @@ public class SmithMatrixForm extends MatrixForm {
                     continue;
                 }
                 MatrixCell cell = matrix.get(row, column);
-                if (getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1
-                        && !getHandler().isZeroElement(cell.getElement())) {
-                    smallestCell = cell;
-                }
-
                 if (getHandler().isZeroElement(smallestCell.getElement())
-                        && !getHandler().isZeroElement(cell.getElement())) {
+                        || (getHandler().comparePowersOfElements(cell.getElement(), smallestCell.getElement()) == -1
+                        && !getHandler().isZeroElement(cell.getElement()))) {
                     smallestCell = cell;
                 }
             }
