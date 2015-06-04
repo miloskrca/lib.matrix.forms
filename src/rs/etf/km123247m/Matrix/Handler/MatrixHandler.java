@@ -440,7 +440,11 @@ public abstract class MatrixHandler {
     }
 
     public boolean isNumeric(String s) {
-        return s.matches(("^([\\+\\-]?\\d+)$")) || isDouble(s) || isFraction(s);
+        return isWholeNumeric(s) || isDouble(s) || isFraction(s);
+    }
+
+    public boolean isWholeNumeric(String s) {
+        return s.matches(("^([\\+\\-]?\\d+)$"));
     }
 
     public boolean isFraction(String s) {

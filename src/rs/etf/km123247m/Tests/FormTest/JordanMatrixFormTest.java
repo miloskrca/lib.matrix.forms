@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.Observable;
 import java.util.Observer;
 
-public class JordanMatrixFormOutputTest {
+public class JordanMatrixFormTest {
 
     private String[] paths;
     private String lastOutput = "";
@@ -84,7 +84,7 @@ public class JordanMatrixFormOutputTest {
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
-                    assert !lastOutput.equals(output);
+                    assertNotEquals(lastOutput, output);
                     lastOutput = output;
 //                    System.out.println(output);
                 }

@@ -35,14 +35,12 @@ public class SmithMatrixForm extends MatrixForm {
 
     @Override
     public void process() throws Exception {
-        sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         MatrixHandler handler = this.getHandler();
-
         if (handler.isSingular()) {
             sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_IS_SINGULAR, null);
             return;
         }
-
+        sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         int matrixSize = handler.getMatrix().getRowNumber();
 
         for (int range = 0; range < matrixSize - 1; range++) {

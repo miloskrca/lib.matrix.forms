@@ -29,7 +29,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     protected boolean isElementSymbol(Object element) {
-        return element.toString().contains(String.valueOf(Term.X));
+        return !isWholeNumeric(element.toString());
+//        return element.toString().contains(String.valueOf(Term.X));
     }
 
     @Override
@@ -233,25 +234,35 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
         return result;
     }
 
+    /**
+     * Recursively find the highest power
+     *
+     * @param expr IExpr
+     * @return Highest power
+     */
     public int getHighestPower(Object expr) throws Exception {
-
-        int power;
-        String exprString = expr.toString().replace(" ", "");
-
-        if (isNumeric(exprString)) {
-            power = 0;
-        } else {
-            ArrayList<CoefficientPowerPair> pairs = getCoefficientPowerPairs(evaluate(expr));
-            IExpr highestPower = util.evaluate("-1");
-            for (CoefficientPowerPair pair : pairs) {
-                if (highestPower.compareTo((IExpr) pair.getPower()) == -1) {
-                    highestPower = (IExpr) pair.getPower();
+        IExpr poly = evaluate(expr);
+        int polyPower = 0;
+        if (poly.isNumber()) {
+            polyPower = 0;
+        } else if (poly.isSymbol()) {
+            polyPower = 1;
+        } else if (poly.isPower()) {
+            for (IExpr subLeaf : poly.leaves()) {
+                if (subLeaf.leaves() == null && !subLeaf.isSymbol() && isWholeNumeric(subLeaf.toString())) {
+                    polyPower = Integer.parseInt(subLeaf.toString());
                 }
             }
-            power = Integer.parseInt(highestPower.toString());
+        } else if (poly.leaves() != null) {
+            for (IExpr leaf : poly.leaves()) {
+                int temp = getHighestPower(leaf);
+                if (temp > polyPower) {
+                    polyPower = temp;
+                }
+            }
         }
 
-        return power;
+        return polyPower;
     }
 
     @Override
@@ -264,7 +275,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
         IExprFactorisation f = getIExprFactorisation(true);
         f.factorize(element);
-        if(!f.isFactorisationCorrect()) {
+        if (!f.isFactorisationCorrect()) {
             System.out.println("Warning: SymJa couldn't confirm successful factorisation for polynomial: " + element);
         }
         return f.getFactors();
@@ -274,7 +285,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     public ArrayList<Object> getRoots(Object element) throws Exception {
         IExprFactorisation f = getIExprFactorisation(true);
         f.factorize(element);
-        if(!f.isFactorisationCorrect()) {
+        if (!f.isFactorisationCorrect()) {
             System.out.println("Warning: SymJa couldn't confirm successful factorisation for polynomial: " + element);
         }
         return f.getRoots();
@@ -396,10 +407,10 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     public IExprFactorisation getIExprFactorisation(boolean reset) {
-        if(this.iExprFactorisation == null) {
+        if (this.iExprFactorisation == null) {
             this.iExprFactorisation = new IExprFactorisation(this);
         }
-        if(reset) {
+        if (reset) {
             this.iExprFactorisation.resetRootsAndFactors();
         }
         return this.iExprFactorisation;

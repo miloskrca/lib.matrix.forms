@@ -17,7 +17,7 @@ import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-public class SmithMatrixFormOutputTest {
+public class SmithMatrixFormTest {
 
     private String[] paths;
     private String lastOutput = "";
@@ -87,7 +87,7 @@ public class SmithMatrixFormOutputTest {
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
-                    assert !lastOutput.equals(output);
+                    assertNotEquals(lastOutput, output);
                     lastOutput = output;
 //                    System.out.println(output);
                 }

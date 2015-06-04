@@ -32,6 +32,7 @@ public class RationalCanonicalMatrixFormTest {
                 file(3),
                 file(4),
                 file(5),
+                file(6),
                 file(7),
                 file(8)
         };
@@ -92,7 +93,7 @@ public class RationalCanonicalMatrixFormTest {
                             break;
                     }
                     // assert no endless loop
-                    assert !lastOutput.equals(output);
+                    assertNotEquals(lastOutput, output);
                     lastOutput = output;
 //                    System.out.println(output);
                 }
@@ -134,13 +135,24 @@ public class RationalCanonicalMatrixFormTest {
             check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "18");
             check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "15");
 
+        } else if (path.equals(file(6))) {
+            check(matrixForm, 0, 0, "0"); check(matrixForm, 0, 1, "-1"); check(matrixForm, 0, 2, "0"); check(matrixForm, 0, 3, "0");
+            check(matrixForm, 1, 0, "1"); check(matrixForm, 1, 1, "2"); check(matrixForm, 1, 2, "0"); check(matrixForm, 1, 3, "0");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "0"); check(matrixForm, 2, 3, "-1");
+            check(matrixForm, 3, 0, "0"); check(matrixForm, 3, 1, "0"); check(matrixForm, 3, 2, "1"); check(matrixForm, 3, 3, "2");
+
+        } else if (path.equals(file(7))) {
+            check(matrixForm, 0, 0, "2"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "-6");
+            check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "5");
+
         }
     }
 
     protected void check(PolynomialRationalCanonicalMatrixForm matrixForm, int row, int column, String value) throws Exception {
         assertEquals(
-                matrixForm.getFinalMatrix().get(row, column).getElement().toString(),
-                matrixForm.getHandler().getObjectFromString(value).toString()
+                matrixForm.getHandler().getObjectFromString(value).toString(),
+                matrixForm.getFinalMatrix().get(row, column).getElement().toString()
         );
     }
 }

@@ -11,6 +11,7 @@ import rs.etf.km123247m.Matrix.Implementation.ArrayMatrix;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import static org.junit.Assert.assertEquals;
 
@@ -92,6 +93,26 @@ public class SymJaLibraryTest {
 
             }
         }
+    }
+
+    @Test
+    public void testHighestPower() throws Exception {
+        HashMap<String, Integer> polynomials = new HashMap<String, Integer>();
+        polynomials.put("x^3-5/3*x^2+5/3*x-2/3", 3);
+        polynomials.put("x^2-5*x-2", 2);
+        polynomials.put("3*x+3", 1);
+        polynomials.put("8", 0);
+        polynomials.put("x", 1);
+
+        for (String polynomial : polynomials.keySet()) {
+            IExpr poly = util.evaluate(polynomial);
+            assertEquals(
+                    "Power not equal for " + polynomial + "!",
+                    (int) polynomials.get(polynomial),
+                    handler.getHighestPower(poly)
+            );
+        }
+
     }
 
     @Test
