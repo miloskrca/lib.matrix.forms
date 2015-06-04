@@ -177,12 +177,12 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                         if (secondLeaf.isPower()) {
                             tempCoefficientPowerPair.setPower(secondLeaf.getAt(2));
                         } else {
-                            throw new Exception("Fix this2!");
+                            throw new Exception("Get coefficient power pairs exception!");
                         }
                     } else if (secondLeaf.isSymbol()) {
                         tempCoefficientPowerPair.setPower(one);
                     } else {
-                        throw new Exception("Fix this3!");
+                        throw new Exception("Get coefficient power pairs exception!");
                     }
                     if (firstLeaf.isNumber()) {
                         tempCoefficientPowerPair.setCoefficient(firstLeaf);
@@ -191,7 +191,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
                             pairs.add(getLeadingCoefficientAndPowerOfElementRecursive(leaf));
                         }
                     } else {
-                        throw new Exception("Fix this4!");
+                        throw new Exception("Get coefficient power pairs exception!");
                     }
                     pairs.add(tempCoefficientPowerPair);
                 }

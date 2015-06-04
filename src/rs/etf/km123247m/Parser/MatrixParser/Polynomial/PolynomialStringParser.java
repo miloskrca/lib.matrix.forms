@@ -60,11 +60,11 @@ public class PolynomialStringParser extends StringParser {
                     if(isNumeric(parts[1])) {
                         pow = Integer.parseInt(parts[1]);
                     } else {
-                        throw new Exception("qurac2");
+                        throw new Exception("Exception while parsing: degree not numerical!");
                     }
                     handleCoefficientAndVar(parts[0]);
                 } else {
-                    throw new Exception("qurac");
+                    throw new Exception("Exception while parsing: power has more than two parts!");
                 }
             } else {
                 handleCoefficientAndVar(term);
@@ -94,7 +94,7 @@ public class PolynomialStringParser extends StringParser {
                 coefficient = String.valueOf(parts.charAt(0));
                 pow = 0;
             } else {
-                throw new Exception("qurac3");
+                throw new Exception("Exception while parsing: unknown value!");
             }
         } else {
             if(parts.contains("*")) {
@@ -103,20 +103,20 @@ public class PolynomialStringParser extends StringParser {
                     if(isNumeric(subParts[0])) {
                         coefficient = subParts[0];
                     } else {
-                        throw new Exception("qurac7");
+                        throw new Exception("Exception while parsing: multiplication part not numerical!");
                     }
                     if(subParts[1].length() == 1) {
                         var = subParts[1].charAt(0);
                     } else {
-                        throw new Exception("qurac6");
+                        throw new Exception("Exception while parsing: multiplication has too many elements!");
                     }
                 } else {
-                    throw new Exception("qurac5");
+                    throw new Exception("Exception while parsing: multiplication has too many elements!");
                 }
             } else if(isNumeric(parts)) {
                 coefficient = parts;
             } else {
-                throw new Exception("qurac4");
+                throw new Exception("Exception while parsing: unrecognized operation!");
             }
         }
     }
