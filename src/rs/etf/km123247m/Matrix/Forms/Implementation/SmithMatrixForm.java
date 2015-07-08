@@ -83,16 +83,16 @@ public class SmithMatrixForm extends MatrixForm {
         while (!isTheDiagonalOk()) {
             for (int range = 0; range < matrixSize - 1; range++) {
                 if (!isTheNextElementDividedByThisElement(range)) {
-                    addTwoRows(range + 1, range); //stores in second
+                    addTwoRowsAndStoreInSecond(range + 1, range);
 
-                    int tempMatrixSize = range + 2;
+                    int subMatrixSize = range + 2;
                     while (!isColumnCleared(range) || !isRowCleared(range)) { // do {
                         while (!isRowCleared(range)) { // do {
                             // Moving smallest to start...
-                            MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                            MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, subMatrixSize);
                             moveCellToStartPosition(range, smallestCell);
                             // make all elements, except for the first one, in the top outmost row equal to 0 or smaller power that first element
-                            for (int nextColumn = range + 1; nextColumn < tempMatrixSize; nextColumn++) {
+                            for (int nextColumn = range + 1; nextColumn < subMatrixSize; nextColumn++) {
                                 MatrixCell nextCell = handler.getMatrix().get(range, nextColumn);
                                 if (!getHandler().isZeroElement(nextCell.getElement())) {
                                     MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
@@ -103,9 +103,9 @@ public class SmithMatrixForm extends MatrixForm {
                         } // while (!isRowCleared(range));
 
                         // Moving smallest to start...
-                        MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, tempMatrixSize);
+                        MatrixCell smallestCell = findCellWithElementWithSmallestPower(range, subMatrixSize);
                         moveCellToStartPosition(range, smallestCell);
-                        for (int nextRow = range + 1; nextRow < tempMatrixSize; nextRow++) {
+                        for (int nextRow = range + 1; nextRow < subMatrixSize; nextRow++) {
                             MatrixCell nextCell = handler.getMatrix().get(nextRow, range);
                             if (!getHandler().isZeroElement(nextCell.getElement())) {
                                 MatrixCell quotient = calculateQuotientForCell(nextCell, smallestCell);
@@ -247,7 +247,7 @@ public class SmithMatrixForm extends MatrixForm {
         return true;
     }
 
-    protected void addTwoRows(int row1, int row2) throws Exception {
+    protected void addTwoRowsAndStoreInSecond(int row1, int row2) throws Exception {
         ICommand command = new AddRowsAndStoreCommand(
                 row1, row2
         );
