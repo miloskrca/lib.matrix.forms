@@ -125,8 +125,8 @@ public class JordanMatrixForm extends MatrixForm implements FormObserver {
         for (int row = 0; row < transitionalMatrix.getRowNumber(); row++) {
             for (int column = 0; column < transitionalMatrix.getColumnNumber(); column++) {
                 Object currentElement = transitionalMatrix.get(row, column).getElement();
-                if (handler.compare(currentElement, handler.getZero()) != 0
-                        && handler.compare(currentElement, handler.getOne()) != 0) {
+                if (!handler.isZeroElement(currentElement)
+                        && !handler.isOneElement(currentElement)) {
 
                     ArrayList<Object> currentFactors = handler.factor(currentElement);
                     if (currentFactors.size() == 0) {

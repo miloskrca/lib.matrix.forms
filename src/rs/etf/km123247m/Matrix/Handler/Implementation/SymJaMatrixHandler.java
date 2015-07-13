@@ -28,9 +28,18 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
+    public boolean isWholeNumeric(Object element) {
+        return (util.evaluate(element.toString())).isNumIntValue();
+    }
+
+    @Override
+    public Object getInverse(Object element) throws Exception {
+        return (util.evaluate(element.toString())).inverse();
+    }
+
+    @Override
     protected boolean isElementSymbol(Object element) {
-        return !isWholeNumeric(element.toString());
-//        return element.toString().contains(String.valueOf(Term.X));
+        return ((IExpr)element).isSymbol();
     }
 
     @Override
@@ -78,7 +87,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public Object calculateNegativeElement(Object element) throws Exception {
-        return evaluate(((IExpr) element).negate());
+        return ((IExpr) element).negative();
     }
 
     @Override
@@ -90,9 +99,12 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
 
     @Override
     public boolean isZeroElement(Object element) throws Exception {
-        int result = (util.evaluate(element.toString())).compareTo((IExpr) getElementEquivalentToZero());
-        return result == 0;
-//        return getElementEquivalentToZero().toString().equals(element.toString());
+        return  (util.evaluate(element.toString())).isZero();
+    }
+
+    @Override
+    public boolean isOneElement(Object element) throws Exception {
+        return  (util.evaluate(element.toString())).isOne();
     }
 
     @Override
@@ -249,7 +261,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             polyPower = 1;
         } else if (poly.isPower()) {
             for (IExpr subLeaf : poly.leaves()) {
-                if (subLeaf.leaves() == null && !subLeaf.isSymbol() && isWholeNumeric(subLeaf.toString())) {
+                if (subLeaf.leaves() == null && !subLeaf.isSymbol() && isWholeNumeric(subLeaf)) {
                     polyPower = Integer.parseInt(subLeaf.toString());
                 }
             }

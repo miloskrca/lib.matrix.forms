@@ -33,9 +33,7 @@ public abstract class PolynomialMatrixHandler extends MatrixHandler {
         return getLeadingCoefficientOfElement(element);
     }
 
-    public Object getInverse(Object element) throws Exception {
-        return divideElements(getElementEquivalentToOne(), element);
-    }
+    public abstract Object getInverse(Object element) throws Exception;
 
     public abstract ArrayList<CoefficientPowerPair> getCoefficientPowerPairs(Object element) throws Exception;
 

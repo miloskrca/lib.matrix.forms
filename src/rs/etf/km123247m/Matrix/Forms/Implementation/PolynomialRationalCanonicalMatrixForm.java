@@ -39,7 +39,7 @@ public class PolynomialRationalCanonicalMatrixForm extends RationalCanonicalMatr
         IMatrix matrix = handler.getMatrix();
         for(int row = 0; row < matrix.getRowNumber(); row++) {
             Object element = matrix.get(row, row).getElement();
-            if(handler.compare(element, handler.getOne()) != 0) {
+            if(!handler.isOneElement(element)) {
                 polynomialsOnTheDiagonal.add(element);
             }
         }

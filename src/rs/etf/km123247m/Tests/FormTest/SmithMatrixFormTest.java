@@ -37,6 +37,7 @@ public class SmithMatrixFormTest {
                 file(9),
                 file(10),
                 file(11),
+                file(12),
         };
     }
 
@@ -146,6 +147,10 @@ public class SmithMatrixFormTest {
             check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0"); check(matrixForm, 0, 2, "0");
             check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
             check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x+16/15");
+
+        } else if (path.equals(file(12))) {
+            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0.0");
+            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1.0");
 
         }
     }

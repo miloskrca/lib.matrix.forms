@@ -48,7 +48,7 @@ public class SymJaMatrixHandlerTest {
         CoefficientPowerPair pair = handler.getCoefficientPowerPairFromFactor(
                 handler.getObjectFromString("x^2")
         );
-        assert handler.compare(pair.getCoefficient(), handler.getZero()) == 0;
+        assert handler.isZeroElement(pair.getCoefficient());
         assert handler.compare(pair.getPower(), handler.getObjectFromString("2")) == 0;
     }
 

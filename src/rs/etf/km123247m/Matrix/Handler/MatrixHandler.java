@@ -423,7 +423,7 @@ public abstract class MatrixHandler {
 
     public boolean isSingular() throws Exception {
         // Determinant of singular matrices is 0
-        return compare(determinant(getMatrix()), getObjectFromString("0")) == 0;
+        return isZeroElement(determinant(getMatrix()));
     }
 
     public boolean matrixContainsSymbol() throws Exception {
@@ -447,6 +447,8 @@ public abstract class MatrixHandler {
         return s.matches(("^([\\+\\-]?\\d+)$"));
     }
 
+    public abstract boolean isWholeNumeric(Object element);
+
     public boolean isFraction(String s) {
         return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
     }
@@ -468,6 +470,8 @@ public abstract class MatrixHandler {
     public abstract int comparePowersOfElements(Object element1, Object element2) throws Exception;
 
     public abstract boolean isZeroElement(Object element) throws Exception;
+
+    public abstract boolean isOneElement(Object element) throws Exception;
 
     public abstract int compare(Object element1, Object element2) throws Exception;
 

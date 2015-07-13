@@ -262,7 +262,7 @@ public class SmithMatrixForm extends MatrixForm {
         int rowNumber = handler.getMatrix().getRowNumber();
         for (int row = 0; row < rowNumber; row++) {
             Object leadingCoefficient = handler.getLeadingCoefficient(getHandler().getMatrix().get(row, row).getElement());
-            if (handler.compare(leadingCoefficient, handler.getOne()) != 0) {
+            if (!handler.isOneElement(leadingCoefficient)) {
                 // divide row with element with its leading coefficient
                 ICommand command = new MultiplyRowWithElementAndStoreCommand(row, handler.getInverse(leadingCoefficient));
                 command.execute(getHandler());
