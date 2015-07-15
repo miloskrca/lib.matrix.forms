@@ -78,8 +78,11 @@ public abstract class MatrixStringParser extends StringParser {
         if(sMax != null) {
             max_power = Integer.parseInt(sMax);
         }
-        if (min_power > list.size() || max_power < list.size()) {
-            throw new Exception(("Wrong matrix size!") + list.size());
+        if (min_power > list.size()) {
+            throw new Exception(("Wrong matrix size! Matrix too small."));
+        }
+        if (max_power < list.size()) {
+            throw new Exception(("Wrong matrix size! Matrix too big."));
         }
 
         matrix = new ArrayMatrix(list.size(), list.get(0).size());
