@@ -28,18 +28,8 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
     }
 
     @Override
-    public boolean isWholeNumeric(Object element) {
-        return (util.evaluate(element.toString())).isNumIntValue();
-    }
-
-    @Override
     public Object getInverse(Object element) throws Exception {
         return (util.evaluate(element.toString())).inverse();
-    }
-
-    @Override
-    protected boolean isElementSymbol(Object element) {
-        return ((IExpr)element).isSymbol();
     }
 
     @Override
@@ -261,7 +251,7 @@ public class SymJaMatrixHandler extends PolynomialMatrixHandler {
             polyPower = 1;
         } else if (poly.isPower()) {
             for (IExpr subLeaf : poly.leaves()) {
-                if (subLeaf.leaves() == null && !subLeaf.isSymbol() && isWholeNumeric(subLeaf)) {
+                if (subLeaf.leaves() == null && !subLeaf.isSymbol() && isWholeNumeric(subLeaf.toString())) {
                     polyPower = Integer.parseInt(subLeaf.toString());
                 }
             }

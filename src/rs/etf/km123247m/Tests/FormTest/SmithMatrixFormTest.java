@@ -49,6 +49,8 @@ public class SmithMatrixFormTest {
     public void testProcess() throws Exception {
 
         for (final String path : paths) {
+            lastOutput = "";
+            output = "";
             File file = new File(path);
             IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
@@ -101,6 +103,8 @@ public class SmithMatrixFormTest {
     private void assertExceptionOk(FormEvent event, String path) {
         if (path.equals(file(11))) {
             assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_IS_SINGULAR, event.getMessage());
+        } else if (path.equals(file(12))) {
+            assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_CONTAINS_DECIMAL, event.getMessage());
         } else {
             fail("Not expected exception: " + event.getMessage());
         }
@@ -148,10 +152,10 @@ public class SmithMatrixFormTest {
             check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1"); check(matrixForm, 1, 2, "0");
             check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "0"); check(matrixForm, 2, 2, "x+16/15");
 
+        } else if (path.equals(file(11))) {
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_IS_SINGULAR + "' expected.");
         } else if (path.equals(file(12))) {
-            check(matrixForm, 0, 0, "1"); check(matrixForm, 0, 1, "0.0");
-            check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "1.0");
-
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_CONTAINS_DECIMAL + "' expected.");
         }
     }
 

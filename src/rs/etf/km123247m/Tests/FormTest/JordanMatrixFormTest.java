@@ -34,6 +34,9 @@ public class JordanMatrixFormTest {
                 file(4),
                 file(5),
                 file(6),
+                file(7),
+                file(8),
+                file(9),
         };
     }
 
@@ -45,6 +48,8 @@ public class JordanMatrixFormTest {
     public void testProcess() throws Exception {
 
         for (final String path : paths) {
+            lastOutput = "";
+            output = "";
             File file = new File(path);
             IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
@@ -80,7 +85,7 @@ public class JordanMatrixFormTest {
                             output = "PROCESSING_INFO " + event.getMessage() + "\n";
                             break;
                         case FormEvent.PROCESSING_EXCEPTION:
-                            System.out.println("Exception: " + event.getMessage());
+                            assertExceptionOk(event, path);
                             output = "PROCESSING_EXCEPTION";
                             break;
                     }
@@ -91,6 +96,18 @@ public class JordanMatrixFormTest {
             };
             matrixForm.addObserver(observer);
             matrixForm.start();
+        }
+    }
+
+    private void assertExceptionOk(FormEvent event, String path) {
+        if (path.equals(file(7))) {
+            assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, event.getMessage());
+        } else if (path.equals(file(8))) {
+            assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, event.getMessage());
+        } else if (path.equals(file(9))) {
+            assertEquals("Exception not recognized", FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL, event.getMessage());
+        } else {
+            fail("Not expected exception: " + event.getMessage() + " file: " + path);
         }
     }
 
@@ -180,6 +197,12 @@ public class JordanMatrixFormTest {
                             "| 0  0  3 |",
                     matrixForm.getFinalMatrix().toString().replace("\n", ""));
             assertArrayEquals(new String[]{"2", "2", "3"}, rootStrings);
+        } else if (path.equals(file(7))) {
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL + "' expected.");
+        } else if (path.equals(file(8))) {
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL + "' expected.");
+        } else if (path.equals(file(9))) {
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL + "' expected.");
         }
     }
 

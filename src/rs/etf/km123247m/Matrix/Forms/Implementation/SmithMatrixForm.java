@@ -40,6 +40,10 @@ public class SmithMatrixForm extends MatrixForm {
             sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_IS_SINGULAR, null);
             return;
         }
+        if (handler.containsDecimalNumbers()) {
+            sendUpdate(FormEvent.PROCESSING_EXCEPTION, FormEvent.EXCEPTION_MATRIX_CONTAINS_DECIMAL, null);
+            return;
+        }
         sendUpdate(FormEvent.PROCESSING_START, null, getHandler().getMatrix());
         int matrixSize = handler.getMatrix().getRowNumber();
 

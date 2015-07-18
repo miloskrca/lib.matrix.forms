@@ -37,6 +37,7 @@ public class FormEvent {
     // exception message codes
     public static final String EXCEPTION_MATRIX_IS_SINGULAR = "EXCEPTION_MATRIX_IS_SINGULAR";
     public static final String EXCEPTION_MATRIX_NOT_NUMERICAL = "EXCEPTION_MATRIX_NOT_NUMERICAL";
+    public static final String EXCEPTION_MATRIX_CONTAINS_DECIMAL = "EXCEPTION_MATRIX_CONTAINS_DECIMAL";
 
     private final IMatrix matrix;
 

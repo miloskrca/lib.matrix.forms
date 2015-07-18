@@ -426,11 +426,27 @@ public abstract class MatrixHandler {
         return isZeroElement(determinant(getMatrix()));
     }
 
-    public boolean matrixContainsSymbol() throws Exception {
+    public boolean matrixNotNumerical() throws Exception {
         IMatrix matrix = getMatrix();
         for (int i=0;i< this.matrix.getRowNumber();i++) {
             for (int j=0; j< this.matrix.getColumnNumber();j++) {
-                if(isElementSymbol(matrix.get(i, j).getElement())) {
+                Object element = matrix.get(i, j).getElement();
+                if(!isWholeNumeric(element.toString())/* && !isFraction(element.toString())*/) {
+                    // rational and jordans algorithm support fractions but we will not allow them anyway
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    public boolean containsDecimalNumbers() throws Exception {
+        IMatrix matrix = getMatrix();
+        for (int i=0;i< this.matrix.getRowNumber();i++) {
+            for (int j=0; j< this.matrix.getColumnNumber();j++) {
+                Object element = matrix.get(i, j).getElement();
+                if(isDouble(element.toString())) {
                     return true;
                 }
             }
@@ -447,17 +463,13 @@ public abstract class MatrixHandler {
         return s.matches(("^([\\+\\-]?\\d+)$"));
     }
 
-    public abstract boolean isWholeNumeric(Object element);
-
     public boolean isFraction(String s) {
         return s.matches(("^([\\+\\-]?\\d+)/([\\+\\-]?\\d+)$"));
     }
 
     public boolean isDouble(String s) {
-        return s.matches("[-+]?\\d*\\.?\\d+");
+        return s.contains(".");
     }
-
-    protected abstract boolean isElementSymbol(Object element);
 
     protected abstract Object addElements(Object element1, Object element2) throws Exception;
 

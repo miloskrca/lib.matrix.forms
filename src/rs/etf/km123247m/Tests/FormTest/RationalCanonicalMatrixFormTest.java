@@ -46,6 +46,8 @@ public class RationalCanonicalMatrixFormTest {
     public void testProcess() throws Exception {
 
         for (final String path : paths) {
+            lastOutput = "";
+            output = "";
             File file = new File(path);
             IParser parser = new IExprMatrixFileParser(file);
             IMatrix matrix = (ArrayMatrix) parser.parseInput();
@@ -146,6 +148,8 @@ public class RationalCanonicalMatrixFormTest {
             check(matrixForm, 1, 0, "0"); check(matrixForm, 1, 1, "0"); check(matrixForm, 1, 2, "-6");
             check(matrixForm, 2, 0, "0"); check(matrixForm, 2, 1, "1"); check(matrixForm, 2, 2, "5");
 
+        } else if (path.equals(file(8))) {
+            fail("Exception '" + FormEvent.EXCEPTION_MATRIX_NOT_NUMERICAL + "' expected.");
         }
     }
 
