@@ -426,7 +426,7 @@ public abstract class MatrixHandler {
         return isZeroElement(determinant(getMatrix()));
     }
 
-    public boolean matrixNotNumerical() throws Exception {
+    public boolean matrixNotWholeNumerical() throws Exception {
         IMatrix matrix = getMatrix();
         for (int i=0;i< this.matrix.getRowNumber();i++) {
             for (int j=0; j< this.matrix.getColumnNumber();j++) {
